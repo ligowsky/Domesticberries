@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse.Persistence", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse.Presentation", "src\Warehouse\Warehouse.Presentation\Warehouse.Presentation.csproj", "{AE86B950-D008-4BF8-92EF-73A1E25F09CB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{091617FA-D106-491A-8EF9-527A598B4D4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,7 @@ Global
 		{BC6A361F-CF55-40F9-960E-258CC4C9036B} = {4D8C79B8-ECBE-4A81-A30B-881190267186}
 		{EB7A489A-E198-4289-898F-7A64CFE7D649} = {4D8C79B8-ECBE-4A81-A30B-881190267186}
 		{AE86B950-D008-4BF8-92EF-73A1E25F09CB} = {4D8C79B8-ECBE-4A81-A30B-881190267186}
+		{091617FA-D106-491A-8EF9-527A598B4D4E} = {183FD872-54F6-4C24-9C8E-74526CB5EDC8}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{16DA55B2-5679-4FF3-A8E1-C3AE3FBE839D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
