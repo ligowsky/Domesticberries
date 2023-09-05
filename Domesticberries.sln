@@ -1,20 +1,22 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{183FD872-54F6-4C24-9C8E-74526CB5EDC8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Warehouse", "Warehouse", "{4D8C79B8-ECBE-4A81-A30B-881190267186}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse.WebAPI", "src\Warehouse\Warehouse.WebAPI\Warehouse.WebAPI.csproj", "{16DA55B2-5679-4FF3-A8E1-C3AE3FBE839D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Warehouse.WebAPI", "src\Services\Warehouse\Dberries.Warehouse.WebAPI\Dberries.Warehouse.WebAPI.csproj", "{16DA55B2-5679-4FF3-A8E1-C3AE3FBE839D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse.Core", "src\Warehouse\Warehouse.Core\Warehouse.Core.csproj", "{6F366322-927E-4A20-AE6F-148C06C43537}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Warehouse.Core", "src\Services\Warehouse\Dberries.Warehouse.Core\Dberries.Warehouse.Core.csproj", "{6F366322-927E-4A20-AE6F-148C06C43537}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse.Infrastructure", "src\Warehouse\Warehouse.Infrastructure\Warehouse.Infrastructure.csproj", "{BC6A361F-CF55-40F9-960E-258CC4C9036B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Warehouse.Infrastructure", "src\Services\Warehouse\Dberries.Warehouse.Infrastructure\Dberries.Warehouse.Infrastructure.csproj", "{BC6A361F-CF55-40F9-960E-258CC4C9036B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse.Persistence", "src\Warehouse\Warehouse.Persistence\Warehouse.Persistence.csproj", "{EB7A489A-E198-4289-898F-7A64CFE7D649}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Warehouse.Persistence", "src\Services\Warehouse\Dberries.Warehouse.Persistence\Dberries.Warehouse.Persistence.csproj", "{EB7A489A-E198-4289-898F-7A64CFE7D649}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse.Presentation", "src\Warehouse\Warehouse.Presentation\Warehouse.Presentation.csproj", "{AE86B950-D008-4BF8-92EF-73A1E25F09CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Warehouse.Presentation", "src\Services\Warehouse\Dberries.Warehouse.Presentation\Dberries.Warehouse.Presentation.csproj", "{AE86B950-D008-4BF8-92EF-73A1E25F09CB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{091617FA-D106-491A-8EF9-527A598B4D4E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{53B906EF-E185-45F5-AA6C-AC710AE11035}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,13 +24,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{4D8C79B8-ECBE-4A81-A30B-881190267186} = {183FD872-54F6-4C24-9C8E-74526CB5EDC8}
 		{16DA55B2-5679-4FF3-A8E1-C3AE3FBE839D} = {4D8C79B8-ECBE-4A81-A30B-881190267186}
 		{6F366322-927E-4A20-AE6F-148C06C43537} = {4D8C79B8-ECBE-4A81-A30B-881190267186}
 		{BC6A361F-CF55-40F9-960E-258CC4C9036B} = {4D8C79B8-ECBE-4A81-A30B-881190267186}
 		{EB7A489A-E198-4289-898F-7A64CFE7D649} = {4D8C79B8-ECBE-4A81-A30B-881190267186}
 		{AE86B950-D008-4BF8-92EF-73A1E25F09CB} = {4D8C79B8-ECBE-4A81-A30B-881190267186}
 		{091617FA-D106-491A-8EF9-527A598B4D4E} = {183FD872-54F6-4C24-9C8E-74526CB5EDC8}
+		{53B906EF-E185-45F5-AA6C-AC710AE11035} = {183FD872-54F6-4C24-9C8E-74526CB5EDC8}
+		{4D8C79B8-ECBE-4A81-A30B-881190267186} = {53B906EF-E185-45F5-AA6C-AC710AE11035}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{16DA55B2-5679-4FF3-A8E1-C3AE3FBE839D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
