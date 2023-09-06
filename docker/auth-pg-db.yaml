@@ -1,0 +1,23 @@
+﻿version: '3.0'
+
+services:
+  auth-pg-db:
+    container_name: auth-pg-db
+    image: postgres
+    environment:
+      POSTGRES_USER: '${AUTH_PG_USER:-admin}'
+      POSTGRES_PASSWORD: '${AUTH_PG_PASSWORD:-admin}'
+      POSTGRES_DB: auth
+      PGDATA: /data/postgres
+    volumes:
+      - auth-pg-db:/data/postgres
+    ports:
+      - '${AUTH_PG_PORT:-5444}:5432'
+    networks:
+      - domesticberries
+    restart: unless-stopped
+networks:
+  domesticberries:
+    driver: bridge
+volumes:
+  auth-pg-db:

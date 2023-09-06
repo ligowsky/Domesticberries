@@ -5,13 +5,13 @@ services:
     image: rabbitmq:management
     container_name: rabbitmq
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER:-guest}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS:-guest}
     volumes:
       - "rabbitmq-data:/var/lib/rabbitmq/mnesia/"
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "${RABBITMQ_PORT1:-5672}:5672"
+      - "${RABBITMQ_PORT2:-15672}:15672"
     networks:
       - domesticberries
     restart: unless-stopped  

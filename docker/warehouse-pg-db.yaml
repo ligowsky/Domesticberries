@@ -1,0 +1,23 @@
+﻿version: '3.0'
+
+services:
+  warehouse-pg-db:
+    container_name: warehouse-pg-db
+    image: postgres
+    environment:
+      POSTGRES_USER: '${WAREHOUSE_PG_USER:-admin}'
+      POSTGRES_PASSWORD: '${WAREHOUSE_PG_PASSWORD:-admin}'
+      POSTGRES_DB: warehouse
+      PGDATA: /data/postgres
+    volumes:
+      - warehouse-pg-db:/data/postgres
+    ports:
+      - '${WAREHOUSE_PG_PORT:-5446}:5432'
+    networks:
+      - domesticberries
+    restart: unless-stopped
+networks:
+  domesticberries:
+    driver: bridge
+volumes:
+  warehouse-pg-db:

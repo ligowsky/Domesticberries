@@ -1,0 +1,23 @@
+﻿version: '3.0'
+
+services:
+  store-pg-db:
+    container_name: store-pg-db
+    image: postgres
+    environment:
+      POSTGRES_USER: '${STORE_PG_USER:-admin}'
+      POSTGRES_PASSWORD: '${STORE_PG_PASSWORD:-admin}'
+      POSTGRES_DB: store
+      PGDATA: /data/postgres
+    volumes:
+      - store-pg-db:/data/postgres
+    ports:
+      - '${STORE_PG_PORT:-5446}:5432'
+    networks:
+      - domesticberries
+    restart: unless-stopped
+networks:
+  domesticberries:
+    driver: bridge
+volumes:
+  store-pg-db:
