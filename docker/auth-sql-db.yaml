@@ -1,9 +1,8 @@
 ﻿version: '3.9'
-
 services:
   auth-sql-db:
-    image: 'mcr.microsoft.com/azure-sql-edge'
-    container_name: azure-sql-edge
+    image: mcr.microsoft.com/azure-sql-edge
+    container_name: auth-sql-db
     restart: unless-stopped
     environment:
       ACCEPT_EULA: 'Y'
@@ -17,7 +16,6 @@ services:
       - domesticberries
     volumes:
       - './auth-sql-db-data:/var/opt/mssql/data'
-
 networks:
   domesticberries:
     name: domesticberries

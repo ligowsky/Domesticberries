@@ -1,21 +1,21 @@
-﻿version: '3.9'
+version: '3.9'
 services:
-  warehouse-sql-db:
+  store-sql-db:
     image: mcr.microsoft.com/azure-sql-edge
-    container_name: warehouse-sql-db
+    container_name: store-sql-db
     restart: unless-stopped
     environment:
       ACCEPT_EULA: 'Y'
-      MSSQL_SA_PASSWORD: '${WAREHOUSE_MSSQL_SA_PASSWORD:-Str0ngP@ssw0rd}'
+      MSSQL_SA_PASSWORD: '${STORE_MSSQL_SA_PASSWORD:-Str0ngP@ssw0rd}'
       MSSQL_PID: Developer
       MSSQL_COLLATION: SQL_Latin1_General_CP1_CI_AS
       MSSQL_TCP_PORT: 1433
     ports:
-      - '1435:1433'
+      - '1436:1433'
     networks:
       - domesticberries
     volumes:
-      - './warehouse-sql-db-data:/var/opt/mssql/data'
+      - './store-sql-db-data:/var/opt/mssql/data'
 networks:
   domesticberries:
     name: domesticberries
