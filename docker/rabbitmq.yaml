@@ -8,15 +8,14 @@ services:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER:-guest}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS:-guest}
     volumes:
-      - "rabbitmq-data:/var/lib/rabbitmq/mnesia/"
+      - "./rabbitmq-data:/var/lib/rabbitmq/mnesia/"
     ports:
       - "${RABBITMQ_PORT1:-5672}:5672"
       - "${RABBITMQ_PORT2:-15672}:15672"
     networks:
       - domesticberries
     restart: unless-stopped  
+    
 networks:
   domesticberries:
     driver: bridge
-volumes:
-  rabbitmq-data:
