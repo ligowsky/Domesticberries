@@ -2,22 +2,22 @@
 
 services:
   auth-sql-db:
-    image: mcr.microsoft.com/azure-sql-edge:latest
+    image: 'mcr.microsoft.com/azure-sql-edge'
     container_name: azure-sql-edge
     restart: unless-stopped
     environment:
-      ACCEPT_EULA: Y
-      MSSQL_SA_PASSWORD: ${AUTH_MSSQL_SA_PASSWORD}
+      ACCEPT_EULA: 'Y'
+      MSSQL_SA_PASSWORD: 'Str0ngP@ssw0rd'
       MSSQL_PID: Developer
       MSSQL_COLLATION: SQL_Latin1_General_CP1_CI_AS
       MSSQL_TCP_PORT: 1433
     ports:
-      - "1433:1433"
+      - '1433:1433'
+    networks:
+      - domesticberries
     volumes:
-      - auth-sql-db-data:/var/opt/mssql/data
-volumes:
-  auth-sql-db-data:
-    driver: local
+      - './auth-sql-db-data:/var/opt/mssql/data'
+
 networks:
   domesticberries:
     name: domesticberries
