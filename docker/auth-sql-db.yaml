@@ -11,7 +11,7 @@ services:
       MSSQL_COLLATION: SQL_Latin1_General_CP1_CI_AS
       MSSQL_TCP_PORT: 1433
     ports:
-      - '1434:1433'
+      - '1433:1433'
     networks:
       - domesticberries
     volumes:

@@ -1,0 +1,9 @@
+upstream rabbitmq {
+    least_conn;
+    server rabbitmq:15672 weight=10 max_fails=3 fail_timeout=30s;
+}
+
+upstream kibana {
+    least_conn;
+    server kibana:5601;
+}

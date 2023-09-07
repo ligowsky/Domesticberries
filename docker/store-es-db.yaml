@@ -2,6 +2,8 @@ version: '3.9'
 services:
   store-es-db:
     image: 'docker.elastic.co/elasticsearch/elasticsearch:8.9.0'
+    container_name: store-es-db
+    restart: unless-stopped
     environment:
       - bootstrap.memory_lock=true
       - cluster.name=docker-cluster
@@ -16,7 +18,7 @@ services:
     volumes:
       - './store-es-db-data:/usr/share/elasticsearch/data'
     ports:
-      - '9201:9200'
+      - '9200:9200'
     networks:
       - domesticberries
     healthcheck:
@@ -25,7 +27,6 @@ services:
       test: >-
         curl -s http://localhost:9201/_cluster/health | grep -vq
         '"status":"red"'
-    restart: unless-stopped
 networks:
   domesticberries:
     name: domesticberries
