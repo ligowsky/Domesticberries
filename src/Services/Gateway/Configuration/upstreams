@@ -7,3 +7,7 @@ upstream kibana {
     least_conn;
     server kibana:5601;
 }
+
+upstream warehouse {
+    server warehouse-webapi:80;
+}
