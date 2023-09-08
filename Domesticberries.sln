@@ -1,5 +1,6 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{183FD872-54F6-4C24-9C8E-74526CB5EDC8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Warehouse", "Warehouse", "{4D8C79B8-ECBE-4A81-A30B-881190267186}"
@@ -50,6 +51,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{2E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{80D66B4C-E48A-4DEC-95A8-F62020D9F98B}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "domesticberries", "docker\domesticberries.dcproj", "{E168B209-351A-4DAE-A5B5-C1212D870C9A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +81,7 @@ Global
 		{1679FA6D-FF39-4BA1-9ABB-0C1A8871BB5C} = {87BF2172-94CC-47E9-B807-38368C3B24A4}
 		{2EE28B65-B3DB-4C4A-95D3-758E48D92E11} = {B0F708AC-C9AA-40A2-B74D-AD5DACF9F7DB}
 		{80D66B4C-E48A-4DEC-95A8-F62020D9F98B} = {B0F708AC-C9AA-40A2-B74D-AD5DACF9F7DB}
+		{E168B209-351A-4DAE-A5B5-C1212D870C9A} = {97A28828-5824-4340-A617-78BEFF6C6BF1}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{16DA55B2-5679-4FF3-A8E1-C3AE3FBE839D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -140,5 +144,9 @@ Global
 		{1679FA6D-FF39-4BA1-9ABB-0C1A8871BB5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1679FA6D-FF39-4BA1-9ABB-0C1A8871BB5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1679FA6D-FF39-4BA1-9ABB-0C1A8871BB5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E168B209-351A-4DAE-A5B5-C1212D870C9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E168B209-351A-4DAE-A5B5-C1212D870C9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E168B209-351A-4DAE-A5B5-C1212D870C9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E168B209-351A-4DAE-A5B5-C1212D870C9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -20,6 +20,10 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers();
+// app.MapControllers();
+app.MapGet("/", () =>
+{
+    return "Hello World!";
+});
 
 app.Run();

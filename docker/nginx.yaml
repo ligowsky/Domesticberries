@@ -1,0 +1,20 @@
+version: '3.9'
+name: domesticberries-gateway
+
+services:
+  gateway:
+    image: nginx:latest
+    container_name: gateway
+    restart: unless-stopped
+    volumes:
+      - ../src/Services/Gateway/Configuration/nginx.conf:/etc/nginx/nginx.conf
+      - ../src/Services/Gateway/Configuration/upstreams:/etc/nginx/upstreams
+    ports:
+      - "80:80"
+    networks:
+      - domesticberries
+
+networks:
+  domesticberries:
+    name: domesticberries
+    external: true  
