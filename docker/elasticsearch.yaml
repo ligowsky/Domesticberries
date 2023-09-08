@@ -1,24 +1,23 @@
 version: '3.9'
-name: domesticberries-store
+name: domesticberries-elasticsearch
 
 services:
-  store-es-db:
-    image: 'docker.elastic.co/elasticsearch/elasticsearch:8.9.0'
-    container_name: store-es-db
+  elasticsearch:
+    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.17.12'
+    container_name: elasticsearch
     restart: unless-stopped
     environment:
       - bootstrap.memory_lock=true
-      - cluster.name=docker-cluster
+      - cluster.name=es-cluster
       - cluster.routing.allocation.disk.threshold_enabled=false
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
-      - xpack.security.enabled=true
     ulimits:
       memlock:
         hard: -1
         soft: -1
     volumes:
-      - './store-es-db-data:/usr/share/elasticsearch/data'
+      - './elasticsearch-data:/usr/share/elasticsearch/data'
     networks:
       - domesticberries
     healthcheck:
@@ -27,6 +26,7 @@ services:
       test: >-
         curl -s http://localhost:9200/_cluster/health | grep -vq
         '"status":"red"'
+
 networks:
   domesticberries:
     name: domesticberries

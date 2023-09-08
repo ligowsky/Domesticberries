@@ -1,21 +1,21 @@
 ﻿version: '3.9'
-name: domesticberries-auth
+name: domesticberries-db
 
 services:
-  auth-sql-db:
+  ms-sql-db:
     image: mcr.microsoft.com/azure-sql-edge
-    container_name: auth-sql-db
+    container_name: ms-sql-db
     restart: unless-stopped
     environment:
       ACCEPT_EULA: 'Y'
-      MSSQL_SA_PASSWORD: '${AUTH_MSSQL_SA_PASSWORD:-Str0ngP@ssw0rd}'
+      MSSQL_SA_PASSWORD: '${MS_SQL_DB_PASSWORD:-Str0ngP@ssw0rd}'
       MSSQL_PID: Developer
       MSSQL_COLLATION: SQL_Latin1_General_CP1_CI_AS
       MSSQL_TCP_PORT: 1433
     networks:
       - domesticberries
     volumes:
-      - './auth-sql-db-data:/var/opt/mssql/data'
+      - './ms-sql-db-data:/var/opt/mssql/data'
 
 networks:
   domesticberries:

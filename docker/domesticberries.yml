@@ -14,13 +14,24 @@ services:
       - "80:80"
     networks:
       - domesticberries
-      - 
+
   auth-webapi:
     image: ${DOCKER_REGISTRY-}auth-webapi
     container_name: auth-webapi
     build:
       context: ../
       dockerfile: src/Services/Auth/Dberries.Auth.WebAPI/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - domesticberries
+  
+  warehouse-webapi:
+    image: ${DOCKER_REGISTRY-}store-webapi
+    container_name: warehouse-webapi
+    build:
+      context: ../
+      dockerfile: src/Services/Warehouse/Dberries.Warehouse.WebAPI/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     networks:
