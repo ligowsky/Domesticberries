@@ -1,4 +1,6 @@
 ﻿version: '3.9'
+name: domesticberries-warehouse
+
 services:
   warehouse-sql-db:
     image: mcr.microsoft.com/azure-sql-edge
@@ -10,12 +12,11 @@ services:
       MSSQL_PID: Developer
       MSSQL_COLLATION: SQL_Latin1_General_CP1_CI_AS
       MSSQL_TCP_PORT: 1433
-    ports:
-      - '1433:1433'
     networks:
       - domesticberries
     volumes:
       - './warehouse-sql-db-data:/var/opt/mssql/data'
+
 networks:
   domesticberries:
     name: domesticberries

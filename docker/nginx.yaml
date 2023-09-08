@@ -1,4 +1,6 @@
 version: '3.9'
+name: domesticberries-gateway
+
 services:
   gateway:
     image: nginx:latest
@@ -11,6 +13,7 @@ services:
       - "80:80"
     networks:
       - domesticberries
+
 networks:
   domesticberries:
     name: domesticberries

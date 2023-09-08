@@ -8,6 +8,14 @@ upstream kibana {
     server kibana:5601;
 }
 
+upstream auth {
+    server auth-webapi:80;
+}
+
 upstream warehouse {
     server warehouse-webapi:80;
+}
+
+upstream store {
+    server store-webapi:80;
 }

@@ -1,4 +1,6 @@
 version: '3.9'
+name: domesticberries-store
+
 services:
   store-es-db:
     image: 'docker.elastic.co/elasticsearch/elasticsearch:8.9.0'
@@ -17,15 +19,13 @@ services:
         soft: -1
     volumes:
       - './store-es-db-data:/usr/share/elasticsearch/data'
-    ports:
-      - '9200:9200'
     networks:
       - domesticberries
     healthcheck:
       interval: 20s
       retries: 10
       test: >-
-        curl -s http://localhost:9201/_cluster/health | grep -vq
+        curl -s http://localhost:9200/_cluster/health | grep -vq
         '"status":"red"'
 networks:
   domesticberries:
