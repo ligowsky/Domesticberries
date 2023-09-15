@@ -8,6 +8,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
 {
     public virtual void Configure(EntityTypeBuilder<Location> builder)
     {
+        builder.ToTable("Locations", "Location");
+        
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Name)
@@ -16,6 +18,10 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
 
         builder.Property(x => x.Coordinates).IsRequired();
 
-        builder.OwnsMany(x => x.Stock);
+        builder.OwnsMany(x => x.Stock, stock =>
+        {
+            stock.ToTable("Stock", "Location");
+            stock.Configure();
+        });
     }
 }

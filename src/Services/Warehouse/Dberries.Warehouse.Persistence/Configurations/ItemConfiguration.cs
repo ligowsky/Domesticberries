@@ -6,8 +6,10 @@ namespace Warehouse.Persistence;
 
 public class ItemConfiguration : IEntityTypeConfiguration<Item>
 {
-    public virtual void Configure(EntityTypeBuilder<Item> builder)
+    public void Configure(EntityTypeBuilder<Item> builder)
     {
+        builder.ToTable("Items", "Item");
+        
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Name)
