@@ -4,10 +4,24 @@ public class Coordinates
 {
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    
-    public Coordinates(double latitude, double longitude)
+
+    public CoordinatesDto ToDto()
     {
-        Latitude = latitude;
-        Longitude = longitude;
+        return new CoordinatesDto
+        {
+            Latitude = Latitude,
+            Longitude = Longitude
+        };
+    }
+
+    public static Coordinates? ToModel(CoordinatesDto? dto)
+    {
+        if (dto is null) return null;
+
+        return new Coordinates
+        {
+            Latitude = dto.Latitude,
+            Longitude = dto.Longitude
+        };
     }
 }
