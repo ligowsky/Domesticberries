@@ -15,5 +15,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .HasMaxLength(128);
 
         builder.Property(x => x.Coordinates).IsRequired();
+
+        builder.OwnsMany(x => x.Stock);
     }
 }

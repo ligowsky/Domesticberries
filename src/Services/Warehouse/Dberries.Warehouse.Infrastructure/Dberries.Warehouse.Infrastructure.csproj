@@ -7,4 +7,8 @@
         <RootNamespace>Warehouse.Infrastructure</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Dberries.Warehouse.Persistence\Dberries.Warehouse.Persistence.csproj" />
+    </ItemGroup>
+
 </Project>
