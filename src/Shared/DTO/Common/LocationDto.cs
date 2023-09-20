@@ -14,5 +14,5 @@ public class LocationDto
     public CoordinatesDto? Coordinates { get; set; }
     
     [JsonPropertyName("stock")]
-    public ICollection<StockDto>? Stock { get; set; }
+    public IEnumerable<StockDto>? Stock { get; set; }
 }

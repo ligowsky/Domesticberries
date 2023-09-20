@@ -3,7 +3,7 @@ using Warehouse.Core;
 
 namespace Warehouse.Presentation;
 
-public static class ItemMappingExtension
+public static class ItemMappingExtensions
 {
     public static ItemDto ToDto(this Item model)
     {

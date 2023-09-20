@@ -3,7 +3,7 @@ using Warehouse.Core;
 
 namespace Warehouse.Presentation;
 
-public static class LocationMappingExtension
+public static class LocationMappingExtensions
 {
     public static LocationDto ToDto(this Location model)
     {
