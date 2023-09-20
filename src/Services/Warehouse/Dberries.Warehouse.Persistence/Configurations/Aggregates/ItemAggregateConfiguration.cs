@@ -4,7 +4,7 @@ using Warehouse.Core;
 
 namespace Warehouse.Persistence;
 
-public class ItemConfiguration : IEntityTypeConfiguration<Item>
+public class ItemAggregateConfiguration : IEntityTypeConfiguration<Item>
 {
     public void Configure(EntityTypeBuilder<Item> builder)
     {
