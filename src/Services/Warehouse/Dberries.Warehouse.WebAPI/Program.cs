@@ -1,4 +1,4 @@
-using Warehouse.Persistence;
+using Dberries.Warehouse.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 

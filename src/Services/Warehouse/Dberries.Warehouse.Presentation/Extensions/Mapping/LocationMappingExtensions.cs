@@ -1,7 +1,6 @@
-using Shared;
-using Warehouse.Core;
+using Dberries.Warehouse.Core;
 
-namespace Warehouse.Presentation;
+namespace Dberries.Warehouse.Presentation;
 
 public static class LocationMappingExtensions
 {

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace Warehouse.Persistence;
+namespace Dberries.Warehouse.Persistence;
 
 public class MsSqlDbContextDesignTimeFactory : IDesignTimeDbContextFactory<MsSqlDbContext>
 {

@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Warehouse.Persistence;
+namespace Dberries.Warehouse.Persistence;
 
 public static class AddMsSqlDbContextExtension
 {

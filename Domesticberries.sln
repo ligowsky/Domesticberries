@@ -51,7 +51,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{80D66B
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "domesticberries", "docker\domesticberries.dcproj", "{E168B209-351A-4DAE-A5B5-C1212D870C9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\Shared\Shared.csproj", "{27464665-156F-47C8-9360-27FC00855ED2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Shared", "src\Dberries.Shared\Dberries.Shared.csproj", "{27464665-156F-47C8-9360-27FC00855ED2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

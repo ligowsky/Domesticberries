@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Warehouse.Persistence;
+namespace Dberries.Warehouse.Persistence;
 
 public abstract class AppDbContext : DbContext
 {

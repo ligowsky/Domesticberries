@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Warehouse.Core;
+using Dberries.Warehouse.Core;
 
-namespace Warehouse.Persistence;
+namespace Dberries.Warehouse.Persistence;
 
 internal static class CoordinatesConfiguration
 {

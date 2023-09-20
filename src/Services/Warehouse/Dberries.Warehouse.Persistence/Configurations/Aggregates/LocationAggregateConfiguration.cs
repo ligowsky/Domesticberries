@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Warehouse.Core;
+using Dberries.Warehouse.Core;
 
-namespace Warehouse.Persistence;
+namespace Dberries.Warehouse.Persistence;
 
 public class LocationAggregateConfiguration : IEntityTypeConfiguration<Location>
 {
