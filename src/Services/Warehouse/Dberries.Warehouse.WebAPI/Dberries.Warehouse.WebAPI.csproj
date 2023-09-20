@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <RootNamespace>Warehouse.WebAPI</RootNamespace>
+        <RootNamespace>Dberries.Warehouse.WebAPI</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
@@ -16,13 +16,17 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\..\.dockerignore">
+      <Folder Include="Controllers\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
+      <ProjectReference Include="..\Dberries.Warehouse.Presentation\Dberries.Warehouse.Presentation.csproj" />
     </ItemGroup>
 
 </Project>

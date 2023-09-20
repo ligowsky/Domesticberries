@@ -4,7 +4,10 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>Warehouse.Presentation</RootNamespace>
+        <RootNamespace>Dberries.Warehouse.Presentation</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Dberries.Warehouse.Infrastructure\Dberries.Warehouse.Infrastructure.csproj" />
+    </ItemGroup>
 </Project>
