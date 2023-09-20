@@ -1,6 +1,6 @@
 using Dberries.Warehouse.Core;
 
-namespace Dberries.Warehouse.Presentation;
+namespace Dberries;
 
 public static class LocationMappingExtensions
 {
