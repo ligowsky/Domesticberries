@@ -16,10 +16,14 @@ public class LocationAggregateConfiguration : IEntityTypeConfiguration<Location>
             .IsRequired()
             .HasMaxLength(128);
 
-        builder.OwnsOne(x => x.Coordinates, coordinates => { coordinates.Configure(); })
+        builder.OwnsOne(x => x.Coordinates, coordinates =>
+            {
+                coordinates.WithOwner();
+                coordinates.Configure();
+            })
             .Navigation(x => x.Coordinates)
             .IsRequired();
-    
+
         builder.OwnsMany(x => x.Stock, stock =>
         {
             stock.ToTable("Stock", "Location");
