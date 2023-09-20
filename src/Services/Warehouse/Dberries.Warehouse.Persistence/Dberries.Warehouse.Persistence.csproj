@@ -4,7 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>Warehouse.Persistence</RootNamespace>
+        <RootNamespace>Dberries.Warehouse.Persistence</RootNamespace>
     </PropertyGroup>
 
 
