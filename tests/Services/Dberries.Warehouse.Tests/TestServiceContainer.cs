@@ -24,15 +24,16 @@ public class TestServiceContainer : IDisposable
             .UseSqlite(sqliteConnection)
             .Options;
         
-        using (var context = new TestDbContext(options))
-        {
-            context.Database.EnsureCreated();
-        }
-        
         services.AddDbContext<TestDbContext>(x => x.UseSqlite(sqliteConnection));
         services.AddScoped<AppDbContext>(x => x.GetRequiredService<TestDbContext>());
         
         _services = services.BuildServiceProvider();
+        
+        using (var scope = _services.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            dbContext.Database.EnsureCreated();
+        }
     }
     
     public void Dispose()
