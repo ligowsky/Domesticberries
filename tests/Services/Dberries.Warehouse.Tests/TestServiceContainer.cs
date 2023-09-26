@@ -20,10 +20,6 @@ public class TestServiceContainer : IDisposable
         var sqliteConnection = new SqliteConnection("Filename=:memory:");
         sqliteConnection.Open();
         
-        var options = new DbContextOptionsBuilder<TestDbContext>()
-            .UseSqlite(sqliteConnection)
-            .Options;
-        
         services.AddDbContext<TestDbContext>(x => x.UseSqlite(sqliteConnection));
         services.AddScoped<AppDbContext>(x => x.GetRequiredService<TestDbContext>());
         
