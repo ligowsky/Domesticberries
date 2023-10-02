@@ -1,4 +1,4 @@
-using Dberries.Store.Core;
+using Dberries.Store;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

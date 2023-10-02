@@ -1,4 +1,4 @@
-namespace Dberries.Store.Core;
+namespace Dberries.Store;
 
 public class Location
 {
