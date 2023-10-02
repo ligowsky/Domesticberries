@@ -17,7 +17,7 @@ public class LocationAggregateConfiguration : IEntityTypeConfiguration<Location>
             .HasMaxLength(128);
 
         builder.HasMany(x => x.Items)
-            .WithMany(y => y.Locations)
-            .UsingEntity(z => z.ToTable("LocationItem"));
+            .WithMany(x => x.Locations)
+            .UsingEntity(x => x.ToTable("LocationItem"));
     }
 }
