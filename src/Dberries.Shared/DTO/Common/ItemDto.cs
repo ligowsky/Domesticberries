@@ -12,4 +12,10 @@ public class ItemDto
     
     [JsonPropertyName("description")]
     public string? Description { get; set; }
+    
+    [JsonPropertyName("ratings")]
+    public IEnumerable<RatingDto>? Ratings { get; set; }
+    
+    [JsonPropertyName("locations")]
+    public IEnumerable<LocationDto>? Locations { get; set; }
 }

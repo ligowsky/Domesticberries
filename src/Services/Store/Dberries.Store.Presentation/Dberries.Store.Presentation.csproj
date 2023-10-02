@@ -6,4 +6,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+
+    <ItemGroup>
+      <ProjectReference Include="..\Dberries.Store.Core\Dberries.Store.Core.csproj" />
+      <ProjectReference Include="..\Dberries.Store.Infrastructure\Dberries.Store.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>
