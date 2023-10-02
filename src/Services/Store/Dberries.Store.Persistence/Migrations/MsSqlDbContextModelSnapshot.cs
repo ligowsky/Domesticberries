@@ -22,7 +22,7 @@ namespace Dberries.Store.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Dberries.Store.Core.Item", b =>
+            modelBuilder.Entity("Dberries.Store.Item", b =>
                 {
                     b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
@@ -42,7 +42,7 @@ namespace Dberries.Store.Persistence.Migrations
                     b.ToTable("Items", "Item");
                 });
 
-            modelBuilder.Entity("Dberries.Store.Core.Location", b =>
+            modelBuilder.Entity("Dberries.Store.Location", b =>
                 {
                     b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
@@ -73,11 +73,11 @@ namespace Dberries.Store.Persistence.Migrations
                     b.ToTable("LocationItem", (string)null);
                 });
 
-            modelBuilder.Entity("Dberries.Store.Core.Item", b =>
+            modelBuilder.Entity("Dberries.Store.Item", b =>
                 {
-                    b.OwnsMany("Dberries.Store.Core.Rating", "Ratings", b1 =>
+                    b.OwnsMany("Dberries.Store.Rating", "Ratings", b1 =>
                         {
-                            b1.Property<Guid?>("ItemId")
+                            b1.Property<Guid>("ItemId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<Guid?>("UserId")
@@ -101,13 +101,13 @@ namespace Dberries.Store.Persistence.Migrations
 
             modelBuilder.Entity("ItemLocation", b =>
                 {
-                    b.HasOne("Dberries.Store.Core.Item", null)
+                    b.HasOne("Dberries.Store.Item", null)
                         .WithMany()
                         .HasForeignKey("ItemsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Dberries.Store.Core.Location", null)
+                    b.HasOne("Dberries.Store.Location", null)
                         .WithMany()
                         .HasForeignKey("LocationsId")
                         .OnDelete(DeleteBehavior.Cascade)

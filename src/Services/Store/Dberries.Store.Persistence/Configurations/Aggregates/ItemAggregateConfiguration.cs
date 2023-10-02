@@ -20,7 +20,7 @@ public class ItemAggregateConfiguration : IEntityTypeConfiguration<Item>
         builder.OwnsMany(x => x.Ratings, ratings =>
         {
             ratings.ToTable("Rating", "Item");
-            builder.HasKey("ItemId", "UserId");
+            ratings.HasKey("ItemId", "UserId");
             ratings.Property<Guid>("ItemId");
             ratings.WithOwner().HasForeignKey("ItemId");
             ratings.Configure();
