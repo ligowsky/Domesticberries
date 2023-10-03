@@ -21,4 +21,5 @@
       <ProjectReference Include="..\Dberries.Auth.Core\Dberries.Auth.Core.csproj" />
     </ItemGroup>
 
+
 </Project>
