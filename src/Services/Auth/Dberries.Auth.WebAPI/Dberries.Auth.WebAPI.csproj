@@ -24,4 +24,8 @@
       <Folder Include="Controllers\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Dberries.Auth.Infrastructure\Dberries.Auth.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>
