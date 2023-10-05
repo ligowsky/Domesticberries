@@ -1,6 +1,4 @@
-using Dberries.Store;
-
-namespace Dberries;
+namespace Dberries.Store;
 
 public static class LocationMappingExtensions
 {

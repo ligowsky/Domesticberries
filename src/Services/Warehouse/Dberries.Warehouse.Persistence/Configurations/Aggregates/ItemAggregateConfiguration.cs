@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Dberries.Warehouse.Core;
 
 namespace Dberries.Warehouse.Persistence;
 

@@ -1,4 +1,4 @@
-namespace Dberries.Warehouse.Core;
+namespace Dberries.Warehouse;
 
 public class Coordinates
 {

@@ -1,6 +1,4 @@
-using Dberries.Warehouse.Core;
-
-namespace Dberries;
+namespace Dberries.Warehouse;
 
 public static class ItemMappingExtensions
 {
