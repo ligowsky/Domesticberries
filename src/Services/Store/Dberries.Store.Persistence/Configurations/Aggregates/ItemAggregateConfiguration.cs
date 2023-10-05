@@ -21,7 +21,7 @@ public class ItemAggregateConfiguration : IEntityTypeConfiguration<Item>
         {
             ratings.ToTable("Rating", "Item");
             ratings.HasKey("ItemId", "UserId");
-            ratings.Property<Guid>("ItemId");
+            ratings.Property<Guid>("ItemId").IsRequired();
             ratings.WithOwner().HasForeignKey("ItemId");
             ratings.Configure();
         });
