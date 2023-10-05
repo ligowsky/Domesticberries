@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Dberries.Warehouse.Persistence;
+namespace Dberries.Store.Persistence;
 
 public class ItemAggregateConfiguration : IEntityTypeConfiguration<Item>
 {
@@ -16,5 +16,14 @@ public class ItemAggregateConfiguration : IEntityTypeConfiguration<Item>
             .HasMaxLength(128);
 
         builder.Property(x => x.Description).IsRequired();
+
+        builder.OwnsMany(x => x.Ratings, ratings =>
+        {
+            ratings.ToTable("Rating", "Item");
+            ratings.HasKey("ItemId", "UserId");
+            ratings.Property<Guid>("ItemId").IsRequired();
+            ratings.WithOwner().HasForeignKey("ItemId");
+            ratings.Configure();
+        });
     }
 }

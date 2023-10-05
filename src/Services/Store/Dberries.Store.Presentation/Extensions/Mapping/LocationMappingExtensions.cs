@@ -1,4 +1,4 @@
-namespace Dberries.Warehouse;
+namespace Dberries.Store;
 
 public static class LocationMappingExtensions
 {
@@ -8,8 +8,7 @@ public static class LocationMappingExtensions
         {
             Id = model.Id,
             Name = model.Name,
-            Coordinates = model.Coordinates?.ToDto(),
-            Stock = model.Stock?.Select(x => x.ToDto()).ToList()
+            Items = model.Items?.Select(x => x.ToDto()).ToList()
         };
     }
 
@@ -19,8 +18,7 @@ public static class LocationMappingExtensions
         {
             Id = dto.Id,
             Name = dto.Name,
-            Coordinates = dto.Coordinates?.ToModel(),
-            Stock = dto.Stock?.Select(x => x.ToModel()).ToList()
+            Items = dto.Items?.Select(x => x.ToModel()).ToList()
         };
     }
 }

@@ -1,4 +1,4 @@
-namespace Dberries.Warehouse;
+namespace Dberries.Store;
 
 public static class ItemMappingExtensions
 {
@@ -8,7 +8,7 @@ public static class ItemMappingExtensions
         {
             Id = model.Id,
             Name = model.Name,
-            Description = model.Description
+            Description = model.Description,
         };
     }
 

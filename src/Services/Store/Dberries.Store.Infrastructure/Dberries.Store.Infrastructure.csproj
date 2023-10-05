@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Dberries.Store.Persistence\Dberries.Store.Persistence.csproj" />
+    </ItemGroup>
+
 </Project>
