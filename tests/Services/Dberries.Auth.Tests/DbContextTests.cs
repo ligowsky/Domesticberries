@@ -1,8 +1,8 @@
-using Dberries.Warehouse.Persistence;
+using Dberries.Auth.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Dberries.Warehouse.Tests;
+namespace Dberries.Auth.Tests;
 
 [Collection("Service Collection")]
 public class DbContextTests
@@ -15,29 +15,29 @@ public class DbContextTests
     }
 
     [Fact]
-    public async Task AddItem_NewItem_AddsToDatabase()
+    public async Task AddUser_NewUser_AddsToDatabase()
     {
         // Arrange
         var dbContext = _services.GetRequiredService<AppDbContext>();
-        var item = new Item()
+        var user = new User()
         {
             Id = Guid.NewGuid(),
-            Name = "Item 1",
-            Description = "Description 1"
+            Email = "user@dberries.com",
+            PasswordHash = "passwordHash"
         };
         
         //Act
-        await dbContext.AddAsync(item);
+        await dbContext.AddAsync(user);
         await dbContext.SaveChangesAsync();
-        
+
         //Assert
-        var createdItem = await dbContext.Set<Item>()
-            .Where(x => x.Id == item.Id)
+        var createdUser = await dbContext.Set<User>()
+            .Where(x => x.Id == user.Id)
             .FirstOrDefaultAsync();
         
-        Assert.NotNull(createdItem);
-        Assert.Equal(item.Id, createdItem.Id);
-        Assert.Equal(item.Name, createdItem.Name);
-        Assert.Equal(item.Description, createdItem.Description);
+        Assert.NotNull(createdUser);
+        Assert.Equal(user.Id, createdUser.Id);
+        Assert.Equal(user.Email, createdUser.Email);
+        Assert.Equal(user.PasswordHash, createdUser.PasswordHash);
     }
 }
