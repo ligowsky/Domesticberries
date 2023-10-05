@@ -16,27 +16,26 @@ public class DbContextTests
     }
 
     [Fact]
-    public async Task ItemCreated()
+    public async Task AddItem_NewItem_AddsToDatabase()
     {
         // Arrange
         var dbContext = _services.GetRequiredService<AppDbContext>();
-
-        //Act
         var item = new Item()
         {
             Id = Guid.NewGuid(),
             Name = "Item 1",
             Description = "Description 1"
         };
-
+        
+        //Act
         await dbContext.AddAsync(item);
         await dbContext.SaveChangesAsync();
-
+        
+        //Assert
         var createdItem = await dbContext.Set<Item>()
             .Where(x => x.Id == item.Id)
             .FirstOrDefaultAsync();
-
-        //Assert
+        
         Assert.NotNull(createdItem);
         Assert.Equal(item.Id, createdItem.Id);
         Assert.Equal(item.Name, createdItem.Name);

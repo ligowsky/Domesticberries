@@ -15,27 +15,26 @@ public class DbContextTests
     }
 
     [Fact]
-    public async Task UserCreated()
+    public async Task AddUser_NewUser_AddsToDatabase()
     {
         // Arrange
         var dbContext = _services.GetRequiredService<AppDbContext>();
-
-        //Act
         var user = new User()
         {
             Id = Guid.NewGuid(),
             Email = "user@dberries.com",
             PasswordHash = "passwordHash"
         };
-
+        
+        //Act
         await dbContext.AddAsync(user);
         await dbContext.SaveChangesAsync();
 
+        //Assert
         var createdUser = await dbContext.Set<User>()
             .Where(x => x.Id == user.Id)
             .FirstOrDefaultAsync();
-
-        //Assert
+        
         Assert.NotNull(createdUser);
         Assert.Equal(user.Id, createdUser.Id);
         Assert.Equal(user.Email, createdUser.Email);
