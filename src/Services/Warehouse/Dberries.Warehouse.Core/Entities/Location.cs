@@ -6,4 +6,10 @@ public class Location
     public string? Name { get; set; }
     public Coordinates? Coordinates { get; set; }
     public ICollection<Stock>? Stock { get; set; }
+    
+    public void Update(Location input)
+    {
+        Name = input.Name ?? Name;
+        Coordinates = input.Coordinates ?? Coordinates;
+    }
 }

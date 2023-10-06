@@ -11,7 +11,7 @@ public class ItemsService : IItemsService
         _itemsRepository = itemsRepository;
     }
 
-    public async Task<PageResult<Item>> GetItemsAsync(PageRequest pageRequest)
+    public async Task<PageResult<Item>> GetItemsPageAsync(PageRequest pageRequest)
     {
         return await _itemsRepository.GetPageAsync(pageRequest);
     }

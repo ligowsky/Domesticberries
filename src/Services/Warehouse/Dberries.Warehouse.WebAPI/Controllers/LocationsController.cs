@@ -1,3 +1,4 @@
+using BitzArt.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dberries.Warehouse.WebAPI;
@@ -6,55 +7,88 @@ namespace Dberries.Warehouse.WebAPI;
 [Route("[Controller]")]
 public class LocationsController : ControllerBase
 {
-    [HttpGet(Name = "GetLocations")]
-    public async Task<IActionResult> GetLocationsAsync()
+    private readonly ILocationsService _locationsService;
+    private readonly IStockService _stockService;
+
+    public LocationsController(ILocationsService locationsService, IStockService stockService)
     {
-        return Ok();
+        _locationsService = locationsService;
+        _stockService = stockService;
+    }
+
+    [HttpGet(Name = "GetLocations")]
+    public async Task<IActionResult> GetLocationsAsync([FromQuery] PageRequest pageRequest)
+    {
+        var locations = await _locationsService.GetLocationsPageAsync(pageRequest);
+        var result = locations.Convert(x => x.ToDto());
+
+        return Ok(result);
     }
 
     [HttpGet("{id:guid}", Name = "GetLocation")]
     public async Task<IActionResult> GetLocationByIdAsync([FromRoute] Guid id)
     {
-        return Ok();
+        var location = await _locationsService.GetLocationAsync(id);
+        var result = location.ToDto();
+
+        return Ok(result);
     }
 
     [HttpPost(Name = "CreateLocation")]
     public async Task<IActionResult> CreateLocationAsync([FromBody] LocationDto input)
     {
         var location = input.ToModel();
-        return Ok();
+        var createdLocation = await _locationsService.CreateLocationAsync(location);
+        var result = createdLocation.ToDto();
+
+        return CreatedAtRoute("GetLocation", new { id = result.Id }, result);
     }
 
     [HttpPut("{id:guid}", Name = "UpdateLocation")]
     public async Task<IActionResult> UpdateLocationAsync([FromRoute] Guid id, [FromBody] LocationDto input)
     {
         var location = input.ToModel();
-        return Ok();
+        var updatedLocation = await _locationsService.UpdateLocationAsync(id, location);
+        var result = updatedLocation.ToDto();
+
+        return Ok(result);
     }
 
     [HttpDelete("{id:guid}", Name = "DeleteLocation")]
-    public async Task<IActionResult> DeleteLocationByIdAsync([FromRoute] Guid id)
+    public async Task<IActionResult> DeleteLocationAsync([FromRoute] Guid id)
     {
+        await _locationsService.DeleteLocationAsync(id);
+
         return Ok();
     }
 
-    [HttpGet("{id:guid}/stock", Name = "GetLocationStock")]
-    public async Task<IActionResult> GetLocationStockAsync([FromRoute] Guid id)
+    [HttpGet("{locationId:guid}/stock", Name = "GetStock")]
+    public async Task<IActionResult> GetStockAsync([FromRoute] Guid locationId,
+        [FromRoute] PageRequest pageRequest)
     {
-        return Ok();
+        var stock = await _stockService.GetStockPageAsync(locationId, pageRequest);
+        var result = stock.Convert(x => x.ToDto());
+
+        return Ok(result);
     }
 
-    [HttpGet("{locationId:guid}/stock/{itemId:guid}", Name = "GetLocationStockByItemId")]
-    public async Task<IActionResult> GetLocationStockByItemIdAsync([FromRoute] Guid locationId, [FromRoute] Guid itemId)
+    [HttpGet("{locationId:guid}/stock/{itemId:guid}", Name = "GetStockForItem")]
+    public async Task<IActionResult> GetStockForItemAsync([FromRoute] Guid locationId, [FromRoute] Guid itemId)
     {
-        return Ok();
+        var stock = await _stockService.GetStockForItemAsync(locationId, itemId);
+        var result = stock?.ToDto();
+
+        return Ok(result);
     }
 
-    [HttpPut("{locationId:guid}/stock/{itemId:guid}", Name = "UpdateLocationStockByItemId")]
-    public async Task<IActionResult> UpdateLocationStockByItemIdAsync([FromRoute] Guid locationId,
+    [HttpPut("{locationId:guid}/stock/{itemId:guid}", Name = "UpdateStockForItem")]
+    public async Task<IActionResult> UpdateStockForItemAsync([FromRoute] Guid locationId,
         [FromRoute] Guid itemId, [FromBody] StockDto input)
     {
         var stock = input.ToModel();
-        return Ok();
+        var updatedStock = await _stockService.UpdateStockForItemAsync(locationId, itemId, stock);
+        var result = updatedStock.ToDto();
+
+        return Ok(result);
     }
 }

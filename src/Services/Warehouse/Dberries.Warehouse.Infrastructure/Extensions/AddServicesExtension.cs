@@ -6,6 +6,8 @@ public static class AddServicesExtension
 {
     public static void AddServices(this IServiceCollection services)
     {
+        services.AddScoped<ILocationsService, LocationsService>();
         services.AddScoped<IItemsService, ItemsService>();
+        services.AddScoped<IStockService, StockService>();
     }
 }

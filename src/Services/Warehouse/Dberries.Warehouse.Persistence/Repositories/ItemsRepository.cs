@@ -1,4 +1,4 @@
-using BitzArt.ApiExceptions;
+using BitzArt;
 using BitzArt.Pagination;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,14 +15,14 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         return await Db.Set<Item>().ToPageAsync(pageRequest);
     }
 
-    public async Task<Item> GetAsync(Guid? id)
+    public async Task<Item> GetAsync(Guid id)
     {
         var result = await Db.Set<Item>()
-            .Where(x => x.Id == id)
+            .Where(x => x.Id! == id)
             .FirstOrDefaultAsync();
 
         if (result is null)
-            throw new NotFoundApiException($"Item with id '{id}' is not found");
+            throw ApiException.NotFound($"Item with id '{id}' is not found");
 
         return result;
     }
@@ -37,5 +37,17 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
     public void Delete(Item item)
     {
         Db.Set<Item>().Remove(item);
+    }
+
+    public async Task<bool> Exists(Guid id)
+    {
+        var itemExists = await Db.Set<Item>()
+            .Where(x => x.Id == id)
+            .AnyAsync();
+
+        if (!itemExists)
+            throw ApiException.NotFound($"Item with id '{id}' is not found");
+
+        return itemExists;
     }
 }

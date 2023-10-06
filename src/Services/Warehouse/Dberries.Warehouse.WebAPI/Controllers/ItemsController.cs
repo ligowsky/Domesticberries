@@ -17,7 +17,7 @@ public class ItemsController : ControllerBase
     [HttpGet(Name = "GetItems")]
     public async Task<IActionResult> GetItemsAsync([FromQuery] PageRequest pageRequest)
     {
-        var items = await _itemsService.GetItemsAsync(pageRequest);
+        var items = await _itemsService.GetItemsPageAsync(pageRequest);
         var result = items.Convert(x => x.ToDto());
 
         return Ok(result);
@@ -39,7 +39,7 @@ public class ItemsController : ControllerBase
         var createdItem = await _itemsService.CreateItemAsync(item);
         var result = createdItem.ToDto();
 
-        return Ok(result);
+        return CreatedAtRoute("GetItem", new { id = result.Id }, result);
     }
 
     [HttpPut("{id:guid}", Name = "UpdateItem")]
