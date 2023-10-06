@@ -14,7 +14,7 @@ public class ItemsController : ControllerBase
         _itemsService = itemsService;
     }
 
-    [HttpGet(Name = "GetItems")]
+    [HttpGet]
     public async Task<IActionResult> GetItemsAsync([FromQuery] PageRequest pageRequest)
     {
         var items = await _itemsService.GetItemsPageAsync(pageRequest);
@@ -32,7 +32,7 @@ public class ItemsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost(Name = "CreateItem")]
+    [HttpPost]
     public async Task<IActionResult> CreateItemAsync([FromBody] ItemDto input)
     {
         var item = input.ToModel();
@@ -42,7 +42,7 @@ public class ItemsController : ControllerBase
         return CreatedAtRoute("GetItem", new { id = result.Id }, result);
     }
 
-    [HttpPut("{id:guid}", Name = "UpdateItem")]
+    [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateItemAsync([FromRoute] Guid id, [FromBody] ItemDto input)
     {
         var item = input.ToModel();
@@ -52,7 +52,7 @@ public class ItemsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpDelete("{id:guid}", Name = "DeleteItem")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteItemAsync([FromRoute] Guid id)
     {
         await _itemsService.DeleteItemAsync(id);
