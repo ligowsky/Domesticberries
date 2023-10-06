@@ -25,7 +25,7 @@ public class ItemsController : ControllerBase
     public async Task<IActionResult> GetItemAsync([FromRoute] Guid id)
     {
         var item = await _itemsService.GetItemAsync(id);
-        
+
         return Ok(item);
     }
 
@@ -34,7 +34,7 @@ public class ItemsController : ControllerBase
     {
         var item = input.ToModel();
         var createdItem = await _itemsService.CreateItemAsync(item);
-        
+
         return Ok(createdItem);
     }
 
@@ -43,15 +43,15 @@ public class ItemsController : ControllerBase
     {
         var item = input.ToModel();
         var updatedItem = await _itemsService.UpdateItemAsync(id, item);
-        
+
         return Ok(updatedItem);
     }
 
     [HttpDelete("{id:guid}", Name = "DeleteItem")]
     public async Task<IActionResult> DeleteItemAsync([FromRoute] Guid id)
     {
-        await _itemsService.DeleteItemAsync(id); 
-            
+        await _itemsService.DeleteItemAsync(id);
+
         return Ok();
     }
 }

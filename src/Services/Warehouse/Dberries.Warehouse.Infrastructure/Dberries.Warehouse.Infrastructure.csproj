@@ -11,4 +11,5 @@
       <ProjectReference Include="..\Dberries.Warehouse.Persistence\Dberries.Warehouse.Persistence.csproj" />
     </ItemGroup>
 
+
 </Project>
