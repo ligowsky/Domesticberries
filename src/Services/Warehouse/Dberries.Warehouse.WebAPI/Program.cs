@@ -1,3 +1,4 @@
+using BitzArt.ApiExceptions.AspNetCore;
 using Dberries.Warehouse.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,5 +20,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseApiExceptionHandler();
 
 app.Run();

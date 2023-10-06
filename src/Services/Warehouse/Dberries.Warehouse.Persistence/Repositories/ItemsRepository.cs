@@ -1,3 +1,4 @@
+using BitzArt.ApiExceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dberries.Warehouse.Persistence;
@@ -19,10 +20,7 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
 
-        if (result is null)
-        {
-            throw new NotImplementedException();
-        }
+        if (result is null) throw new NotFoundApiException($"Item with id '{id}' is not found");
 
         return result;
     }
