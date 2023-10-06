@@ -6,7 +6,7 @@ namespace Dberries.Warehouse.Persistence;
 
 public class ItemsRepository : RepositoryBase, IItemsRepository
 {
-    protected ItemsRepository(AppDbContext db) : base(db)
+    public ItemsRepository(AppDbContext db) : base(db)
     {
     }
 

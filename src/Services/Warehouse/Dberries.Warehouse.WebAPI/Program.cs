@@ -1,9 +1,11 @@
 using BitzArt.ApiExceptions.AspNetCore;
+using Dberries.Warehouse.Infrastructure;
 using Dberries.Warehouse.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddInfrastructure();
 
 builder.Services.AddApiExceptionHandler();
 
@@ -24,5 +26,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseApiExceptionHandler();
+
+app.MapControllers();
 
 app.Run();
