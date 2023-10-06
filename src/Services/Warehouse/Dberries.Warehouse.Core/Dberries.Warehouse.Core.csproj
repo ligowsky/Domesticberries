@@ -7,5 +7,6 @@
     </PropertyGroup>
     <ItemGroup>
       <PackageReference Include="BitzArt.ApiExceptions" Version="1.18.2" />
+      <PackageReference Include="BitzArt.Pagination.EntityFrameworkCore" Version="1.14.0" />
     </ItemGroup>
 </Project>

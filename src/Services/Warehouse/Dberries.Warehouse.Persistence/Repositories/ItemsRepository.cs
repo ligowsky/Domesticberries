@@ -1,4 +1,5 @@
 using BitzArt.ApiExceptions;
+using BitzArt.Pagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dberries.Warehouse.Persistence;
@@ -9,9 +10,9 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
     {
     }
 
-    public async Task<List<Item>> GetAllAsync()
+    public async Task<PageResult<Item>> GetPageAsync(PageRequest pageRequest)
     {
-        return await Db.Set<Item>().ToListAsync();
+        return await Db.Set<Item>().ToPageAsync(pageRequest);
     }
 
     public async Task<Item> GetAsync(Guid? id)
@@ -20,7 +21,8 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
 
-        if (result is null) throw new NotFoundApiException($"Item with id '{id}' is not found");
+        if (result is null)
+            throw new NotFoundApiException($"Item with id '{id}' is not found");
 
         return result;
     }

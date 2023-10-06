@@ -1,3 +1,5 @@
+using BitzArt.Pagination;
+
 namespace Dberries.Warehouse.Infrastructure;
 
 public class ItemsService : IItemsService
@@ -9,9 +11,9 @@ public class ItemsService : IItemsService
         _itemsRepository = itemsRepository;
     }
 
-    public async Task<List<Item>> GetItemsAsync()
+    public async Task<PageResult<Item>> GetItemsAsync(PageRequest pageRequest)
     {
-        return await _itemsRepository.GetAllAsync();
+        return await _itemsRepository.GetPageAsync(pageRequest);
     }
 
     public async Task<Item> GetItemAsync(Guid id)

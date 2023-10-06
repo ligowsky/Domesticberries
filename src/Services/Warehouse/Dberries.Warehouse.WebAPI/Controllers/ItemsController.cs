@@ -1,3 +1,4 @@
+using BitzArt.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dberries.Warehouse.WebAPI;
@@ -14,19 +15,21 @@ public class ItemsController : ControllerBase
     }
 
     [HttpGet(Name = "GetItems")]
-    public async Task<IActionResult> GetItemsAsync()
+    public async Task<IActionResult> GetItemsAsync([FromQuery] PageRequest pageRequest)
     {
-        var items = await _itemsService.GetItemsAsync();
+        var items = await _itemsService.GetItemsAsync(pageRequest);
+        var result = items.Convert(x => x.ToDto());
 
-        return Ok(items);
+        return Ok(result);
     }
 
     [HttpGet("{id:guid}", Name = "GetItem")]
     public async Task<IActionResult> GetItemAsync([FromRoute] Guid id)
     {
         var item = await _itemsService.GetItemAsync(id);
+        var result = item.ToDto();
 
-        return Ok(item);
+        return Ok(result);
     }
 
     [HttpPost(Name = "CreateItem")]
@@ -34,8 +37,9 @@ public class ItemsController : ControllerBase
     {
         var item = input.ToModel();
         var createdItem = await _itemsService.CreateItemAsync(item);
+        var result = createdItem.ToDto();
 
-        return Ok(createdItem);
+        return Ok(result);
     }
 
     [HttpPut("{id:guid}", Name = "UpdateItem")]
@@ -43,8 +47,9 @@ public class ItemsController : ControllerBase
     {
         var item = input.ToModel();
         var updatedItem = await _itemsService.UpdateItemAsync(id, item);
+        var result = updatedItem.ToDto();
 
-        return Ok(updatedItem);
+        return Ok(result);
     }
 
     [HttpDelete("{id:guid}", Name = "DeleteItem")]
