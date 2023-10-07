@@ -47,6 +47,7 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
             .AsNoTracking()
             .Where(x => x.Id == locationId)
             .SelectMany(x => x.Stock!)
+            .OrderBy(x => x.ItemId)
             .Include(x => x.Item)
             .ToPageAsync(pageRequest);
     }
@@ -56,13 +57,12 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
         await CheckExistsAsync<Location>(locationId);
         await CheckExistsAsync<Item>(itemId);
 
-        var location = await Db.Set<Location>()
+        return await Db.Set<Location>()
+            .AsNoTracking()
             .Where(x => x.Id == locationId)
-            .Include(x => x.Stock!.Where(y => y.ItemId == itemId))
-            .ThenInclude(stock => stock.Item)
+            .SelectMany(x => x.Stock!.Where(y => y.ItemId == itemId))
+            .Include(stock => stock.Item)
             .FirstOrDefaultAsync();
-
-        return location?.Stock!.FirstOrDefault();
     }
 
     public async Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, int quantity)
