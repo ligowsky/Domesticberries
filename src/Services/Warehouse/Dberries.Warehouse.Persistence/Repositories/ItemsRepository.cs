@@ -22,7 +22,7 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             .FirstOrDefaultAsync();
 
         if (result is null)
-            throw ApiException.NotFound($"Item with id '{id}' is not found");
+            throw ApiException.NotFound($"{nameof(Item)} with id '{id}' is not found");
 
         return result;
     }
@@ -46,7 +46,7 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             .AnyAsync();
 
         if (!itemExists)
-            throw ApiException.NotFound($"Item with id '{id}' is not found");
+            throw ApiException.NotFound($"{nameof(Item)} with id '{id}' is not found");
 
         return itemExists;
     }

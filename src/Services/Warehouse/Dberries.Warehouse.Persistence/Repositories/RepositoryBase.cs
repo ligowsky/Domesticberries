@@ -1,3 +1,7 @@
+using BitzArt;
+using BitzArt.Pagination;
+using Microsoft.EntityFrameworkCore;
+
 namespace Dberries.Warehouse.Persistence;
 
 public class RepositoryBase : IRepositoryBase
@@ -12,5 +16,13 @@ public class RepositoryBase : IRepositoryBase
     public async Task<int> SaveChangesAsync()
     {
         return await Db.SaveChangesAsync();
+    }
+
+    protected async Task CheckExistsAsync<T>(Guid id) where T : class, IEntity
+    {
+        var entityExists = await Db.Set<T>().Where(x => x.Id == id).AnyAsync();
+
+        if (!entityExists)
+            throw ApiException.NotFound($"{typeof(T).Name} with id '{id}' is not found");
     }
 }

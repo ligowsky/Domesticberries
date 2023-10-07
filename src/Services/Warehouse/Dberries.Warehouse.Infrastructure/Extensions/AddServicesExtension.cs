@@ -8,6 +8,5 @@ public static class AddServicesExtension
     {
         services.AddScoped<ILocationsService, LocationsService>();
         services.AddScoped<IItemsService, ItemsService>();
-        services.AddScoped<IStockService, StockService>();
     }
 }

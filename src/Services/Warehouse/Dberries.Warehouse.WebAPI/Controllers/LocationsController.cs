@@ -8,12 +8,10 @@ namespace Dberries.Warehouse.WebAPI;
 public class LocationsController : ControllerBase
 {
     private readonly ILocationsService _locationsService;
-    private readonly IStockService _stockService;
 
-    public LocationsController(ILocationsService locationsService, IStockService stockService)
+    public LocationsController(ILocationsService locationsService)
     {
         _locationsService = locationsService;
-        _stockService = stockService;
     }
 
     [HttpGet]
@@ -66,7 +64,7 @@ public class LocationsController : ControllerBase
     public async Task<IActionResult> GetStockAsync([FromRoute] Guid locationId,
         [FromQuery] PageRequest pageRequest)
     {
-        var stock = await _stockService.GetStockPageAsync(locationId, pageRequest);
+        var stock = await _locationsService.GetStockPageAsync(locationId, pageRequest);
         var result = stock.Convert(x => x.ToDto());
 
         return Ok(result);
@@ -75,7 +73,7 @@ public class LocationsController : ControllerBase
     [HttpGet("{locationId:guid}/stock/{itemId:guid}")]
     public async Task<IActionResult> GetStockForItemAsync([FromRoute] Guid locationId, [FromRoute] Guid itemId)
     {
-        var stock = await _stockService.GetStockForItemAsync(locationId, itemId);
+        var stock = await _locationsService.GetStockAsync(locationId, itemId);
         var result = stock?.ToDto();
 
         return Ok(result);
@@ -83,11 +81,10 @@ public class LocationsController : ControllerBase
 
     [HttpPut("{locationId:guid}/stock/{itemId:guid}")]
     public async Task<IActionResult> UpdateStockForItemAsync([FromRoute] Guid locationId,
-        [FromRoute] Guid itemId, [FromBody] StockDto input)
+        [FromRoute] Guid itemId, [FromBody] int quantity)
     {
-        var stock = input.ToModel();
-        var updatedStock = await _stockService.UpdateStockForItemAsync(locationId, itemId, stock);
-        var result = updatedStock.ToDto();
+        var updatedStock = await _locationsService.UpdateStockAsync(locationId, itemId, quantity);
+        var result = updatedStock?.ToDto();
 
         return Ok(result);
     }

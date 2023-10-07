@@ -22,7 +22,7 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
             .FirstOrDefaultAsync();
 
         if (result is null)
-            throw ApiException.NotFound($"Location with id '{id}' is not found");
+            throw ApiException.NotFound($"{nameof(Location)} with id '{id}' is not found");
 
         return result;
     }
@@ -39,15 +39,44 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
         Db.Set<Location>().Remove(location);
     }
 
-    public async Task<bool> Exists(Guid id)
+    public async Task<PageResult<Stock>> GetStockPageAsync(Guid locationId, PageRequest pageRequest)
     {
-        var locationExists = await Db.Set<Location>()
-            .Where(x => x.Id == id)
-            .AnyAsync();
+        await CheckExistsAsync<Location>(locationId);
 
-        if (!locationExists)
-            throw ApiException.NotFound($"Location with id '{id}' is not found");
+        return await Db.Set<Location>()
+            .AsNoTracking()
+            .Where(x => x.Id == locationId)
+            .SelectMany(x => x.Stock!)
+            .Include(x => x.Item)
+            .ToPageAsync(pageRequest);
+    }
 
-        return locationExists;
+    public async Task<Stock?> GetStockAsync(Guid locationId, Guid itemId)
+    {
+        await CheckExistsAsync<Location>(locationId);
+        await CheckExistsAsync<Item>(itemId);
+
+        var location = await Db.Set<Location>()
+            .Where(x => x.Id == locationId)
+            .Include(x => x.Stock!.Where(y => y.ItemId == itemId))
+            .ThenInclude(stock => stock.Item)
+            .FirstOrDefaultAsync();
+
+        return location?.Stock!.FirstOrDefault();
+    }
+
+    public async Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, int quantity)
+    {
+        await CheckExistsAsync<Item>(itemId);
+
+        var location = await Db.Set<Location>()
+            .Where(x => x.Id == locationId)
+            .Include(x => x.Stock!.Where(y => y.ItemId == itemId))
+            .FirstOrDefaultAsync();
+
+        if (location is null)
+            throw ApiException.NotFound($"{nameof(Location)} with id '{locationId}' is not found");
+
+        return location.UpdateStock(itemId, quantity);
     }
 }

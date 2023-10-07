@@ -9,4 +9,8 @@ public interface ILocationsService
     public Task<Location> CreateLocationAsync(Location location);
     public Task<Location> UpdateLocationAsync(Guid id, Location location);
     public Task DeleteLocationAsync(Guid id);
+    
+    Task<PageResult<Stock>> GetStockPageAsync(Guid locationId, PageRequest pageRequest);
+    Task<Stock?> GetStockAsync(Guid locationId, Guid itemId);
+    Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, int quantity);
 }

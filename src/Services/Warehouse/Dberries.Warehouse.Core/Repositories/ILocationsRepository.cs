@@ -8,5 +8,8 @@ public interface ILocationsRepository : IRepositoryBase
     public Task<Location> GetAsync(Guid id);
     public Task<Location> CreateAsync(Location location);
     public void Delete(Location location);
-    public Task<bool> Exists(Guid id);
+    
+    public Task<PageResult<Stock>> GetStockPageAsync(Guid locationId, PageRequest pageRequest);
+    public Task<Stock?> GetStockAsync(Guid locationId, Guid itemId);
+    public Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, int quantity);
 }
