@@ -46,9 +46,10 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
         return await Db.Set<Location>()
             .AsNoTracking()
             .Where(x => x.Id == locationId)
+            .Include(x => x.Stock!)
+            .ThenInclude(stock => stock.Item)
             .SelectMany(x => x.Stock!)
             .OrderBy(x => x.ItemId)
-            .Include(x => x.Item)
             .ToPageAsync(pageRequest);
     }
 
@@ -60,8 +61,9 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
         return await Db.Set<Location>()
             .AsNoTracking()
             .Where(x => x.Id == locationId)
+            .Include(x => x.Stock!)
+            .ThenInclude(stock => stock.Item)
             .SelectMany(x => x.Stock!.Where(y => y.ItemId == itemId))
-            .Include(stock => stock.Item)
             .FirstOrDefaultAsync();
     }
 
