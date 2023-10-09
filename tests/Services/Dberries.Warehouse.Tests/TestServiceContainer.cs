@@ -1,3 +1,4 @@
+using Dberries.Warehouse.Infrastructure;
 using Dberries.Warehouse.Persistence;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,8 @@ public class TestServiceContainer : IDisposable
         
         services.AddDbContext<TestDbContext>(x => x.UseSqlite(sqliteConnection));
         services.AddScoped<AppDbContext>(x => x.GetRequiredService<TestDbContext>());
+        services.AddInfrastructure();
+        services.AddRepositories();
         
         _services = services.BuildServiceProvider();
         

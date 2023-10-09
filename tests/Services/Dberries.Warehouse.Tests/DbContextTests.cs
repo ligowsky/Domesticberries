@@ -25,16 +25,16 @@ public class DbContextTests
             Name = "Item 1",
             Description = "Description 1"
         };
-        
+
         //Act
         await dbContext.AddAsync(item);
         await dbContext.SaveChangesAsync();
-        
+
         //Assert
         var createdItem = await dbContext.Set<Item>()
             .Where(x => x.Id == item.Id)
             .FirstOrDefaultAsync();
-        
+
         Assert.NotNull(createdItem);
         Assert.Equal(item.Id, createdItem.Id);
         Assert.Equal(item.Name, createdItem.Name);
