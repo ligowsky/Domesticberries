@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Warehouse.Persistence.Migrations
+namespace Dberries.Warehouse.Persistence.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -38,8 +38,8 @@ namespace Warehouse.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Coordinates_Latitude = table.Column<double>(type: "float", nullable: false),
-                    Coordinates_Longitude = table.Column<double>(type: "float", nullable: false)
+                    Coordinates_Latitude = table.Column<double>(type: "float(7)", precision: 7, scale: 5, nullable: false),
+                    Coordinates_Longitude = table.Column<double>(type: "float(7)", precision: 7, scale: 5, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,8 +51,8 @@ namespace Warehouse.Persistence.Migrations
                 schema: "Location",
                 columns: table => new
                 {
-                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

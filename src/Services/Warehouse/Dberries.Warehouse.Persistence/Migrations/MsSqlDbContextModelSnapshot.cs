@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Warehouse.Persistence.Migrations
+namespace Dberries.Warehouse.Persistence.Migrations
 {
     [DbContext(typeof(MsSqlDbContext))]
     partial class MsSqlDbContextModelSnapshot : ModelSnapshot
@@ -22,7 +22,7 @@ namespace Warehouse.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Dberries.Warehouse.Core.Item", b =>
+            modelBuilder.Entity("Dberries.Warehouse.Item", b =>
                 {
                     b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
@@ -42,7 +42,7 @@ namespace Warehouse.Persistence.Migrations
                     b.ToTable("Items", "Item");
                 });
 
-            modelBuilder.Entity("Dberries.Warehouse.Core.Location", b =>
+            modelBuilder.Entity("Dberries.Warehouse.Location", b =>
                 {
                     b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,18 +58,20 @@ namespace Warehouse.Persistence.Migrations
                     b.ToTable("Locations", "Location");
                 });
 
-            modelBuilder.Entity("Dberries.Warehouse.Core.Location", b =>
+            modelBuilder.Entity("Dberries.Warehouse.Location", b =>
                 {
-                    b.OwnsOne("Dberries.Warehouse.Core.Coordinates", "Coordinates", b1 =>
+                    b.OwnsOne("Dberries.Warehouse.Coordinates", "Coordinates", b1 =>
                         {
                             b1.Property<Guid>("LocationId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<double>("Latitude")
-                                .HasColumnType("float");
+                                .HasPrecision(7, 5)
+                                .HasColumnType("float(7)");
 
                             b1.Property<double>("Longitude")
-                                .HasColumnType("float");
+                                .HasPrecision(7, 5)
+                                .HasColumnType("float(7)");
 
                             b1.HasKey("LocationId");
 
@@ -79,12 +81,12 @@ namespace Warehouse.Persistence.Migrations
                                 .HasForeignKey("LocationId");
                         });
 
-                    b.OwnsMany("Dberries.Warehouse.Core.Stock", "Stock", b1 =>
+                    b.OwnsMany("Dberries.Warehouse.Stock", "Stock", b1 =>
                         {
                             b1.Property<Guid>("LocationId")
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.Property<Guid>("ItemId")
+                            b1.Property<Guid?>("ItemId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<int?>("Quantity")
@@ -97,7 +99,7 @@ namespace Warehouse.Persistence.Migrations
 
                             b1.ToTable("Stock", "Location");
 
-                            b1.HasOne("Dberries.Warehouse.Core.Item", "Item")
+                            b1.HasOne("Dberries.Warehouse.Item", "Item")
                                 .WithMany()
                                 .HasForeignKey("ItemId")
                                 .OnDelete(DeleteBehavior.Cascade)
