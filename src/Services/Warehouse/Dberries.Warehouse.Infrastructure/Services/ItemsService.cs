@@ -1,3 +1,4 @@
+using BitzArt;
 using BitzArt.Pagination;
 
 namespace Dberries.Warehouse.Infrastructure;
@@ -32,7 +33,11 @@ public class ItemsService : IItemsService
     public async Task<Item> UpdateAsync(Guid id, Item item)
     {
         var existingItem = await _itemsRepository.GetAsync(id);
-        existingItem.Update(item);
+
+        existingItem.Patch(item)
+            .Property(x => x.Name)
+            .Property(x => x.Description);
+        
         await _itemsRepository.SaveChangesAsync();
 
         return existingItem;

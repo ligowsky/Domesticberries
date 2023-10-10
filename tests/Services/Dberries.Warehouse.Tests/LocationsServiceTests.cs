@@ -1,3 +1,4 @@
+using BitzArt;
 using BitzArt.ApiExceptions;
 using BitzArt.Pagination;
 using Dberries.Warehouse.Persistence;
@@ -121,7 +122,10 @@ public class LocationsServiceTests
         };
 
         // Act
-        existingLocation.Update(location);
+        existingLocation.Patch(location)
+            .Property(x => x.Name)
+            .Property(x => x.Coordinates);
+        
         await _locationsService.UpdateAsync(existingLocation.Id!.Value, existingLocation);
 
         // Assert

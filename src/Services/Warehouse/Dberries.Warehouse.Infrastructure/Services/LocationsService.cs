@@ -1,3 +1,4 @@
+using BitzArt;
 using BitzArt.Pagination;
 
 namespace Dberries.Warehouse.Infrastructure;
@@ -32,7 +33,11 @@ public class LocationsService : ILocationsService
     public async Task<Location> UpdateAsync(Guid id, Location location)
     {
         var existingLocation = await _locationsRepository.GetAsync(id);
-        existingLocation.Update(location);
+
+        existingLocation.Patch(location)
+            .Property(x => x.Name)
+            .Property(x => x.Coordinates);
+
         await _locationsRepository.SaveChangesAsync();
 
         return existingLocation;
