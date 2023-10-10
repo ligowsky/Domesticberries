@@ -1,17 +1,20 @@
 using BitzArt.ApiExceptions;
 using BitzArt.Pagination;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit.Abstractions;
 
 namespace Dberries.Warehouse.Tests;
 
 [Collection("Service Collection")]
 public class LocationsServiceTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
     private readonly ILocationsService _locationsService;
     private readonly IItemsService _itemsService;
 
-    public LocationsServiceTests(TestServiceContainer testServiceContainer)
+    public LocationsServiceTests(TestServiceContainer testServiceContainer, ITestOutputHelper testOutputHelper)
     {
+        _testOutputHelper = testOutputHelper;
         _locationsService = testServiceContainer.ServiceProvider.GetRequiredService<ILocationsService>();
         _itemsService = testServiceContainer.ServiceProvider.GetRequiredService<IItemsService>();
     }
@@ -187,6 +190,39 @@ public class LocationsServiceTests
         Assert.Equal(expectedMessage, exception.Message);
     }
 
+    [Fact]
+    public async Task GetStockPage_ExistingStock_StockReceived()
+    {
+        // Arrange
+        var location = InitNewLocation();
+        var createdLocation = await _locationsService.CreateLocationAsync(location);
+
+        const int stockCount = 10;
+        const int quantity = 5;
+
+        for (var i = 0; i < stockCount; i++)
+        {
+            var item = InitNewItem();
+            var createdItem = await _itemsService.CreateItemAsync(item);
+
+            var stock = await _locationsService.UpdateStockAsync(createdLocation.Id!.Value, createdItem.Id!.Value, quantity);
+            _testOutputHelper.WriteLine(stock?.ToString());
+        }
+
+        var pageRequest = new PageRequest()
+        {
+            Offset = 0,
+            Limit = stockCount
+        };
+
+        // Act
+        var stockPage = await _locationsService.GetStockPageAsync(createdLocation.Id!.Value, pageRequest);
+
+        // Assert
+        Assert.NotNull(stockPage);
+        Assert.Equal(stockCount, stockPage.Data!.Count());
+    }
+
     [Theory]
     [InlineData(1)]
     [InlineData(10)]
@@ -282,12 +318,12 @@ public class LocationsServiceTests
         var exception =
             await Record.ExceptionAsync(async () =>
                 await _locationsService.UpdateStockAsync(locationId, item.Id!.Value, quantity));
-        
+
         // Assert
         Assert.IsType(exceptionType, exception);
         Assert.Equal(expectedMessage, exception.Message);
     }
-    
+
     [Fact]
     public async Task UpdateStock_ExistingStock_ItemNotFound()
     {
@@ -309,7 +345,7 @@ public class LocationsServiceTests
         var exception =
             await Record.ExceptionAsync(async () =>
                 await _locationsService.UpdateStockAsync(location.Id!.Value, itemId, quantity));
-        
+
         // Assert
         Assert.IsType(exceptionType, exception);
         Assert.Equal(expectedMessage, exception.Message);
@@ -319,7 +355,6 @@ public class LocationsServiceTests
     {
         return new Location
         {
-            Id = Guid.NewGuid(),
             Name = "Location 1",
             Coordinates = new Coordinates
             {
@@ -333,7 +368,6 @@ public class LocationsServiceTests
     {
         return new Item
         {
-            Id = Guid.NewGuid(),
             Name = "Item 1",
             Description = "Description 1"
         };
