@@ -68,6 +68,9 @@ public class LocationsRepository : Repository, ILocationsRepository
 
     public async Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, int quantity)
     {
+        if (quantity < 0)
+            ApiException.BadRequest("Quantity must be grater than 0");
+
         await CheckExistsAsync<Item>(itemId);
 
         var location = await Db.Set<Location>()
@@ -78,6 +81,25 @@ public class LocationsRepository : Repository, ILocationsRepository
         if (location is null)
             throw ApiException.NotFound($"{nameof(Location)} with id '{locationId}' is not found");
 
-        return location.UpdateStock(itemId, quantity);
+        var stock = location.Stock!.FirstOrDefault(x => x.ItemId == itemId);
+
+        if (stock is null)
+        {
+            stock = new Stock
+            {
+                ItemId = itemId,
+            };
+
+            location.Stock!.Add(stock);
+        }
+
+        stock.Quantity = quantity;
+
+        if (quantity != 0)
+            return stock;
+
+        location.Stock!.Remove(stock);
+
+        return null;
     }
 }

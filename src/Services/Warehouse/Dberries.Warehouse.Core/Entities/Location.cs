@@ -1,5 +1,3 @@
-using BitzArt;
-
 namespace Dberries.Warehouse;
 
 public class Location : IEntity
@@ -13,32 +11,5 @@ public class Location : IEntity
     {
         Name = input.Name ?? Name;
         Coordinates = input.Coordinates ?? Coordinates;
-    }
-
-    public Stock? UpdateStock(Guid itemId, int quantity)
-    {
-        if (quantity < 0)
-            ApiException.BadRequest("Quantity must be grater than 0");
-
-        var stock = Stock?.FirstOrDefault();
-
-        if (stock is null)
-        {
-            stock = new Stock()
-            {
-                ItemId = itemId,
-            };
-
-            Stock?.Add(stock);
-        }
-
-        stock.Quantity = quantity;
-
-        if (quantity != 0)
-            return stock;
-
-        Stock?.Remove(stock);
-
-        return null;
     }
 }
