@@ -11,17 +11,17 @@ public class LocationsService : ILocationsService
         _locationsRepository = locationsRepository;
     }
 
-    public async Task<PageResult<Location>> GetLocationsPageAsync(PageRequest pageRequest)
+    public async Task<PageResult<Location>> GetPageAsync(PageRequest pageRequest)
     {
         return await _locationsRepository.GetPageAsync(pageRequest);
     }
 
-    public async Task<Location> GetLocationAsync(Guid id)
+    public async Task<Location> GetAsync(Guid id)
     {
         return await _locationsRepository.GetAsync(id);
     }
 
-    public async Task<Location> CreateLocationAsync(Location location)
+    public async Task<Location> AddAsync(Location location)
     {
         var createdLocation = _locationsRepository.Add(location);
         await _locationsRepository.SaveChangesAsync();
@@ -29,7 +29,7 @@ public class LocationsService : ILocationsService
         return createdLocation;
     }
 
-    public async Task<Location> UpdateLocationAsync(Guid id, Location location)
+    public async Task<Location> UpdateAsync(Guid id, Location location)
     {
         var existingLocation = await _locationsRepository.GetAsync(id);
         existingLocation.Update(location);
@@ -38,7 +38,7 @@ public class LocationsService : ILocationsService
         return existingLocation;
     }
 
-    public async Task DeleteLocationAsync(Guid id)
+    public async Task RemoveAsync(Guid id)
     {
         var existingLocation = await _locationsRepository.GetAsync(id);
         _locationsRepository.Remove(existingLocation);

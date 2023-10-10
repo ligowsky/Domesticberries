@@ -17,7 +17,7 @@ public class ItemsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetItemsAsync([FromQuery] PageRequest pageRequest)
     {
-        var items = await _itemsService.GetItemsPageAsync(pageRequest);
+        var items = await _itemsService.GetPageAsync(pageRequest);
         var result = items.Convert(x => x.ToDto());
 
         return Ok(result);
@@ -26,7 +26,7 @@ public class ItemsController : ControllerBase
     [HttpGet("{id:guid}", Name = "GetItem")]
     public async Task<IActionResult> GetItemAsync([FromRoute] Guid id)
     {
-        var item = await _itemsService.GetItemAsync(id);
+        var item = await _itemsService.GetAsync(id);
         var result = item.ToDto();
 
         return Ok(result);
@@ -46,7 +46,7 @@ public class ItemsController : ControllerBase
     public async Task<IActionResult> UpdateItemAsync([FromRoute] Guid id, [FromBody] ItemDto input)
     {
         var item = input.ToModel();
-        var updatedItem = await _itemsService.UpdateItemAsync(id, item);
+        var updatedItem = await _itemsService.UpdateAsync(id, item);
         var result = updatedItem.ToDto();
 
         return Ok(result);
@@ -55,7 +55,7 @@ public class ItemsController : ControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteItemAsync([FromRoute] Guid id)
     {
-        await _itemsService.DeleteItemAsync(id);
+        await _itemsService.RemoveAsync(id);
 
         return Ok();
     }

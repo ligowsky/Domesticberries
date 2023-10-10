@@ -30,7 +30,7 @@ public class LocationsServiceTests
         for (var i = 0; i < locationsCount; i++)
         {
             var location = InitNewLocation();
-            await _locationsService.CreateLocationAsync(location);
+            await _locationsService.AddAsync(location);
         }
 
         var pageRequest = new PageRequest()
@@ -40,7 +40,7 @@ public class LocationsServiceTests
         };
 
         // Act
-        var locationsPage = await _locationsService.GetLocationsPageAsync(pageRequest);
+        var locationsPage = await _locationsService.GetPageAsync(pageRequest);
 
         // Assert
         Assert.NotNull(locationsPage);
@@ -52,10 +52,10 @@ public class LocationsServiceTests
     {
         // Arrange
         var location = InitNewLocation();
-        await _locationsService.CreateLocationAsync(location);
+        await _locationsService.AddAsync(location);
 
         // Act
-        var existingLocation = await _locationsService.GetLocationAsync(location.Id!.Value);
+        var existingLocation = await _locationsService.GetAsync(location.Id!.Value);
 
         // Assert
         Assert.NotNull(existingLocation);
@@ -74,7 +74,7 @@ public class LocationsServiceTests
 
         // Act
         var exception =
-            await Record.ExceptionAsync(async () => await _locationsService.GetLocationAsync(locationId));
+            await Record.ExceptionAsync(async () => await _locationsService.GetAsync(locationId));
 
         // Assert
         Assert.IsType(exceptionType, exception);
@@ -88,10 +88,10 @@ public class LocationsServiceTests
         var location = InitNewLocation();
 
         // Act
-        await _locationsService.CreateLocationAsync(location);
+        await _locationsService.AddAsync(location);
 
         // Assert
-        var createdLocation = await _locationsService.GetLocationAsync(location.Id!.Value);
+        var createdLocation = await _locationsService.GetAsync(location.Id!.Value);
 
         Assert.NotNull(createdLocation);
         Assert.Equal(location.Id, createdLocation.Id);
@@ -107,8 +107,8 @@ public class LocationsServiceTests
     {
         // Arrange
         var newLocation = InitNewLocation();
-        await _locationsService.CreateLocationAsync(newLocation);
-        var existingLocation = await _locationsService.GetLocationAsync(newLocation.Id!.Value);
+        await _locationsService.AddAsync(newLocation);
+        var existingLocation = await _locationsService.GetAsync(newLocation.Id!.Value);
 
         var location = new Location
         {
@@ -122,10 +122,10 @@ public class LocationsServiceTests
 
         // Act
         existingLocation.Update(location);
-        await _locationsService.UpdateLocationAsync(existingLocation.Id!.Value, existingLocation);
+        await _locationsService.UpdateAsync(existingLocation.Id!.Value, existingLocation);
 
         // Assert
-        var updatedLocation = await _locationsService.GetLocationAsync(existingLocation.Id!.Value);
+        var updatedLocation = await _locationsService.GetAsync(existingLocation.Id!.Value);
 
         Assert.NotNull(updatedLocation);
         Assert.Equal(existingLocation.Id, updatedLocation.Id);
@@ -146,7 +146,7 @@ public class LocationsServiceTests
 
         // Act
         var exception =
-            Record.ExceptionAsync(async () => await _locationsService.UpdateLocationAsync(locationId, location));
+            Record.ExceptionAsync(async () => await _locationsService.UpdateAsync(locationId, location));
 
         // Assert
         Assert.IsType(exceptionType, exception.Result);
@@ -158,18 +158,18 @@ public class LocationsServiceTests
     {
         // Arrange
         var newLocation = InitNewLocation();
-        await _locationsService.CreateLocationAsync(newLocation);
-        var existingLocation = await _locationsService.GetLocationAsync(newLocation.Id!.Value);
+        await _locationsService.AddAsync(newLocation);
+        var existingLocation = await _locationsService.GetAsync(newLocation.Id!.Value);
         var exceptionType = typeof(NotFoundApiException);
         var expectedMessage = $"{nameof(Location)} with id '{existingLocation.Id}' is not found";
 
         // Act
-        await _locationsService.DeleteLocationAsync(existingLocation.Id!.Value);
+        await _locationsService.RemoveAsync(existingLocation.Id!.Value);
 
         // Assert
         var exception =
             await Record.ExceptionAsync(
-                async () => await _locationsService.GetLocationAsync(existingLocation.Id!.Value));
+                async () => await _locationsService.GetAsync(existingLocation.Id!.Value));
 
         Assert.IsType(exceptionType, exception);
         Assert.Equal(expectedMessage, exception.Message);
@@ -185,7 +185,7 @@ public class LocationsServiceTests
 
         // Act
         var exception =
-            await Record.ExceptionAsync(async () => await _locationsService.DeleteLocationAsync(locationId));
+            await Record.ExceptionAsync(async () => await _locationsService.RemoveAsync(locationId));
 
         // Assert
         Assert.IsType(exceptionType, exception);
@@ -197,7 +197,7 @@ public class LocationsServiceTests
     {
         // Arrange
         var location = InitNewLocation();
-        var createdLocation = await _locationsService.CreateLocationAsync(location);
+        var createdLocation = await _locationsService.AddAsync(location);
 
         const int count = 10;
         const int quantity = 5;
@@ -234,7 +234,7 @@ public class LocationsServiceTests
     {
         // Arrange
         var location = InitNewLocation();
-        await _locationsService.CreateLocationAsync(location);
+        await _locationsService.AddAsync(location);
 
         var item = InitNewItem(1);
         await _itemsService.AddAsync(item);
@@ -258,7 +258,7 @@ public class LocationsServiceTests
     {
         // Arrange
         var location = InitNewLocation();
-        await _locationsService.CreateLocationAsync(location);
+        await _locationsService.AddAsync(location);
 
         var item = InitNewItem(1);
         await _itemsService.AddAsync(item);
@@ -283,7 +283,7 @@ public class LocationsServiceTests
     {
         // Arrange
         var location = InitNewLocation();
-        await _locationsService.CreateLocationAsync(location);
+        await _locationsService.AddAsync(location);
 
         var item = InitNewItem(1);
         await _itemsService.AddAsync(item);
@@ -305,7 +305,7 @@ public class LocationsServiceTests
     {
         // Arrange
         var location = InitNewLocation();
-        await _locationsService.CreateLocationAsync(location);
+        await _locationsService.AddAsync(location);
 
         var item = InitNewItem(1);
         await _itemsService.AddAsync(item);
@@ -332,7 +332,7 @@ public class LocationsServiceTests
     {
         // Arrange
         var location = InitNewLocation();
-        await _locationsService.CreateLocationAsync(location);
+        await _locationsService.AddAsync(location);
 
         var item = InitNewItem(1);
         await _itemsService.AddAsync(item);

@@ -4,9 +4,9 @@ namespace Dberries.Warehouse;
 
 public interface IItemsService
 {
-    public Task<PageResult<Item>> GetItemsPageAsync(PageRequest pageRequest);
-    public Task<Item> GetItemAsync(Guid id);
+    public Task<PageResult<Item>> GetPageAsync(PageRequest pageRequest);
+    public Task<Item> GetAsync(Guid id);
     public Task<Item> AddAsync(Item item);
-    public Task<Item> UpdateItemAsync(Guid id, Item item);
-    public Task DeleteItemAsync(Guid id);
+    public Task<Item> UpdateAsync(Guid id, Item item);
+    public Task RemoveAsync(Guid id);
 }

@@ -11,12 +11,12 @@ public class ItemsService : IItemsService
         _itemsRepository = itemsRepository;
     }
 
-    public async Task<PageResult<Item>> GetItemsPageAsync(PageRequest pageRequest)
+    public async Task<PageResult<Item>> GetPageAsync(PageRequest pageRequest)
     {
         return await _itemsRepository.GetPageAsync(pageRequest);
     }
 
-    public async Task<Item> GetItemAsync(Guid id)
+    public async Task<Item> GetAsync(Guid id)
     {
         return await _itemsRepository.GetAsync(id);
     }
@@ -29,7 +29,7 @@ public class ItemsService : IItemsService
         return createdItem;
     }
 
-    public async Task<Item> UpdateItemAsync(Guid id, Item item)
+    public async Task<Item> UpdateAsync(Guid id, Item item)
     {
         var existingItem = await _itemsRepository.GetAsync(id);
         existingItem.Update(item);
@@ -38,7 +38,7 @@ public class ItemsService : IItemsService
         return existingItem;
     }
 
-    public async Task DeleteItemAsync(Guid id)
+    public async Task RemoveAsync(Guid id)
     {
         var existingItem = await _itemsRepository.GetAsync(id);
         _itemsRepository.Remove(existingItem);
