@@ -30,6 +30,6 @@ public class LocationAggregateConfiguration : IEntityTypeConfiguration<Location>
             stock.Property<Guid>("LocationId");
             stock.WithOwner().HasForeignKey("LocationId");
             stock.Configure();
-        });
+        }).Navigation(x => x.Stock).AutoInclude(false);
     }
 }
