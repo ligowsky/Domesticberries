@@ -21,9 +21,9 @@ public class ItemsService : IItemsService
         return await _itemsRepository.GetAsync(id);
     }
 
-    public async Task<Item> CreateItemAsync(Item item)
+    public async Task<Item> AddAsync(Item item)
     {
-        var createdItem = await _itemsRepository.CreateAsync(item);
+        var createdItem = _itemsRepository.Add(item);
         await _itemsRepository.SaveChangesAsync();
 
         return createdItem;
@@ -41,7 +41,7 @@ public class ItemsService : IItemsService
     public async Task DeleteItemAsync(Guid id)
     {
         var existingItem = await _itemsRepository.GetAsync(id);
-        _itemsRepository.Delete(existingItem);
+        _itemsRepository.Remove(existingItem);
         await _itemsRepository.SaveChangesAsync();
     }
 }

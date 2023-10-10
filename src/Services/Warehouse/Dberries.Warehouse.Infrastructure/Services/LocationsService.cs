@@ -23,7 +23,7 @@ public class LocationsService : ILocationsService
 
     public async Task<Location> CreateLocationAsync(Location location)
     {
-        var createdLocation = await _locationsRepository.CreateAsync(location);
+        var createdLocation = _locationsRepository.Add(location);
         await _locationsRepository.SaveChangesAsync();
 
         return createdLocation;

@@ -27,9 +27,9 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
         return result;
     }
 
-    public async Task<Location> CreateAsync(Location location)
+    public Location Add(Location location)
     {
-        await Db.Set<Location>().AddAsync(location);
+        Db.Set<Location>().Add(location);
 
         return location;
     }

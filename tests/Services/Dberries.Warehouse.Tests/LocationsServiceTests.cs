@@ -1,9 +1,7 @@
 using BitzArt.ApiExceptions;
 using BitzArt.Pagination;
 using Dberries.Warehouse.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit.Abstractions;
 
 namespace Dberries.Warehouse.Tests;
 
@@ -208,7 +206,7 @@ public class LocationsServiceTests
 
         foreach (var item in items)
         {
-            await _itemsService.CreateItemAsync(item);
+            await _itemsService.AddAsync(item);
             await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, quantity);
 
             _db.ChangeTracker.Clear();
@@ -239,7 +237,7 @@ public class LocationsServiceTests
         await _locationsService.CreateLocationAsync(location);
 
         var item = InitNewItem(1);
-        await _itemsService.CreateItemAsync(item);
+        await _itemsService.AddAsync(item);
 
         // Act
         await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, quantity);
@@ -263,7 +261,7 @@ public class LocationsServiceTests
         await _locationsService.CreateLocationAsync(location);
 
         var item = InitNewItem(1);
-        await _itemsService.CreateItemAsync(item);
+        await _itemsService.AddAsync(item);
 
         var existingStock = await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
 
@@ -288,7 +286,7 @@ public class LocationsServiceTests
         await _locationsService.CreateLocationAsync(location);
 
         var item = InitNewItem(1);
-        await _itemsService.CreateItemAsync(item);
+        await _itemsService.AddAsync(item);
 
         var existingStock = await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
 
@@ -310,7 +308,7 @@ public class LocationsServiceTests
         await _locationsService.CreateLocationAsync(location);
 
         var item = InitNewItem(1);
-        await _itemsService.CreateItemAsync(item);
+        await _itemsService.AddAsync(item);
 
         await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
 
@@ -337,7 +335,7 @@ public class LocationsServiceTests
         await _locationsService.CreateLocationAsync(location);
 
         var item = InitNewItem(1);
-        await _itemsService.CreateItemAsync(item);
+        await _itemsService.AddAsync(item);
 
         await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
 

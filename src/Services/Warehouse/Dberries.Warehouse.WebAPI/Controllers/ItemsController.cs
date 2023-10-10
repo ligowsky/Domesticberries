@@ -36,7 +36,7 @@ public class ItemsController : ControllerBase
     public async Task<IActionResult> CreateItemAsync([FromBody] ItemDto input)
     {
         var item = input.ToModel();
-        var createdItem = await _itemsService.CreateItemAsync(item);
+        var createdItem = await _itemsService.AddAsync(item);
         var result = createdItem.ToDto();
 
         return CreatedAtRoute("GetItem", new { id = result.Id }, result);

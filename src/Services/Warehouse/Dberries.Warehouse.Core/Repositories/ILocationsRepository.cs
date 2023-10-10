@@ -6,7 +6,7 @@ public interface ILocationsRepository : IRepositoryBase
 {
     public Task<PageResult<Location>> GetPageAsync(PageRequest pageRequest);
     public Task<Location> GetAsync(Guid id);
-    public Task<Location> CreateAsync(Location location);
+    public Location Add(Location location);
     public void Delete(Location location);
     
     public Task<PageResult<Stock>> GetStockPageAsync(Guid locationId, PageRequest pageRequest);

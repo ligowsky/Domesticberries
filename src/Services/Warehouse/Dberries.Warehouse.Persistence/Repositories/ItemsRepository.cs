@@ -27,27 +27,15 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         return result;
     }
 
-    public async Task<Item> CreateAsync(Item item)
+    public Item Add(Item item)
     {
-        await Db.Set<Item>().AddAsync(item);
+        Db.Set<Item>().Add(item);
 
         return item;
     }
 
-    public void Delete(Item item)
+    public void Remove(Item item)
     {
         Db.Set<Item>().Remove(item);
-    }
-
-    public async Task<bool> Exists(Guid id)
-    {
-        var itemExists = await Db.Set<Item>()
-            .Where(x => x.Id == id)
-            .AnyAsync();
-
-        if (!itemExists)
-            throw ApiException.NotFound($"{nameof(Item)} with id '{id}' is not found");
-
-        return itemExists;
     }
 }
