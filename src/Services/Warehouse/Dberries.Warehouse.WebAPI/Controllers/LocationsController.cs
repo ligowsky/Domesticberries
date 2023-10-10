@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dberries.Warehouse.WebAPI;
 
-[ApiController]
 [Route("[Controller]")]
 public class LocationsController : ControllerBase
 {
@@ -15,7 +14,7 @@ public class LocationsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetLocationsAsync([FromQuery] PageRequest pageRequest)
+    public async Task<IActionResult> GetPageAsync([FromQuery] PageRequest pageRequest)
     {
         var locations = await _locationsService.GetPageAsync(pageRequest);
         var result = locations.Convert(x => x.ToDto());
@@ -23,8 +22,8 @@ public class LocationsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id:guid}", Name = "GetLocation")]
-    public async Task<IActionResult> GetLocationAsync([FromRoute] Guid id)
+    [HttpGet("{id:guid}", Name = "Get")]
+    public async Task<IActionResult> GetAsync([FromRoute] Guid id)
     {
         var location = await _locationsService.GetAsync(id);
         var result = location.ToDto();
@@ -33,17 +32,17 @@ public class LocationsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateLocationAsync([FromBody] LocationDto input)
+    public async Task<IActionResult> AddAsync([FromBody] LocationDto input)
     {
         var location = input.ToModel();
         var createdLocation = await _locationsService.AddAsync(location);
         var result = createdLocation.ToDto();
 
-        return CreatedAtRoute("GetLocation", new { id = result.Id }, result);
+        return CreatedAtRoute("Get", new { id = result.Id }, result);
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateLocationAsync([FromRoute] Guid id, [FromBody] LocationDto input)
+    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] LocationDto input)
     {
         var location = input.ToModel();
         var updatedLocation = await _locationsService.UpdateAsync(id, location);
@@ -53,7 +52,7 @@ public class LocationsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteLocationAsync([FromRoute] Guid id)
+    public async Task<IActionResult> RemoveAsync([FromRoute] Guid id)
     {
         await _locationsService.RemoveAsync(id);
 
@@ -61,7 +60,7 @@ public class LocationsController : ControllerBase
     }
 
     [HttpGet("{locationId:guid}/stock")]
-    public async Task<IActionResult> GetStockAsync([FromRoute] Guid locationId,
+    public async Task<IActionResult> GetStockPageAsync([FromRoute] Guid locationId,
         [FromQuery] PageRequest pageRequest)
     {
         var stock = await _locationsService.GetStockPageAsync(locationId, pageRequest);
@@ -71,7 +70,7 @@ public class LocationsController : ControllerBase
     }
 
     [HttpGet("{locationId:guid}/stock/{itemId:guid}")]
-    public async Task<IActionResult> GetStockForItemAsync([FromRoute] Guid locationId, [FromRoute] Guid itemId)
+    public async Task<IActionResult> GetStockAsync([FromRoute] Guid locationId, [FromRoute] Guid itemId)
     {
         var stock = await _locationsService.GetStockAsync(locationId, itemId);
         var result = stock?.ToDto();
@@ -80,7 +79,7 @@ public class LocationsController : ControllerBase
     }
 
     [HttpPut("{locationId:guid}/stock/{itemId:guid}")]
-    public async Task<IActionResult> UpdateStockForItemAsync([FromRoute] Guid locationId,
+    public async Task<IActionResult> UpdateStockAsync([FromRoute] Guid locationId,
         [FromRoute] Guid itemId, [FromBody] int quantity)
     {
         var updatedStock = await _locationsService.UpdateStockAsync(locationId, itemId, quantity);

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dberries.Warehouse.WebAPI;
 
-[ApiController]
 [Route("[Controller]")]
 public class ItemsController : ControllerBase
 {
@@ -15,7 +14,7 @@ public class ItemsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetItemsAsync([FromQuery] PageRequest pageRequest)
+    public async Task<IActionResult> GetPageAsync([FromQuery] PageRequest pageRequest)
     {
         var items = await _itemsService.GetPageAsync(pageRequest);
         var result = items.Convert(x => x.ToDto());
@@ -23,8 +22,8 @@ public class ItemsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id:guid}", Name = "GetItem")]
-    public async Task<IActionResult> GetItemAsync([FromRoute] Guid id)
+    [HttpGet("{id:guid}", Name = "Get")]
+    public async Task<IActionResult> GetAsync([FromRoute] Guid id)
     {
         var item = await _itemsService.GetAsync(id);
         var result = item.ToDto();
@@ -33,17 +32,17 @@ public class ItemsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateItemAsync([FromBody] ItemDto input)
+    public async Task<IActionResult> AddAsync([FromBody] ItemDto input)
     {
         var item = input.ToModel();
         var createdItem = await _itemsService.AddAsync(item);
         var result = createdItem.ToDto();
 
-        return CreatedAtRoute("GetItem", new { id = result.Id }, result);
+        return CreatedAtRoute("Get", new { id = result.Id }, result);
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateItemAsync([FromRoute] Guid id, [FromBody] ItemDto input)
+    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] ItemDto input)
     {
         var item = input.ToModel();
         var updatedItem = await _itemsService.UpdateAsync(id, item);
@@ -53,7 +52,7 @@ public class ItemsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteItemAsync([FromRoute] Guid id)
+    public async Task<IActionResult> RemoveAsync([FromRoute] Guid id)
     {
         await _itemsService.RemoveAsync(id);
 
