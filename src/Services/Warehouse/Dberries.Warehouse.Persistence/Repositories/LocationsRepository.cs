@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dberries.Warehouse.Persistence;
 
-public class LocationsRepository : RepositoryBase, ILocationsRepository
+public class LocationsRepository : Repository, ILocationsRepository
 {
     public LocationsRepository(AppDbContext db) : base(db)
     {
@@ -34,7 +34,7 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
         return location;
     }
 
-    public void Delete(Location location)
+    public void Remove(Location location)
     {
         Db.Set<Location>().Remove(location);
     }

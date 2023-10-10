@@ -1,6 +1,6 @@
 namespace Dberries.Warehouse;
 
-public interface IRepositoryBase
+public interface IRepository
 {
     Task<int> SaveChangesAsync();
 }

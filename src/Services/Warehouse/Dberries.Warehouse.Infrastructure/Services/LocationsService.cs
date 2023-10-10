@@ -41,7 +41,7 @@ public class LocationsService : ILocationsService
     public async Task DeleteLocationAsync(Guid id)
     {
         var existingLocation = await _locationsRepository.GetAsync(id);
-        _locationsRepository.Delete(existingLocation);
+        _locationsRepository.Remove(existingLocation);
         await _locationsRepository.SaveChangesAsync();
     }
 
