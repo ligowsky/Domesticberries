@@ -9,17 +9,16 @@ namespace Dberries.Warehouse.Tests;
 [Collection("Service Collection")]
 public class LocationsServiceTests
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly ILocationsService _locationsService;
     private readonly IItemsService _itemsService;
     private readonly AppDbContext _db;
 
     public LocationsServiceTests(TestServiceContainer testServiceContainer)
     {
-        _serviceProvider = testServiceContainer.ServiceProvider;
-        _locationsService = _serviceProvider.GetRequiredService<ILocationsService>();
-        _itemsService = _serviceProvider.GetRequiredService<IItemsService>();
-        _db = _serviceProvider.GetRequiredService<AppDbContext>();
+        var serviceProvider = testServiceContainer.ServiceProvider;
+        _locationsService = serviceProvider.GetRequiredService<ILocationsService>();
+        _itemsService = serviceProvider.GetRequiredService<IItemsService>();
+        _db = serviceProvider.GetRequiredService<AppDbContext>();
     }
 
     [Fact]
@@ -30,7 +29,7 @@ public class LocationsServiceTests
 
         for (var i = 0; i < locationsCount; i++)
         {
-            var location = InitNewLocation();
+            var location = GenerateLocation();
             await _locationsService.AddAsync(location);
         }
 
@@ -52,7 +51,7 @@ public class LocationsServiceTests
     public async Task GetLocation_ExistingLocation_LocationReceived()
     {
         // Arrange
-        var location = InitNewLocation();
+        var location = GenerateLocation();
         await _locationsService.AddAsync(location);
 
         // Act
@@ -86,7 +85,7 @@ public class LocationsServiceTests
     public async Task CreateLocation_NewLocation_LocationCreated()
     {
         // Arrange
-        var location = InitNewLocation();
+        var location = GenerateLocation();
 
         // Act
         await _locationsService.AddAsync(location);
@@ -107,7 +106,7 @@ public class LocationsServiceTests
     public async Task UpdateLocation_ExistingLocation_LocationUpdated(string name, double latitude, double longitude)
     {
         // Arrange
-        var newLocation = InitNewLocation();
+        var newLocation = GenerateLocation();
         await _locationsService.AddAsync(newLocation);
         var existingLocation = await _locationsService.GetAsync(newLocation.Id!.Value);
 
@@ -125,7 +124,7 @@ public class LocationsServiceTests
         existingLocation.Patch(location)
             .Property(x => x.Name)
             .Property(x => x.Coordinates);
-        
+
         await _locationsService.UpdateAsync(existingLocation.Id!.Value, existingLocation);
 
         // Assert
@@ -144,7 +143,7 @@ public class LocationsServiceTests
     {
         // Arrange
         var locationId = Guid.NewGuid();
-        var location = InitNewLocation();
+        var location = GenerateLocation();
         var exceptionType = typeof(NotFoundApiException);
         var expectedMessage = $"{nameof(Location)} with id '{locationId}' is not found";
 
@@ -161,7 +160,7 @@ public class LocationsServiceTests
     public async Task DeleteLocation_ExistingLocation_LocationDeleted()
     {
         // Arrange
-        var newLocation = InitNewLocation();
+        var newLocation = GenerateLocation();
         await _locationsService.AddAsync(newLocation);
         var existingLocation = await _locationsService.GetAsync(newLocation.Id!.Value);
         var exceptionType = typeof(NotFoundApiException);
@@ -200,13 +199,13 @@ public class LocationsServiceTests
     public async Task GetStockPage_ExistingStock_StockReceived()
     {
         // Arrange
-        var location = InitNewLocation();
+        var location = GenerateLocation();
         var createdLocation = await _locationsService.AddAsync(location);
 
         const int count = 10;
         const int quantity = 5;
 
-        var items = Enumerable.Range(0, count).Select(InitNewItem);
+        var items = Enumerable.Range(0, count).Select(GenerateItem);
 
         foreach (var item in items)
         {
@@ -237,10 +236,10 @@ public class LocationsServiceTests
     public async Task UpdateStock_NewStock_StockAdded(int quantity)
     {
         // Arrange
-        var location = InitNewLocation();
+        var location = GenerateLocation();
         await _locationsService.AddAsync(location);
 
-        var item = InitNewItem(1);
+        var item = GenerateItem();
         await _itemsService.AddAsync(item);
 
         // Act
@@ -261,10 +260,10 @@ public class LocationsServiceTests
     public async Task UpdateStock_ExistingStock_StockUpdated(int quantity)
     {
         // Arrange
-        var location = InitNewLocation();
+        var location = GenerateLocation();
         await _locationsService.AddAsync(location);
 
-        var item = InitNewItem(1);
+        var item = GenerateItem();
         await _itemsService.AddAsync(item);
 
         var existingStock = await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
@@ -286,10 +285,10 @@ public class LocationsServiceTests
     public async Task UpdateStock_ExistingStock_StockDeleted()
     {
         // Arrange
-        var location = InitNewLocation();
+        var location = GenerateLocation();
         await _locationsService.AddAsync(location);
 
-        var item = InitNewItem(1);
+        var item = GenerateItem();
         await _itemsService.AddAsync(item);
 
         var existingStock = await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
@@ -308,10 +307,10 @@ public class LocationsServiceTests
     public async Task UpdateStock_ExistingStock_LocationNotFound()
     {
         // Arrange
-        var location = InitNewLocation();
+        var location = GenerateLocation();
         await _locationsService.AddAsync(location);
 
-        var item = InitNewItem(1);
+        var item = GenerateItem();
         await _itemsService.AddAsync(item);
 
         await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
@@ -335,10 +334,10 @@ public class LocationsServiceTests
     public async Task UpdateStock_ExistingStock_ItemNotFound()
     {
         // Arrange
-        var location = InitNewLocation();
+        var location = GenerateLocation();
         await _locationsService.AddAsync(location);
 
-        var item = InitNewItem(1);
+        var item = GenerateItem();
         await _itemsService.AddAsync(item);
 
         await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
@@ -358,11 +357,11 @@ public class LocationsServiceTests
         Assert.Equal(expectedMessage, exception.Message);
     }
 
-    private Location InitNewLocation()
+    private Location GenerateLocation(int number = 1)
     {
         return new Location
         {
-            Name = "Location 1",
+            Name = $"Location {number}",
             Coordinates = new Coordinates
             {
                 Latitude = 1,
@@ -371,7 +370,7 @@ public class LocationsServiceTests
         };
     }
 
-    private Item InitNewItem(int number)
+    private Item GenerateItem(int number = 1)
     {
         return new Item
         {
