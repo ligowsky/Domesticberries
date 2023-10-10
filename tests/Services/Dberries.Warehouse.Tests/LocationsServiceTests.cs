@@ -144,7 +144,6 @@ public class LocationsServiceTests
             Record.ExceptionAsync(async () => await _locationsService.UpdateLocationAsync(locationId, location));
 
         // Assert
-        Assert.NotNull(exception);
         Assert.IsType(exceptionType, exception.Result);
         Assert.Equal(expectedMessage, exception.Result.Message);
     }
@@ -260,6 +259,60 @@ public class LocationsServiceTests
 
         Assert.NotNull(existingStock);
         Assert.Null(updatedStock);
+    }
+
+    [Fact]
+    public async Task UpdateStock_ExistingStock_LocationNotFound()
+    {
+        // Arrange
+        var location = InitNewLocation();
+        await _locationsService.CreateLocationAsync(location);
+
+        var item = InitNewItem();
+        await _itemsService.CreateItemAsync(item);
+
+        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
+
+        const int quantity = 10;
+        var locationId = Guid.NewGuid();
+        var exceptionType = typeof(NotFoundApiException);
+        var expectedMessage = $"{nameof(Location)} with id '{locationId}' is not found";
+
+        // Act
+        var exception =
+            await Record.ExceptionAsync(async () =>
+                await _locationsService.UpdateStockAsync(locationId, item.Id!.Value, quantity));
+        
+        // Assert
+        Assert.IsType(exceptionType, exception);
+        Assert.Equal(expectedMessage, exception.Message);
+    }
+    
+    [Fact]
+    public async Task UpdateStock_ExistingStock_ItemNotFound()
+    {
+        // Arrange
+        var location = InitNewLocation();
+        await _locationsService.CreateLocationAsync(location);
+
+        var item = InitNewItem();
+        await _itemsService.CreateItemAsync(item);
+
+        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
+
+        const int quantity = 10;
+        var itemId = Guid.NewGuid();
+        var exceptionType = typeof(NotFoundApiException);
+        var expectedMessage = $"{nameof(Item)} with id '{itemId}' is not found";
+
+        // Act
+        var exception =
+            await Record.ExceptionAsync(async () =>
+                await _locationsService.UpdateStockAsync(location.Id!.Value, itemId, quantity));
+        
+        // Assert
+        Assert.IsType(exceptionType, exception);
+        Assert.Equal(expectedMessage, exception.Message);
     }
 
     private Location InitNewLocation()
