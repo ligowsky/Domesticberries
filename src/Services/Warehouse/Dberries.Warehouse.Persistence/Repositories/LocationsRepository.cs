@@ -69,7 +69,7 @@ public class LocationsRepository : Repository, ILocationsRepository
     public async Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, int quantity)
     {
         if (quantity < 0)
-            throw ApiException.BadRequest("Quantity must be grater than 0");
+            throw ApiException.BadRequest($"Invalid quantity: {quantity}. Quantity must be greater than 0.");
 
         await CheckExistsAsync<Item>(itemId);
 
@@ -95,11 +95,9 @@ public class LocationsRepository : Repository, ILocationsRepository
 
         stock.Quantity = quantity;
 
-        if (quantity != 0)
-            return stock;
+        if (quantity == 0)
+            location.Stock!.Remove(stock);
 
-        location.Stock!.Remove(stock);
-
-        return null;
+        return stock;
     }
 }

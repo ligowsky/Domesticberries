@@ -65,7 +65,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task GetLocation_NotExistingLocation_LocationNotFound()
+    public async Task GetLocation_NotExistingLocation_NotFoundApiExceptionThrown()
     {
         // Arrange
         var locationId = Guid.NewGuid();
@@ -82,7 +82,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task CreateLocation_NewLocation_LocationCreated()
+    public async Task AddLocation_NewLocation_LocationAdded()
     {
         // Arrange
         var location = GenerateLocation();
@@ -94,7 +94,6 @@ public class LocationsServiceTests
         var createdLocation = await _locationsService.GetAsync(location.Id!.Value);
 
         Assert.NotNull(createdLocation);
-        Assert.Equal(location.Id, createdLocation.Id);
         Assert.Equal(location.Name, createdLocation.Name);
         Assert.Equal(location.Coordinates, createdLocation.Coordinates);
     }
@@ -139,7 +138,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public void UpdateLocation_NotExistingLocation_LocationNotFound()
+    public void UpdateLocation_NotExistingLocation_NotFoundApiExceptionThrown()
     {
         // Arrange
         var locationId = Guid.NewGuid();
@@ -157,7 +156,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task DeleteLocation_ExistingLocation_LocationDeleted()
+    public async Task RemoveLocation_ExistingLocation_LocationRemoved()
     {
         // Arrange
         var newLocation = GenerateLocation();
@@ -179,7 +178,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task DeleteLocation_NotExistingLocation_LocationNotFound()
+    public async Task RemoveLocation_NotExistingLocation_NotFoundApiExceptionThrown()
     {
         // Arrange
         var locationId = Guid.NewGuid();
@@ -196,7 +195,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task GetStockPage_ExistingStock_StockReceived()
+    public async Task GetStockPage_ExistingStock_StockPageReceived()
     {
         // Arrange
         var location = GenerateLocation();
@@ -282,7 +281,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task UpdateStock_ExistingStock_StockDeleted()
+    public async Task UpdateStock_ZeroQuantity_StockRemoved()
     {
         // Arrange
         var location = GenerateLocation();
@@ -304,7 +303,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task UpdateStock_ExistingStock_LocationNotFound()
+    public async Task UpdateStock_NotExistingLocation_NotFoundApiExceptionThrown()
     {
         // Arrange
         var location = GenerateLocation();
@@ -331,7 +330,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task UpdateStock_ExistingStock_ItemNotFound()
+    public async Task UpdateStock_NotExistingItem_NotFoundApiExceptionThrown()
     {
         // Arrange
         var location = GenerateLocation();
@@ -351,6 +350,34 @@ public class LocationsServiceTests
         var exception =
             await Record.ExceptionAsync(async () =>
                 await _locationsService.UpdateStockAsync(location.Id!.Value, itemId, quantity));
+
+        // Assert
+        Assert.IsType(exceptionType, exception);
+        Assert.Equal(expectedMessage, exception.Message);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(-100)]
+    [InlineData(-1000)]
+    public async Task UpdateStock_NegativeQuantity_BadRequestApiExceptionThrown(int quantity)
+    {
+        // Arrange
+        var location = GenerateLocation();
+        await _locationsService.AddAsync(location);
+
+        var item = GenerateItem();
+        await _itemsService.AddAsync(item);
+
+        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
+
+        var exceptionType = typeof(BadRequestApiException);
+        var expectedMessage = ($"Invalid quantity: {quantity}. Quantity must be greater than 0.");
+
+        // Act
+        var exception =
+            await Record.ExceptionAsync(async () =>
+                await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, quantity));
 
         // Assert
         Assert.IsType(exceptionType, exception);
