@@ -202,14 +202,15 @@ public class LocationsServiceTests
         var createdLocation = await _locationsService.AddAsync(location);
 
         const int count = 10;
-        const int quantity = 5;
 
         var items = Enumerable.Range(0, count).Select(GenerateItem);
 
         foreach (var item in items)
         {
             await _itemsService.AddAsync(item);
-            await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, quantity);
+
+            var stock = GenerateStock();
+            await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, stock);
 
             _db.ChangeTracker.Clear();
         }
@@ -241,8 +242,10 @@ public class LocationsServiceTests
         var item = GenerateItem();
         await _itemsService.AddAsync(item);
 
+        var stock = GenerateStock(quantity);
+
         // Act
-        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, quantity);
+        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, stock);
 
         // Assert
         var createdStock = await _locationsService.GetStockAsync(location.Id!.Value, item.Id!.Value);
@@ -265,10 +268,14 @@ public class LocationsServiceTests
         var item = GenerateItem();
         await _itemsService.AddAsync(item);
 
-        var existingStock = await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
+        var existingStock = GenerateStock();
+
+        var stock = GenerateStock(quantity);
+
+        existingStock = await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, existingStock);
 
         // Act
-        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, quantity);
+        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, stock);
 
         // Assert
         var updatedStock = await _locationsService.GetStockAsync(location.Id!.Value, item.Id!.Value);
@@ -290,10 +297,13 @@ public class LocationsServiceTests
         var item = GenerateItem();
         await _itemsService.AddAsync(item);
 
-        var existingStock = await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
+        var existingStock = GenerateStock();
+        existingStock = await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, existingStock);
+
+        var stock = GenerateStock(0);
 
         // Act
-        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 0);
+        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, stock);
 
         // Assert
         var updatedStock = await _locationsService.GetStockAsync(location.Id!.Value, item.Id!.Value);
@@ -312,9 +322,10 @@ public class LocationsServiceTests
         var item = GenerateItem();
         await _itemsService.AddAsync(item);
 
-        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
+        var existingStock = GenerateStock();
+        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, existingStock);
 
-        const int quantity = 10;
+        var stock = GenerateStock();
         var locationId = Guid.NewGuid();
         var exceptionType = typeof(NotFoundApiException);
         var expectedMessage = $"{nameof(Location)} with id '{locationId}' is not found";
@@ -322,7 +333,7 @@ public class LocationsServiceTests
         // Act
         var exception =
             await Record.ExceptionAsync(async () =>
-                await _locationsService.UpdateStockAsync(locationId, item.Id!.Value, quantity));
+                await _locationsService.UpdateStockAsync(locationId, item.Id!.Value, stock));
 
         // Assert
         Assert.IsType(exceptionType, exception);
@@ -339,9 +350,10 @@ public class LocationsServiceTests
         var item = GenerateItem();
         await _itemsService.AddAsync(item);
 
-        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
+        var existingStock = GenerateStock();
+        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, existingStock);
 
-        const int quantity = 10;
+        var stock = GenerateStock();
         var itemId = Guid.NewGuid();
         var exceptionType = typeof(NotFoundApiException);
         var expectedMessage = $"{nameof(Item)} with id '{itemId}' is not found";
@@ -349,7 +361,7 @@ public class LocationsServiceTests
         // Act
         var exception =
             await Record.ExceptionAsync(async () =>
-                await _locationsService.UpdateStockAsync(location.Id!.Value, itemId, quantity));
+                await _locationsService.UpdateStockAsync(location.Id!.Value, itemId, stock));
 
         // Assert
         Assert.IsType(exceptionType, exception);
@@ -369,15 +381,17 @@ public class LocationsServiceTests
         var item = GenerateItem();
         await _itemsService.AddAsync(item);
 
-        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, 1);
+        var existingStock = GenerateStock();
+        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, existingStock);
 
+        var stock = GenerateStock(quantity);
         var exceptionType = typeof(BadRequestApiException);
         var expectedMessage = ($"Invalid quantity: {quantity}. Quantity must be greater than 0.");
 
         // Act
         var exception =
             await Record.ExceptionAsync(async () =>
-                await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, quantity));
+                await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, stock));
 
         // Assert
         Assert.IsType(exceptionType, exception);
@@ -403,6 +417,14 @@ public class LocationsServiceTests
         {
             Name = $"Item {number}",
             Description = $"Description {number}"
+        };
+    }
+
+    public Stock GenerateStock(int quantity = 1)
+    {
+        return new Stock
+        {
+            Quantity = quantity
         };
     }
 }

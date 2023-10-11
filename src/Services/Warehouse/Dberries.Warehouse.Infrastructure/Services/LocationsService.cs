@@ -60,11 +60,12 @@ public class LocationsService : ILocationsService
         return await _locationsRepository.GetStockAsync(locationId, itemId);
     }
 
-    public async Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, int quantity)
+    public async Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, Stock stock)
     {
-        var stock = await _locationsRepository.UpdateStockAsync(locationId, itemId, quantity);
+        var quantity = stock.Quantity!.Value;
+        var updatedStock = await _locationsRepository.UpdateStockAsync(locationId, itemId, quantity);
         await _locationsRepository.SaveChangesAsync();
 
-        return stock;
+        return updatedStock;
     }
 }

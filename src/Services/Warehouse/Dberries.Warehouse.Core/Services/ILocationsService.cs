@@ -12,5 +12,5 @@ public interface ILocationsService
     
     Task<PageResult<Stock>> GetStockPageAsync(Guid locationId, PageRequest pageRequest);
     Task<Stock?> GetStockAsync(Guid locationId, Guid itemId);
-    Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, int quantity);
+    Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, Stock stock);
 }

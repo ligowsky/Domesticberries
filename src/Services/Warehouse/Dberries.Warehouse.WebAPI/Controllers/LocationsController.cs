@@ -80,9 +80,10 @@ public class LocationsController : ControllerBase
 
     [HttpPut("{locationId:guid}/stock/{itemId:guid}")]
     public async Task<IActionResult> UpdateStockAsync([FromRoute] Guid locationId,
-        [FromRoute] Guid itemId, [FromBody] int quantity)
+        [FromRoute] Guid itemId, [FromBody] StockDto input)
     {
-        var updatedStock = await _locationsService.UpdateStockAsync(locationId, itemId, quantity);
+        var stock = input.ToModel();
+        var updatedStock = await _locationsService.UpdateStockAsync(locationId, itemId, stock);
         var result = updatedStock?.ToDto();
 
         return Ok(result);
