@@ -1,4 +1,5 @@
 using BitzArt.Pagination;
+using Dberries.Warehouse.Presentation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dberries.Warehouse.WebAPI;
@@ -22,7 +23,7 @@ public class LocationsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id:guid}", Name = "Get")]
+    [HttpGet("{id:guid}", Name = "GetLocation")]
     public async Task<IActionResult> GetAsync([FromRoute] Guid id)
     {
         var location = await _locationsService.GetAsync(id);
@@ -32,18 +33,22 @@ public class LocationsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddAsync([FromBody] LocationDto input)
+    public async Task<IActionResult> AddAsync([FromBody] LocationDto input,
+        [FromServices] AddLocationValidator validator)
     {
+        validator.ValidateDto(input);
         var location = input.ToModel();
         var createdLocation = await _locationsService.AddAsync(location);
         var result = createdLocation.ToDto();
 
-        return CreatedAtRoute("Get", new { id = result.Id }, result);
+        return CreatedAtRoute("GetLocation", new { id = result.Id }, result);
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] LocationDto input)
+    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] LocationDto input,
+        [FromServices] UpdateLocationValidator validator)
     {
+        validator.ValidateDto(input);
         var location = input.ToModel();
         var updatedLocation = await _locationsService.UpdateAsync(id, location);
         var result = updatedLocation.ToDto();
@@ -80,8 +85,9 @@ public class LocationsController : ControllerBase
 
     [HttpPut("{locationId:guid}/stock/{itemId:guid}")]
     public async Task<IActionResult> UpdateStockAsync([FromRoute] Guid locationId,
-        [FromRoute] Guid itemId, [FromBody] StockDto input)
+        [FromRoute] Guid itemId, [FromBody] StockDto input, [FromServices] UpdateStockValidator validator)
     {
+        validator.ValidateDto(input);
         var stock = input.ToModel();
         var updatedStock = await _locationsService.UpdateStockAsync(locationId, itemId, stock);
         var result = updatedStock?.ToDto();

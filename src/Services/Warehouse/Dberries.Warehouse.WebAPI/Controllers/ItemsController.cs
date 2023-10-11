@@ -1,4 +1,5 @@
 using BitzArt.Pagination;
+using Dberries.Warehouse.Presentation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dberries.Warehouse.WebAPI;
@@ -22,7 +23,7 @@ public class ItemsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id:guid}", Name = "Get")]
+    [HttpGet("{id:guid}", Name = "GetItem")]
     public async Task<IActionResult> GetAsync([FromRoute] Guid id)
     {
         var item = await _itemsService.GetAsync(id);
@@ -32,18 +33,21 @@ public class ItemsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddAsync([FromBody] ItemDto input)
+    public async Task<IActionResult> AddAsync([FromBody] ItemDto input, [FromServices] AddItemValidator validator)
     {
+        validator.ValidateDto(input);
         var item = input.ToModel();
         var createdItem = await _itemsService.AddAsync(item);
         var result = createdItem.ToDto();
 
-        return CreatedAtRoute("Get", new { id = result.Id }, result);
+        return CreatedAtRoute("GetItem", new { id = result.Id }, result);
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] ItemDto input)
+    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] ItemDto input,
+        [FromServices] UpdateItemValidator validator)
     {
+        validator.ValidateDto(input);
         var item = input.ToModel();
         var updatedItem = await _itemsService.UpdateAsync(id, item);
         var result = updatedItem.ToDto();
