@@ -2,9 +2,9 @@ using FluentValidation;
 
 namespace Dberries.Warehouse.Presentation;
 
-public class UpdateStockValidator : AbstractValidator<StockDto>
+public class StockValidator : AbstractValidator<StockDto>
 {
-    public UpdateStockValidator()
+    public StockValidator()
     {
         RuleFor(x => x.Quantity)
             .NotNull()

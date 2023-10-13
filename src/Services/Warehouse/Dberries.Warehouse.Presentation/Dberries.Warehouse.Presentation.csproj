@@ -8,10 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Dberries.Warehouse.Infrastructure\Dberries.Warehouse.Infrastructure.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Validation\Dberries.Shared.Validation.csproj" />
+      <ProjectReference Include="..\Dberries.Warehouse.Core\Dberries.Warehouse.Core.csproj" />
     </ItemGroup>
 </Project>

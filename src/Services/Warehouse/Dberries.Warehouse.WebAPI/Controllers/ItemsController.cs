@@ -33,9 +33,9 @@ public class ItemsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddAsync([FromBody] ItemDto input, [FromServices] AddItemValidator validator)
+    public async Task<IActionResult> AddAsync([FromBody] ItemDto input, [FromServices] ItemValidator validator)
     {
-        validator.ValidateDto(input);
+        validator.ValidateDto(input, ActionType.Create);
         var item = input.ToModel();
         var createdItem = await _itemsService.AddAsync(item);
         var result = createdItem.ToDto();
@@ -45,9 +45,9 @@ public class ItemsController : ControllerBase
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] ItemDto input,
-        [FromServices] UpdateItemValidator validator)
+        [FromServices] ItemValidator validator)
     {
-        validator.ValidateDto(input);
+        validator.ValidateDto(input, ActionType.Update);
         var item = input.ToModel();
         var updatedItem = await _itemsService.UpdateAsync(id, item);
         var result = updatedItem.ToDto();

@@ -16,14 +16,19 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\Dberries.Warehouse.Infrastructure\Dberries.Warehouse.Infrastructure.csproj" />
+      <ProjectReference Include="..\Dberries.Warehouse.Persistence\Dberries.Warehouse.Persistence.csproj" />
+      <ProjectReference Include="..\Dberries.Warehouse.Presentation\Dberries.Warehouse.Presentation.csproj" />
+    </ItemGroup>
+
+
     <ItemGroup>
       <Content Include="..\..\..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Dberries.Warehouse.Presentation\Dberries.Warehouse.Presentation.csproj" />
     </ItemGroup>
 
 </Project>

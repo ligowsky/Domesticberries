@@ -3,6 +3,6 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>Shared</RootNamespace>
+        <RootNamespace>Dberries</RootNamespace>
     </PropertyGroup>
 </Project>

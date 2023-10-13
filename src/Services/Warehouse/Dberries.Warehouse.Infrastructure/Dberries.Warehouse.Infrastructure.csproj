@@ -7,9 +7,16 @@
         <RootNamespace>Dberries.Warehouse</RootNamespace>
     </PropertyGroup>
 
+
+
     <ItemGroup>
-      <ProjectReference Include="..\Dberries.Warehouse.Persistence\Dberries.Warehouse.Persistence.csproj" />
+      <ProjectReference Include="..\Dberries.Warehouse.Core\Dberries.Warehouse.Core.csproj" />
     </ItemGroup>
 
+
+
+    <ItemGroup>
+      <PackageReference Include="BitzArt.Patcher" Version="1.0.0" />
+    </ItemGroup>
 
 </Project>
