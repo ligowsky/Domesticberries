@@ -12,7 +12,7 @@ public static class HttpMethodExtensions
             "PATCH" => ActionType.Patch,
             "OPTIONS" => ActionType.Options,
             "DELETE" => ActionType.Delete,
-            _ => throw new ArgumentException("Unexpected httpMethod " + method)
+            _ => throw new ArgumentException($"Unexpected httpMethod {method}")
         };
     }
 }
