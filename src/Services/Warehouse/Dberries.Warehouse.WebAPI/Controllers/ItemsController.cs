@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dberries.Warehouse.WebAPI;
 
 [Route("[Controller]")]
-public class ItemsController : ControllerBase
+public class ItemsController : DberriesController
 {
     private readonly IItemsService _itemsService;
 
@@ -33,9 +33,9 @@ public class ItemsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddAsync([FromBody] ItemDto input, [FromServices] ItemValidator validator)
+    public async Task<IActionResult> AddAsync([FromBody] ItemDto input)
     {
-        validator.ValidateDto(input, ActionType.Create);
+        ValidateDto<ItemValidator, ItemDto>(input);
         var item = input.ToModel();
         var createdItem = await _itemsService.AddAsync(item);
         var result = createdItem.ToDto();
@@ -44,10 +44,9 @@ public class ItemsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] ItemDto input,
-        [FromServices] ItemValidator validator)
+    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] ItemDto input)
     {
-        validator.ValidateDto(input, ActionType.Update);
+        ValidateDto<ItemValidator, ItemDto>(input);
         var item = input.ToModel();
         var updatedItem = await _itemsService.UpdateAsync(id, item);
         var result = updatedItem.ToDto();
