@@ -7,13 +7,13 @@ namespace Dberries;
 public abstract class DberriesController : ControllerBase
 {
     [NonAction]
-    protected void ValidateDto<TValidator, TDto>(TDto value) where TValidator : AbstractValidator<TDto>
+    protected void ValidateDto<TDto>(TDto value)
     {
         if (value is null) return;
 
         var actionType = HttpContext.Request.Method.ToActionType();
 
-        var validator = GetRequiredService<TValidator>();
+        var validator = GetRequiredService<IValidator<TDto>>();
         validator.ValidateDto(value, actionType);
     }
 

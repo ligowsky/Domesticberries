@@ -14,7 +14,7 @@ public static class DberriesValidation
                 member?.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name ?? member?.Name;
     }
     
-    public static void ValidateDto<T>(this AbstractValidator<T> validator, T model, ActionType actionType)
+    public static void ValidateDto<T>(this IValidator<T> validator, T model, ActionType actionType)
     {
         var result = validator.Validate(model,
             options =>

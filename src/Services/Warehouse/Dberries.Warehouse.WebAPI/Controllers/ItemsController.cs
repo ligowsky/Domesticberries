@@ -35,7 +35,7 @@ public class ItemsController : DberriesController
     [HttpPost]
     public async Task<IActionResult> AddAsync([FromBody] ItemDto input)
     {
-        ValidateDto<ItemValidator, ItemDto>(input);
+        ValidateDto(input);
         var item = input.ToModel();
         var createdItem = await _itemsService.AddAsync(item);
         var result = createdItem.ToDto();
@@ -46,7 +46,7 @@ public class ItemsController : DberriesController
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] ItemDto input)
     {
-        ValidateDto<ItemValidator, ItemDto>(input);
+        ValidateDto(input);
         var item = input.ToModel();
         var updatedItem = await _itemsService.UpdateAsync(id, item);
         var result = updatedItem.ToDto();
