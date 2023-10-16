@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dberries.Warehouse.Persistence;
 
-public class Repository : IRepository
+public class RepositoryBase : IRepository
 {
     protected readonly AppDbContext Db;
 
-    protected Repository(AppDbContext db)
+    protected RepositoryBase(AppDbContext db)
     {
         Db = db;
     }
