@@ -36,7 +36,7 @@ public class LocationsController : ControllerBase
     public async Task<IActionResult> AddAsync([FromBody] LocationDto input,
         [FromServices] LocationValidator validator)
     {
-        validator.ValidateDto(input, ActionType.Create);
+        validator.Validate(input, ActionType.Create);
         var location = input.ToModel();
         var createdLocation = await _locationsService.AddAsync(location);
         var result = createdLocation.ToDto();
@@ -48,7 +48,7 @@ public class LocationsController : ControllerBase
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] LocationDto input,
         [FromServices] LocationValidator validator)
     {
-        validator.ValidateDto(input, ActionType.Update);
+        validator.Validate(input, ActionType.Update);
         var location = input.ToModel();
         var updatedLocation = await _locationsService.UpdateAsync(id, location);
         var result = updatedLocation.ToDto();
@@ -87,7 +87,7 @@ public class LocationsController : ControllerBase
     public async Task<IActionResult> UpdateStockAsync([FromRoute] Guid locationId,
         [FromRoute] Guid itemId, [FromBody] StockDto input, [FromServices] StockValidator validator)
     {
-        validator.ValidateDto(input, ActionType.Update);
+        validator.Validate(input, ActionType.Update);
         var stock = input.ToModel();
         var updatedStock = await _locationsService.UpdateStockAsync(locationId, itemId, stock);
         var result = updatedStock?.ToDto();

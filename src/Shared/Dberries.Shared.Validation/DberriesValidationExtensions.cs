@@ -5,7 +5,7 @@ namespace Dberries;
 
 public static class DberriesValidationExtensions
 {
-    public static void ValidateDto<T>(this IValidator<T> validator, T model, ActionType actionType)
+    public static void Validate<T>(this IValidator<T> validator, T model, ActionType actionType)
     {
         var result = validator.Validate(model,
             options =>
