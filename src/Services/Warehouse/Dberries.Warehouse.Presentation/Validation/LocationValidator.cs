@@ -12,7 +12,7 @@ public class LocationValidator : AbstractValidator<LocationDto>
 
             RuleFor(x => x.Coordinates).NotNull();
         });
-        
+
         RuleFor(x => x.Name)
             .MaximumLength(128);
 

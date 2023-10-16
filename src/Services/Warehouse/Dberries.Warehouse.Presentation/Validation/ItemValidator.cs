@@ -9,7 +9,7 @@ public class ItemValidator : AbstractValidator<ItemDto>
         RuleSet($"{ActionType.Create}", () =>
         {
             RuleFor(x => x.Name).NotEmpty();
-            
+
             RuleFor(x => x.Description).NotEmpty();
         });
 

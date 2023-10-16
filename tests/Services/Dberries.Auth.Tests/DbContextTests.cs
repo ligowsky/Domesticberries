@@ -25,7 +25,7 @@ public class DbContextTests
             Email = "user@dberries.com",
             PasswordHash = "passwordHash"
         };
-        
+
         //Act
         await dbContext.AddAsync(user);
         await dbContext.SaveChangesAsync();
@@ -34,7 +34,7 @@ public class DbContextTests
         var createdUser = await dbContext.Set<User>()
             .Where(x => x.Id == user.Id)
             .FirstOrDefaultAsync();
-        
+
         Assert.NotNull(createdUser);
         Assert.Equal(user.Id, createdUser.Id);
         Assert.Equal(user.Email, createdUser.Email);

@@ -10,7 +10,7 @@ internal static class CoordinatesConfiguration
         builder.Property(x => x.Latitude)
             .HasPrecision(7, 5)
             .IsRequired();
-        
+
         builder.Property(x => x.Longitude)
             .HasPrecision(7, 5)
             .IsRequired();

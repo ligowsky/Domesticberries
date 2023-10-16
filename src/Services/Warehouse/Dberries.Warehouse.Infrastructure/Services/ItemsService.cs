@@ -37,7 +37,7 @@ public class ItemsService : IItemsService
         existingItem.Patch(item)
             .Property(x => x.Name)
             .Property(x => x.Description);
-        
+
         await _itemsRepository.SaveChangesAsync();
 
         return existingItem;
