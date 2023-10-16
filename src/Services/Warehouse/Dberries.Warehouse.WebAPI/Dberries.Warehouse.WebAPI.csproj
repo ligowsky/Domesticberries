@@ -5,28 +5,31 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <RootNamespace>Dberries.Warehouse.WebAPI</RootNamespace>
+        <RootNamespace>Dberries.Warehouse</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
     <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
     <ItemGroup>
+        <PackageReference Include="BitzArt.ApiExceptions.AspNetCore" Version="1.18.2" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
+
+
     <ItemGroup>
-      <Folder Include="Controllers\" />
+      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Controllers\Dberries.Shared.Controllers.csproj" />
+      <ProjectReference Include="..\Dberries.Warehouse.Infrastructure\Dberries.Warehouse.Infrastructure.csproj" />
+      <ProjectReference Include="..\Dberries.Warehouse.Persistence\Dberries.Warehouse.Persistence.csproj" />
+      <ProjectReference Include="..\Dberries.Warehouse.Presentation\Dberries.Warehouse.Presentation.csproj" />
     </ItemGroup>
+
 
     <ItemGroup>
       <Content Include="..\..\..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Dberries.Warehouse.Presentation\Dberries.Warehouse.Presentation.csproj" />
     </ItemGroup>
 
 </Project>

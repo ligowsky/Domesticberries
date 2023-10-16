@@ -23,8 +23,9 @@
         </PackageReference>
     </ItemGroup>
 
+
     <ItemGroup>
-      <ProjectReference Include="..\..\..\src\Services\Warehouse\Dberries.Warehouse.Persistence\Dberries.Warehouse.Persistence.csproj" />
+      <ProjectReference Include="..\..\..\src\Services\Warehouse\Dberries.Warehouse.WebAPI\Dberries.Warehouse.WebAPI.csproj" />
     </ItemGroup>
 
 </Project>

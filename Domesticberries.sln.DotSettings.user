@@ -1,5 +1,11 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=c6283e72_002Deeb7_002D4250_002D8fe6_002D3e64b529dbcd/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;tests&amp;gt;\&amp;lt;Services&amp;gt;\&amp;lt;Dberries.Warehouse.Tests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=58e6bfb2_002D7e9b_002D40d4_002D833c_002Da49b8c5633d9/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="UpdateLocation_NotExistingLocation_LocationNotFound" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;ProjectFile&gt;A8FA66F3-8E75-40A0-BDDA-AFB21F5B864F/f:LocationsServiceTests.cs&lt;/ProjectFile&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=879448d0_002D3462_002D44e7_002Db01f_002D6eb4f2e1b4b6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="GetLocation_ExistingLocation_LocationReceived" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;ProjectFile&gt;A8FA66F3-8E75-40A0-BDDA-AFB21F5B864F/f:LocationsServiceTests.cs&lt;/ProjectFile&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=c6283e72_002Deeb7_002D4250_002D8fe6_002D3e64b529dbcd/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;tests&amp;gt;\&amp;lt;Services&amp;gt;\&amp;lt;Dberries.Warehouse.Tests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Or&gt;
     &lt;Project Location="/Users/ligowsky/Development/git/Domesticberries/tests/Services/Dberries.Warehouse.Tests" Presentation="&amp;lt;tests&amp;gt;\&amp;lt;Services&amp;gt;\&amp;lt;Dberries.Warehouse.Tests&amp;gt;" /&gt;
     &lt;Project Location="/Users/ligowsky/Development/git/Domesticberries/tests/Services/Dberries.Auth.Tests" Presentation="&amp;lt;tests&amp;gt;\&amp;lt;Services&amp;gt;\&amp;lt;Dberries.Auth.Tests&amp;gt;" /&gt;
