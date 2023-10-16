@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <RootNamespace>Dberries.Warehouse</RootNamespace>
-    </PropertyGroup>
-    <ItemGroup>
-      <PackageReference Include="BitzArt.ApiExceptions" Version="1.18.2" />
-      <PackageReference Include="BitzArt.Pagination.EntityFrameworkCore" Version="1.14.0" />
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Contracts\Dberries.Shared.Contracts.csproj" />
-    </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>Dberries.Warehouse</RootNamespace>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="BitzArt.ApiExceptions" Version="1.18.2" />
+		<PackageReference Include="BitzArt.Pagination.EntityFrameworkCore" Version="1.14.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Shared\Dberries.Shared.Contracts\Dberries.Shared.Contracts.csproj" />
+	</ItemGroup>
 </Project>

@@ -17,7 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Dberries.Models\Dberries.Models.csproj" />
       <ProjectReference Include="..\Dberries.Auth.Core\Dberries.Auth.Core.csproj" />
     </ItemGroup>
 

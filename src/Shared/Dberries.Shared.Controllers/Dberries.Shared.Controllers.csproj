@@ -15,5 +15,4 @@
       <ProjectReference Include="..\Dberries.Shared.Validation\Dberries.Shared.Validation.csproj" />
     </ItemGroup>
 
-
 </Project>

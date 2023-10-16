@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Dberries.Models\Dberries.Models.csproj" />
       <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Contracts\Dberries.Shared.Contracts.csproj" />
       <ProjectReference Include="..\Dberries.Store.Core\Dberries.Store.Core.csproj" />
     </ItemGroup>
