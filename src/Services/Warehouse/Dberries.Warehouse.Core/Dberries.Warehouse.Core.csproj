@@ -11,5 +11,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\Shared\Dberries.Shared.Contracts\Dberries.Shared.Contracts.csproj" />
+		<ProjectReference Include="..\..\..\Shared\Dberries.Shared.Core\Dberries.Shared.Core.csproj" />
 	</ItemGroup>
 </Project>

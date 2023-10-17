@@ -1,4 +1,4 @@
-namespace Dberries.Warehouse;
+namespace Dberries;
 
 public interface IRepository
 {
