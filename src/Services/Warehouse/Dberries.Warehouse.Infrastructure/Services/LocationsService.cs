@@ -78,6 +78,9 @@ public class LocationsService : ILocationsService
         var updatedStock = await _locationsRepository.UpdateStockAsync(locationId, itemId, quantity);
         await _locationsRepository.SaveChangesAsync();
 
+        var message = new StockChangedMessage(updatedStock?.ToDto());
+        await _publishEndpoint.Publish(message);
+
         return updatedStock;
     }
 }
