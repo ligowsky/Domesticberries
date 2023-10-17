@@ -1,15 +1,18 @@
 using BitzArt;
 using BitzArt.Pagination;
+using MassTransit;
 
 namespace Dberries.Warehouse.Infrastructure;
 
 public class ItemsService : IItemsService
 {
     private readonly IItemsRepository _itemsRepository;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public ItemsService(IItemsRepository itemsRepository)
+    public ItemsService(IItemsRepository itemsRepository, IPublishEndpoint publishEndpoint)
     {
         _itemsRepository = itemsRepository;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<PageResult<Item>> GetPageAsync(PageRequest pageRequest)
@@ -27,6 +30,9 @@ public class ItemsService : IItemsService
         var createdItem = _itemsRepository.Add(item);
         await _itemsRepository.SaveChangesAsync();
 
+        var message = new ItemAddedMessage(createdItem.ToDto());
+        await _publishEndpoint.Publish(message);
+
         return createdItem;
     }
 
@@ -40,6 +46,9 @@ public class ItemsService : IItemsService
 
         await _itemsRepository.SaveChangesAsync();
 
+        var message = new ItemUpdatedMessage(existingItem.ToDto());
+        await _publishEndpoint.Publish(message);
+
         return existingItem;
     }
 
@@ -48,5 +57,8 @@ public class ItemsService : IItemsService
         var existingItem = await _itemsRepository.GetAsync(id);
         _itemsRepository.Remove(existingItem);
         await _itemsRepository.SaveChangesAsync();
+
+        var message = new ItemRemovedMessage(id);
+        await _publishEndpoint.Publish(message);
     }
 }
