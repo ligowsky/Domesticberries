@@ -1,15 +1,18 @@
 using BitzArt;
 using BitzArt.Pagination;
+using MassTransit;
 
 namespace Dberries.Warehouse.Infrastructure;
 
 public class LocationsService : ILocationsService
 {
     private readonly ILocationsRepository _locationsRepository;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public LocationsService(ILocationsRepository locationsRepository)
+    public LocationsService(ILocationsRepository locationsRepository, IPublishEndpoint publishEndpoint)
     {
         _locationsRepository = locationsRepository;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<PageResult<Location>> GetPageAsync(PageRequest pageRequest)
@@ -27,6 +30,9 @@ public class LocationsService : ILocationsService
         var createdLocation = _locationsRepository.Add(location);
         await _locationsRepository.SaveChangesAsync();
 
+        var message = new LocationAddedMessage(createdLocation.ToDto());
+        await _publishEndpoint.Publish(message);
+
         return createdLocation;
     }
 
@@ -40,6 +46,9 @@ public class LocationsService : ILocationsService
 
         await _locationsRepository.SaveChangesAsync();
 
+        var message = new LocationUpdatedMessage(existingLocation.ToDto());
+        await _publishEndpoint.Publish(message);
+
         return existingLocation;
     }
 
@@ -48,6 +57,9 @@ public class LocationsService : ILocationsService
         var existingLocation = await _locationsRepository.GetAsync(id);
         _locationsRepository.Remove(existingLocation);
         await _locationsRepository.SaveChangesAsync();
+
+        var message = new LocationRemovedMessage(id);
+        await _publishEndpoint.Publish(message);
     }
 
     public async Task<PageResult<Stock>> GetStockPageAsync(Guid locationId, PageRequest pageRequest)
