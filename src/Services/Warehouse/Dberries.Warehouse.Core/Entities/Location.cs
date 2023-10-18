@@ -6,4 +6,14 @@ public class Location : IEntity
     public string? Name { get; set; }
     public Coordinates? Coordinates { get; set; }
     public ICollection<Stock>? Stock { get; set; }
+
+    public Location(string? name, Coordinates? coordinates)
+    {
+        Name = name;
+        Coordinates = coordinates;
+    }
+
+    public Location()
+    {
+    }
 }
