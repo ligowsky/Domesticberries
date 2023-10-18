@@ -1,11 +1,10 @@
 using BitzArt.Pagination;
-using Dberries.Warehouse.Presentation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dberries.Warehouse.WebAPI;
 
 [Route("[Controller]")]
-public class LocationsController : ControllerBase
+public class LocationsController : DberriesController
 {
     private readonly ILocationsService _locationsService;
 
@@ -33,10 +32,9 @@ public class LocationsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddAsync([FromBody] LocationDto input,
-        [FromServices] LocationValidator validator)
+    public async Task<IActionResult> AddAsync([FromBody] LocationDto input)
     {
-        validator.Validate(input, ActionType.Create);
+        Validate(input);
         var location = input.ToModel();
         var createdLocation = await _locationsService.AddAsync(location);
         var result = createdLocation.ToDto();
@@ -45,10 +43,9 @@ public class LocationsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] LocationDto input,
-        [FromServices] LocationValidator validator)
+    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] LocationDto input)
     {
-        validator.Validate(input, ActionType.Update);
+        Validate(input);
         var location = input.ToModel();
         var updatedLocation = await _locationsService.UpdateAsync(id, location);
         var result = updatedLocation.ToDto();
@@ -85,9 +82,9 @@ public class LocationsController : ControllerBase
 
     [HttpPut("{locationId:guid}/stock/{itemId:guid}")]
     public async Task<IActionResult> UpdateStockAsync([FromRoute] Guid locationId,
-        [FromRoute] Guid itemId, [FromBody] StockDto input, [FromServices] StockValidator validator)
+        [FromRoute] Guid itemId, [FromBody] StockDto input)
     {
-        validator.Validate(input, ActionType.Update);
+        Validate(input);
         var stock = input.ToModel();
         var updatedStock = await _locationsService.UpdateStockAsync(locationId, itemId, stock);
         var result = updatedStock?.ToDto();
