@@ -42,7 +42,7 @@ public class LocationsController : DberriesController
         return CreatedAtRoute("GetLocation", new { id = result.Id }, result);
     }
 
-    [HttpPut("{id:guid}")]
+    [HttpPatch("{id:guid}")]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] LocationDto input)
     {
         Validate(input);

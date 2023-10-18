@@ -42,7 +42,7 @@ public class ItemsController : DberriesController
         return CreatedAtRoute("GetItem", new { id = result.Id }, result);
     }
 
-    [HttpPut("{id:guid}")]
+    [HttpPatch("{id:guid}")]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] ItemDto input)
     {
         Validate(input);
