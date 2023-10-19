@@ -61,7 +61,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Shared.Validation"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Shared.Controllers", "src\Shared\Dberries.Shared.Controllers\Dberries.Shared.Controllers.csproj", "{F4AC7106-E032-4DE3-A6C5-771081589352}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Shared.Core", "src\Shared\Dberries.Shared.Core\Dberries.Shared.Core.csproj", "{7C8EB027-8995-444A-BAD4-FC7694380121}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Shared.Abstractions", "src\Shared\Dberries.Shared.Abstractions\Dberries.Shared.Abstractions.csproj", "{7C8EB027-8995-444A-BAD4-FC7694380121}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Shared.Messages", "src\Shared\Dberries.Shared.Messages\Dberries.Shared.Messages.csproj", "{FB645DC3-AE10-4F9C-8C8B-80AF6993F8F1}"
 EndProject

@@ -10,6 +10,6 @@
 		<PackageReference Include="BitzArt.Pagination.EntityFrameworkCore" Version="1.14.0" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\Shared\Dberries.Shared.Core\Dberries.Shared.Core.csproj" />
+		<ProjectReference Include="..\..\..\Shared\Dberries.Shared.Abstractions\Dberries.Shared.Abstractions.csproj" />
 	</ItemGroup>
 </Project>
