@@ -1,3 +1,4 @@
+using BitzArt.ApiExceptions;
 using MassTransit.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -65,17 +66,16 @@ public class ItemsMessagesTests
         // Arrange
         var itemId = Guid.NewGuid();
         var item = EntityGenerator.GenerateItem();
+        Task Action() => _itemsService.UpdateAsync(itemId, item);
 
         // Assert
-        var exception =
-            await Record.ExceptionAsync(async () => await _itemsService.UpdateAsync(itemId, item));
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
 
-        var message = _harness.Published
+        var isMessagePublished = _harness.Published
             .Select<ItemUpdatedMessage>()
-            .FirstOrDefault(x => x.Context.Message.Item.Id == item.Id)?.Context.Message;
+            .Any(x => x.Context.Message.Item.Id == item.Id);
 
-        Assert.NotNull(exception);
-        Assert.Null(message);
+        Assert.False(isMessagePublished);
     }
 
     [Fact]
@@ -103,16 +103,15 @@ public class ItemsMessagesTests
     {
         // Arrange
         var itemId = Guid.NewGuid();
+        Task Action() => _itemsService.RemoveAsync(itemId);
 
         // Assert
-        var exception =
-            await Record.ExceptionAsync(async () => await _itemsService.RemoveAsync(itemId));
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
 
-        var message = _harness.Published
+        var isMessagePublished = _harness.Published
             .Select<ItemRemovedMessage>()
-            .FirstOrDefault(x => x.Context.Message.Id == itemId)?.Context.Message;
+            .Any(x => x.Context.Message.Id == itemId);
 
-        Assert.NotNull(exception);
-        Assert.Null(message);
+        Assert.False(isMessagePublished);
     }
 }

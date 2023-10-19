@@ -1,3 +1,4 @@
+using BitzArt.ApiExceptions;
 using MassTransit.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -69,17 +70,16 @@ public class LocationsMessagesTests
         // Arrange
         var locationId = Guid.NewGuid();
         var location = EntityGenerator.GenerateLocation();
+        Task Action() => _locationsService.UpdateAsync(locationId, location);
 
         // Assert
-        var exception =
-            await Record.ExceptionAsync(async () => await _locationsService.UpdateAsync(locationId, location));
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
 
-        var message = _harness.Published
+        var isMessagePublished = _harness.Published
             .Select<LocationUpdatedMessage>()
-            .FirstOrDefault(x => x.Context.Message.Location.Id == location.Id)?.Context.Message;
+            .Any(x => x.Context.Message.Location.Id == location.Id);
 
-        Assert.NotNull(exception);
-        Assert.Null(message);
+        Assert.False(isMessagePublished);
     }
 
     [Fact]
@@ -107,17 +107,16 @@ public class LocationsMessagesTests
     {
         // Arrange
         var locationId = Guid.NewGuid();
+        Task Action() => _locationsService.RemoveAsync(locationId);
 
         // Assert
-        var exception =
-            await Record.ExceptionAsync(async () => await _locationsService.RemoveAsync(locationId));
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
 
-        var message = _harness.Published
+        var isMessagePublished = _harness.Published
             .Select<LocationRemovedMessage>()
-            .FirstOrDefault(x => x.Context.Message.Id == locationId)?.Context.Message;
+            .Any(x => x.Context.Message.Id == locationId);
 
-        Assert.NotNull(exception);
-        Assert.Null(message);
+        Assert.False(isMessagePublished);
     }
 
     [Fact]
@@ -160,22 +159,22 @@ public class LocationsMessagesTests
         item = await _itemsService.AddAsync(item);
 
         var locationId = Guid.NewGuid();
+
         var stock = EntityGenerator.GenerateStock();
 
-        // Assert
-        var exception =
-            await Record.ExceptionAsync(async () =>
-                await _locationsService.UpdateStockAsync(locationId, item.Id!.Value, stock));
+        Task Action() => _locationsService.UpdateStockAsync(locationId, item.Id!.Value, stock);
 
-        var message = _harness.Published
+        // Assert
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
+
+        var isMessagePublished = _harness.Published
             .Select<StockUpdatedMessage>()
-            .FirstOrDefault(x =>
+            .Any(x =>
                 x.Context.Message.LocationId == locationId &&
                 x.Context.Message.Stock?.Item?.Id == item.Id
-            )?.Context.Message;
+            );
 
-        Assert.NotNull(exception);
-        Assert.Null(message);
+        Assert.False(isMessagePublished);
     }
 
     [Fact]
@@ -183,24 +182,24 @@ public class LocationsMessagesTests
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();
-        await _locationsService.AddAsync(location);
+        location = await _locationsService.AddAsync(location);
 
         var itemId = Guid.NewGuid();
+
         var stock = EntityGenerator.GenerateStock();
 
-        // Assert
-        var exception =
-            await Record.ExceptionAsync(async () =>
-                await _locationsService.UpdateStockAsync(location.Id!.Value, itemId, stock));
+        Task Action() => _locationsService.UpdateStockAsync(location.Id!.Value, itemId, stock);
 
-        var message = _harness.Published
+        // Assert
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
+
+        var isMessagePublished = _harness.Published
             .Select<StockUpdatedMessage>()
-            .FirstOrDefault(x =>
+            .Any(x =>
                 x.Context.Message.LocationId == location.Id &&
                 x.Context.Message.Stock?.Item?.Id == itemId
-            )?.Context.Message;
+            );
 
-        Assert.NotNull(exception);
-        Assert.Null(message);
+        Assert.False(isMessagePublished);
     }
 }
