@@ -8,13 +8,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+    
+    <ItemGroup>
       <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.1" />
     </ItemGroup>
-
-
-
+    
     <ItemGroup>
       <ProjectReference Include="..\Dberries.Shared.Contracts\Dberries.Shared.Contracts.csproj" />
     </ItemGroup>
-
+    
 </Project>

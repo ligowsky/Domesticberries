@@ -1,6 +1,5 @@
 using BitzArt.ApiExceptions.AspNetCore;
 using Dberries;
-using Dberries.Extensions;
 using Dberries.Warehouse.Infrastructure;
 using Dberries.Warehouse.Persistence;
 using Dberries.Warehouse.Presentation;

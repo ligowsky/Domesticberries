@@ -2,7 +2,7 @@ using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Dberries.Extensions;
+namespace Dberries;
 
 public static class AddMessagingExtensions
 {
@@ -11,17 +11,7 @@ public static class AddMessagingExtensions
         services.AddMassTransit(x =>
         {
             x.SetKebabCaseEndpointNameFormatter();
-
-            x.UsingRabbitMq((context, cfg) =>
-            {
-                cfg.Host(configuration["RabbitMQ:Host"]!, h =>
-                {
-                    h.Username(configuration["RabbitMQ:Username"]!);
-                    h.Password(configuration["RabbitMQ:Password"]!);
-                });
-
-                cfg.ConfigureEndpoints(context);
-            });
+            x.AddRabbitMq(services, configuration);
         });
     }
 }
