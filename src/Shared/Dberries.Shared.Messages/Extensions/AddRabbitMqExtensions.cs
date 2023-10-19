@@ -10,12 +10,13 @@ public static class AddRabbitMqExtensions
         IConfiguration configuration)
     {
         var section = configuration.GetSection("RabbitMQ");
-        services.Configure<RabbitMqOptions>(section);
         var rabbitMqOptions = section.Get<RabbitMqOptions>();
 
         if (rabbitMqOptions is null)
             throw new Exception("RabbitMQ options are required");
 
+        services.Configure<RabbitMqOptions>(section);
+        
         configurator.UsingRabbitMq((context, cfg) =>
         {
             cfg.Host(rabbitMqOptions!.Host, h =>
