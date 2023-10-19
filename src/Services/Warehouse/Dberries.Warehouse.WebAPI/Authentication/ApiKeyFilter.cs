@@ -17,8 +17,6 @@ public class ApiKeyAuthFilter : IAuthorizationFilter
         var userApiKey = context.HttpContext.Request.Headers[AuthConstants.ApiKeyHeaderName].ToString();
 
         if (string.IsNullOrWhiteSpace(userApiKey) || !_apiKeyValidation.IsValidApiKey(userApiKey))
-        {
             throw ApiException.Unauthorized($"{AuthConstants.ApiKeyHeaderName} is not valid");
-        }
     }
 }
