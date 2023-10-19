@@ -1,4 +1,5 @@
 using BitzArt.Pagination;
+using Dberries.Warehouse.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dberries.Warehouse.WebAPI;
@@ -14,6 +15,7 @@ public class ItemsController : DberriesController
     }
 
     [HttpGet]
+    [ApiKey]
     public async Task<IActionResult> GetPageAsync([FromQuery] PageRequest pageRequest)
     {
         var items = await _itemsService.GetPageAsync(pageRequest);
@@ -23,6 +25,7 @@ public class ItemsController : DberriesController
     }
 
     [HttpGet("{id:guid}", Name = "GetItem")]
+    [ApiKey]
     public async Task<IActionResult> GetAsync([FromRoute] Guid id)
     {
         var item = await _itemsService.GetAsync(id);
@@ -32,6 +35,7 @@ public class ItemsController : DberriesController
     }
 
     [HttpPost]
+    [ApiKey]
     public async Task<IActionResult> AddAsync([FromBody] ItemDto input)
     {
         Validate(input);
@@ -43,6 +47,7 @@ public class ItemsController : DberriesController
     }
 
     [HttpPatch("{id:guid}")]
+    [ApiKey]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] ItemDto input)
     {
         Validate(input);
@@ -54,6 +59,7 @@ public class ItemsController : DberriesController
     }
 
     [HttpDelete("{id:guid}")]
+    [ApiKey]
     public async Task<IActionResult> RemoveAsync([FromRoute] Guid id)
     {
         await _itemsService.RemoveAsync(id);
