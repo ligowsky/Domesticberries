@@ -1,6 +1,6 @@
 using BitzArt.ApiExceptions.AspNetCore;
+using Dberries;
 using Dberries.Extensions;
-using Dberries.Warehouse.Authentication;
 using Dberries.Warehouse.Infrastructure;
 using Dberries.Warehouse.Persistence;
 using Dberries.Warehouse.Presentation;
@@ -14,7 +14,7 @@ builder.Services.AddPresentation();
 
 builder.Services.AddApiExceptionHandler();
 
-builder.Services.AddApiKeyAuthentication();
+builder.Services.AddXApiKeyAuthorization(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

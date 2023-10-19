@@ -1,5 +1,4 @@
 using BitzArt.Pagination;
-using Dberries.Warehouse.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dberries.Warehouse.WebAPI;
@@ -15,7 +14,7 @@ public class LocationsController : DberriesController
     }
 
     [HttpGet]
-    [ApiKey]
+    [XApiKeyAuthorization]
     public async Task<IActionResult> GetPageAsync([FromQuery] PageRequest pageRequest)
     {
         var locations = await _locationsService.GetPageAsync(pageRequest);
@@ -25,7 +24,7 @@ public class LocationsController : DberriesController
     }
 
     [HttpGet("{id:guid}", Name = "GetLocation")]
-    [ApiKey]
+    [XApiKeyAuthorization]
     public async Task<IActionResult> GetAsync([FromRoute] Guid id)
     {
         var location = await _locationsService.GetAsync(id);
@@ -35,7 +34,7 @@ public class LocationsController : DberriesController
     }
 
     [HttpPost]
-    [ApiKey]
+    [XApiKeyAuthorization]
     public async Task<IActionResult> AddAsync([FromBody] LocationDto input)
     {
         Validate(input);
@@ -47,7 +46,7 @@ public class LocationsController : DberriesController
     }
 
     [HttpPatch("{id:guid}")]
-    [ApiKey]
+    [XApiKeyAuthorization]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] LocationDto input)
     {
         Validate(input);
@@ -59,7 +58,7 @@ public class LocationsController : DberriesController
     }
 
     [HttpDelete("{id:guid}")]
-    [ApiKey]
+    [XApiKeyAuthorization]
     public async Task<IActionResult> RemoveAsync([FromRoute] Guid id)
     {
         await _locationsService.RemoveAsync(id);
@@ -68,7 +67,7 @@ public class LocationsController : DberriesController
     }
 
     [HttpGet("{locationId:guid}/stock")]
-    [ApiKey]
+    [XApiKeyAuthorization]
     public async Task<IActionResult> GetStockPageAsync([FromRoute] Guid locationId,
         [FromQuery] PageRequest pageRequest)
     {
@@ -79,7 +78,7 @@ public class LocationsController : DberriesController
     }
 
     [HttpGet("{locationId:guid}/stock/{itemId:guid}")]
-    [ApiKey]
+    [XApiKeyAuthorization]
     public async Task<IActionResult> GetStockAsync([FromRoute] Guid locationId, [FromRoute] Guid itemId)
     {
         var stock = await _locationsService.GetStockAsync(locationId, itemId);
@@ -89,7 +88,7 @@ public class LocationsController : DberriesController
     }
 
     [HttpPut("{locationId:guid}/stock/{itemId:guid}")]
-    [ApiKey]
+    [XApiKeyAuthorization]
     public async Task<IActionResult> UpdateStockAsync([FromRoute] Guid locationId,
         [FromRoute] Guid itemId, [FromBody] StockDto input)
     {

@@ -19,6 +19,7 @@
 
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Auth\Dberries.Shared.Auth.csproj" />
       <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Controllers\Dberries.Shared.Controllers.csproj" />
       <ProjectReference Include="..\Dberries.Warehouse.Infrastructure\Dberries.Warehouse.Infrastructure.csproj" />
       <ProjectReference Include="..\Dberries.Warehouse.Persistence\Dberries.Warehouse.Persistence.csproj" />
