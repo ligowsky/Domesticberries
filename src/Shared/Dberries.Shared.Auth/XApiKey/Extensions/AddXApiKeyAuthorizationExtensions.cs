@@ -7,6 +7,12 @@ public static class AddXApiKeyAuthorizationExtensions
 {
     public static void AddXApiKeyAuthorization(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<AuthOptions>(configuration.GetSection("Authentication"));
+        var section = configuration.GetSection("Authentication");
+        var authOptions = section.Get<AuthOptions>();
+
+        if (authOptions is null)
+            throw new Exception("Authentication options are required");
+        
+        services.Configure<AuthOptions>(section);
     }
 }

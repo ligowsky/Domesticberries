@@ -13,6 +13,9 @@ public static class AddRabbitMqExtensions
         services.Configure<RabbitMqOptions>(section);
         var rabbitMqOptions = section.Get<RabbitMqOptions>();
 
+        if (rabbitMqOptions is null)
+            throw new Exception("RabbitMQ options are required");
+
         configurator.UsingRabbitMq((context, cfg) =>
         {
             cfg.Host(rabbitMqOptions!.Host, h =>
