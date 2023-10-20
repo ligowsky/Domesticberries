@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dberries.Warehouse.WebAPI;
 
 [Route("[Controller]")]
+[AdminAuthorize]
 public class ItemsController : DberriesController
 {
     private readonly IItemsService _itemsService;
@@ -14,7 +15,6 @@ public class ItemsController : DberriesController
     }
 
     [HttpGet]
-    [AdminAuthorize]
     public async Task<IActionResult> GetPageAsync([FromQuery] PageRequest pageRequest)
     {
         var items = await _itemsService.GetPageAsync(pageRequest);
@@ -24,7 +24,6 @@ public class ItemsController : DberriesController
     }
 
     [HttpGet("{id:guid}", Name = "GetItem")]
-    [AdminAuthorize]
     public async Task<IActionResult> GetAsync([FromRoute] Guid id)
     {
         var item = await _itemsService.GetAsync(id);
@@ -34,7 +33,6 @@ public class ItemsController : DberriesController
     }
 
     [HttpPost]
-    [AdminAuthorize]
     public async Task<IActionResult> AddAsync([FromBody] ItemDto input)
     {
         Validate(input);
@@ -46,7 +44,6 @@ public class ItemsController : DberriesController
     }
 
     [HttpPatch("{id:guid}")]
-    [AdminAuthorize]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] ItemDto input)
     {
         Validate(input);
@@ -58,7 +55,6 @@ public class ItemsController : DberriesController
     }
 
     [HttpDelete("{id:guid}")]
-    [AdminAuthorize]
     public async Task<IActionResult> RemoveAsync([FromRoute] Guid id)
     {
         await _itemsService.RemoveAsync(id);
