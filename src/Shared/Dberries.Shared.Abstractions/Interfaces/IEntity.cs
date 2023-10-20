@@ -1,4 +1,4 @@
-namespace Dberries.Warehouse;
+namespace Dberries;
 
 /// <summary>
 /// Represents an entity with a unique identifier.

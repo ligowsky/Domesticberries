@@ -10,6 +10,7 @@
 
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Messages\Dberries.Shared.Messages.csproj" />
       <ProjectReference Include="..\Dberries.Warehouse.Core\Dberries.Warehouse.Core.csproj" />
     </ItemGroup>
 

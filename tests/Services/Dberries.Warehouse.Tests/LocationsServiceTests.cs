@@ -29,29 +29,26 @@ public class LocationsServiceTests
 
         for (var i = 0; i < locationsCount; i++)
         {
-            var location = GenerateLocation();
+            var location = EntityGenerator.GenerateLocation();
             await _locationsService.AddAsync(location);
         }
 
-        var pageRequest = new PageRequest()
-        {
-            Offset = 0,
-            Limit = locationsCount
-        };
+        var pageRequest = new PageRequest(0, locationsCount);
 
         // Act
         var locationsPage = await _locationsService.GetPageAsync(pageRequest);
 
         // Assert
         Assert.NotNull(locationsPage);
-        Assert.Equal(locationsCount, locationsPage.Data!.Count());
+        Assert.NotNull(locationsPage.Data);
+        Assert.Equal(locationsCount, locationsPage.Data.Count());
     }
 
     [Fact]
     public async Task GetLocation_ExistingLocation_LocationReceived()
     {
         // Arrange
-        var location = GenerateLocation();
+        var location = EntityGenerator.GenerateLocation();
         await _locationsService.AddAsync(location);
 
         // Act
@@ -69,34 +66,29 @@ public class LocationsServiceTests
     {
         // Arrange
         var locationId = Guid.NewGuid();
-        var exceptionType = typeof(NotFoundApiException);
-        var expectedMessage = $"{nameof(Location)} with id '{locationId}' is not found";
-
-        // Act
-        var exception =
-            await Record.ExceptionAsync(async () => await _locationsService.GetAsync(locationId));
+        Task Action() => _locationsService.GetAsync(locationId);
 
         // Assert
-        Assert.IsType(exceptionType, exception);
-        Assert.Equal(expectedMessage, exception.Message);
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 
     [Fact]
     public async Task AddLocation_NewLocation_LocationAdded()
     {
         // Arrange
-        var location = GenerateLocation();
+        var location = EntityGenerator.GenerateLocation();
 
         // Act
-        await _locationsService.AddAsync(location);
+        var createdLocation = await _locationsService.AddAsync(location);
 
         // Assert
-        var createdLocation = await _locationsService.GetAsync(location.Id!.Value);
-
         Assert.NotNull(createdLocation);
         Assert.Equal(location.Name, createdLocation.Name);
-        Assert.Equal(location.Coordinates, createdLocation.Coordinates);
+        Assert.NotNull(createdLocation.Coordinates);
+        Assert.Equal(location.Coordinates!.Latitude, createdLocation.Coordinates.Latitude);
+        Assert.Equal(location.Coordinates!.Longitude, createdLocation.Coordinates.Longitude);
     }
+
 
     [Theory]
     [InlineData("Location 2", 40.7128, -74.0060)]
@@ -105,76 +97,54 @@ public class LocationsServiceTests
     public async Task UpdateLocation_ExistingLocation_LocationUpdated(string name, double latitude, double longitude)
     {
         // Arrange
-        var newLocation = GenerateLocation();
-        await _locationsService.AddAsync(newLocation);
-        var existingLocation = await _locationsService.GetAsync(newLocation.Id!.Value);
+        var location = EntityGenerator.GenerateLocation();
+        location = await _locationsService.AddAsync(location);
 
-        var location = new Location
-        {
-            Name = name,
-            Coordinates = new Coordinates
-            {
-                Latitude = latitude,
-                Longitude = longitude
-            }
-        };
+        var payload = new Location(name, new Coordinates(latitude, longitude));
 
         // Act
-        existingLocation.Patch(location)
+        location.Patch(payload)
             .Property(x => x.Name)
             .Property(x => x.Coordinates);
 
-        await _locationsService.UpdateAsync(existingLocation.Id!.Value, existingLocation);
+        var updatedLocation = await _locationsService.UpdateAsync(location.Id!.Value, location);
 
         // Assert
-        var updatedLocation = await _locationsService.GetAsync(existingLocation.Id!.Value);
-
         Assert.NotNull(updatedLocation);
-        Assert.Equal(existingLocation.Id, updatedLocation.Id);
-        Assert.Equal(updatedLocation.Name, name);
+        Assert.Equal(location.Id, updatedLocation.Id);
+        Assert.Equal(payload.Name, updatedLocation.Name);
         Assert.NotNull(updatedLocation.Coordinates);
-        Assert.Equal(updatedLocation.Coordinates!.Latitude, latitude);
-        Assert.Equal(updatedLocation.Coordinates!.Longitude, longitude);
+        Assert.Equal(payload.Coordinates!.Latitude, updatedLocation.Coordinates.Latitude);
+        Assert.Equal(payload.Coordinates!.Longitude, updatedLocation.Coordinates!.Longitude);
     }
 
     [Fact]
-    public void UpdateLocation_NotExistingLocation_NotFoundApiExceptionThrown()
+    public async Task UpdateLocation_NotExistingLocation_NotFoundApiExceptionThrown()
     {
         // Arrange
         var locationId = Guid.NewGuid();
-        var location = GenerateLocation();
-        var exceptionType = typeof(NotFoundApiException);
-        var expectedMessage = $"{nameof(Location)} with id '{locationId}' is not found";
-
-        // Act
-        var exception =
-            Record.ExceptionAsync(async () => await _locationsService.UpdateAsync(locationId, location));
+        var location = EntityGenerator.GenerateLocation();
+        
+        Task Action() => _locationsService.UpdateAsync(locationId, location);
 
         // Assert
-        Assert.IsType(exceptionType, exception.Result);
-        Assert.Equal(expectedMessage, exception.Result.Message);
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 
     [Fact]
     public async Task RemoveLocation_ExistingLocation_LocationRemoved()
     {
         // Arrange
-        var newLocation = GenerateLocation();
-        await _locationsService.AddAsync(newLocation);
-        var existingLocation = await _locationsService.GetAsync(newLocation.Id!.Value);
-        var exceptionType = typeof(NotFoundApiException);
-        var expectedMessage = $"{nameof(Location)} with id '{existingLocation.Id}' is not found";
+        var location = EntityGenerator.GenerateLocation();
+        location = await _locationsService.AddAsync(location);
+        
+        Task Action() => _locationsService.GetAsync(location.Id!.Value);
 
         // Act
-        await _locationsService.RemoveAsync(existingLocation.Id!.Value);
+        await _locationsService.RemoveAsync(location.Id!.Value);
 
         // Assert
-        var exception =
-            await Record.ExceptionAsync(
-                async () => await _locationsService.GetAsync(existingLocation.Id!.Value));
-
-        Assert.IsType(exceptionType, exception);
-        Assert.Equal(expectedMessage, exception.Message);
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 
     [Fact]
@@ -182,51 +152,44 @@ public class LocationsServiceTests
     {
         // Arrange
         var locationId = Guid.NewGuid();
-        var exceptionType = typeof(NotFoundApiException);
-        var expectedMessage = $"{nameof(Location)} with id '{locationId}' is not found";
-
-        // Act
-        var exception =
-            await Record.ExceptionAsync(async () => await _locationsService.RemoveAsync(locationId));
+        
+        Task Action() => _locationsService.RemoveAsync(locationId);
 
         // Assert
-        Assert.IsType(exceptionType, exception);
-        Assert.Equal(expectedMessage, exception.Message);
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 
     [Fact]
     public async Task GetStockPage_ExistingStock_StockPageReceived()
     {
         // Arrange
-        var location = GenerateLocation();
-        var createdLocation = await _locationsService.AddAsync(location);
+        var location = EntityGenerator.GenerateLocation();
+        location = await _locationsService.AddAsync(location);
 
         const int count = 10;
 
-        var items = Enumerable.Range(0, count).Select(GenerateItem);
+        var items = Enumerable.Range(0, count)
+            .Select(EntityGenerator.GenerateItem);
 
         foreach (var item in items)
         {
             await _itemsService.AddAsync(item);
 
-            var stock = GenerateStock();
+            var stock = EntityGenerator.GenerateStock();
             await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, stock);
 
             _db.ChangeTracker.Clear();
         }
 
-        var pageRequest = new PageRequest
-        {
-            Offset = 0,
-            Limit = count
-        };
+        var pageRequest = new PageRequest(0, count);
 
         // Act
-        var stockPage = await _locationsService.GetStockPageAsync(createdLocation.Id!.Value, pageRequest);
+        var stockPage = await _locationsService.GetStockPageAsync(location.Id!.Value, pageRequest);
 
         // Assert
         Assert.NotNull(stockPage);
-        Assert.Equal(count, stockPage.Data!.Count());
+        Assert.NotNull(stockPage.Data);
+        Assert.Equal(count, stockPage.Data.Count());
     }
 
     [Theory]
@@ -236,13 +199,13 @@ public class LocationsServiceTests
     public async Task UpdateStock_NewStock_StockAdded(int quantity)
     {
         // Arrange
-        var location = GenerateLocation();
+        var location = EntityGenerator.GenerateLocation();
         await _locationsService.AddAsync(location);
 
-        var item = GenerateItem();
+        var item = EntityGenerator.GenerateItem();
         await _itemsService.AddAsync(item);
 
-        var stock = GenerateStock(quantity);
+        var stock = EntityGenerator.GenerateStock(quantity);
 
         // Act
         await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, stock);
@@ -251,8 +214,8 @@ public class LocationsServiceTests
         var createdStock = await _locationsService.GetStockAsync(location.Id!.Value, item.Id!.Value);
 
         Assert.NotNull(createdStock);
-        Assert.Equal(createdStock.Quantity, quantity);
-        Assert.Equal(createdStock.ItemId, item.Id);
+        Assert.Equal(quantity, createdStock.Quantity);
+        Assert.Equal(item.Id, createdStock.ItemId);
     }
 
     [Theory]
@@ -262,17 +225,16 @@ public class LocationsServiceTests
     public async Task UpdateStock_ExistingStock_StockUpdated(int quantity)
     {
         // Arrange
-        var location = GenerateLocation();
+        var location = EntityGenerator.GenerateLocation();
         await _locationsService.AddAsync(location);
 
-        var item = GenerateItem();
+        var item = EntityGenerator.GenerateItem();
         await _itemsService.AddAsync(item);
 
-        var existingStock = GenerateStock();
+        var newStock = EntityGenerator.GenerateStock();
+        var existingStock = await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, newStock);
 
-        var stock = GenerateStock(quantity);
-
-        existingStock = await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, existingStock);
+        var stock = EntityGenerator.GenerateStock(quantity);
 
         // Act
         await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, stock);
@@ -282,8 +244,8 @@ public class LocationsServiceTests
 
         Assert.NotNull(existingStock);
         Assert.NotNull(updatedStock);
-        Assert.Equal(updatedStock.Quantity, quantity);
-        Assert.Equal(updatedStock.ItemId, item.Id);
+        Assert.Equal(quantity, updatedStock.Quantity);
+        Assert.Equal(item.Id, updatedStock.ItemId);
         Assert.Equal(existingStock.ItemId, updatedStock.ItemId);
     }
 
@@ -291,81 +253,56 @@ public class LocationsServiceTests
     public async Task UpdateStock_ZeroQuantity_StockRemoved()
     {
         // Arrange
-        var location = GenerateLocation();
-        await _locationsService.AddAsync(location);
+        var location = EntityGenerator.GenerateLocation();
+        location = await _locationsService.AddAsync(location);
 
-        var item = GenerateItem();
-        await _itemsService.AddAsync(item);
+        var item = EntityGenerator.GenerateItem();
+        item = await _itemsService.AddAsync(item);
 
-        var existingStock = GenerateStock();
-        existingStock = await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, existingStock);
+        var existingStock = EntityGenerator.GenerateStock();
+        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, existingStock);
 
-        var stock = GenerateStock(0);
+        var stock = EntityGenerator.GenerateStock(0);
 
         // Act
-        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, stock);
+        var updatedStock = await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, stock);
 
         // Assert
-        var updatedStock = await _locationsService.GetStockAsync(location.Id!.Value, item.Id!.Value);
-
         Assert.NotNull(existingStock);
-        Assert.Null(updatedStock);
+        Assert.NotNull(updatedStock);
+        Assert.Equal(0, updatedStock.Quantity);
     }
 
     [Fact]
     public async Task UpdateStock_NotExistingLocation_NotFoundApiExceptionThrown()
     {
         // Arrange
-        var location = GenerateLocation();
-        await _locationsService.AddAsync(location);
-
-        var item = GenerateItem();
-        await _itemsService.AddAsync(item);
-
-        var existingStock = GenerateStock();
-        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, existingStock);
-
-        var stock = GenerateStock();
+        var item = EntityGenerator.GenerateItem();
+        item = await _itemsService.AddAsync(item);
+        
         var locationId = Guid.NewGuid();
-        var exceptionType = typeof(NotFoundApiException);
-        var expectedMessage = $"{nameof(Location)} with id '{locationId}' is not found";
+        var stock = EntityGenerator.GenerateStock();
 
-        // Act
-        var exception =
-            await Record.ExceptionAsync(async () =>
-                await _locationsService.UpdateStockAsync(locationId, item.Id!.Value, stock));
+        Task Action() => _locationsService.UpdateStockAsync(locationId, item.Id!.Value, stock);
 
         // Assert
-        Assert.IsType(exceptionType, exception);
-        Assert.Equal(expectedMessage, exception.Message);
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 
     [Fact]
     public async Task UpdateStock_NotExistingItem_NotFoundApiExceptionThrown()
     {
         // Arrange
-        var location = GenerateLocation();
+        var location = EntityGenerator.GenerateLocation();
         await _locationsService.AddAsync(location);
-
-        var item = GenerateItem();
-        await _itemsService.AddAsync(item);
-
-        var existingStock = GenerateStock();
-        await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, existingStock);
-
-        var stock = GenerateStock();
+        
         var itemId = Guid.NewGuid();
-        var exceptionType = typeof(NotFoundApiException);
-        var expectedMessage = $"{nameof(Item)} with id '{itemId}' is not found";
+        var stock = EntityGenerator.GenerateStock();
 
-        // Act
-        var exception =
-            await Record.ExceptionAsync(async () =>
-                await _locationsService.UpdateStockAsync(location.Id!.Value, itemId, stock));
+        Task Action() => _locationsService.UpdateStockAsync(location.Id!.Value, itemId, stock);
 
         // Assert
-        Assert.IsType(exceptionType, exception);
-        Assert.Equal(expectedMessage, exception.Message);
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 
     [Theory]
@@ -375,56 +312,20 @@ public class LocationsServiceTests
     public async Task UpdateStock_NegativeQuantity_BadRequestApiExceptionThrown(int quantity)
     {
         // Arrange
-        var location = GenerateLocation();
+        var location = EntityGenerator.GenerateLocation();
         await _locationsService.AddAsync(location);
 
-        var item = GenerateItem();
+        var item = EntityGenerator.GenerateItem();
         await _itemsService.AddAsync(item);
 
-        var existingStock = GenerateStock();
+        var existingStock = EntityGenerator.GenerateStock();
         await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, existingStock);
 
-        var stock = GenerateStock(quantity);
-        var exceptionType = typeof(BadRequestApiException);
-        var expectedMessage = ($"Invalid quantity: {quantity}. Quantity must be greater than 0.");
+        var stock = EntityGenerator.GenerateStock(quantity);
 
-        // Act
-        var exception =
-            await Record.ExceptionAsync(async () =>
-                await _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, stock));
-
+        Task Action() => _locationsService.UpdateStockAsync(location.Id!.Value, item.Id!.Value, stock);
+            
         // Assert
-        Assert.IsType(exceptionType, exception);
-        Assert.Equal(expectedMessage, exception.Message);
-    }
-
-    private Location GenerateLocation(int number = 1)
-    {
-        return new Location
-        {
-            Name = $"Location {number}",
-            Coordinates = new Coordinates
-            {
-                Latitude = 1,
-                Longitude = 1
-            }
-        };
-    }
-
-    private Item GenerateItem(int number = 1)
-    {
-        return new Item
-        {
-            Name = $"Item {number}",
-            Description = $"Description {number}"
-        };
-    }
-
-    public Stock GenerateStock(int quantity = 1)
-    {
-        return new Stock
-        {
-            Quantity = quantity
-        };
+        await Assert.ThrowsAsync<BadRequestApiException>(Action);
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dberries.Warehouse.WebAPI;
 
 [Route("[Controller]")]
+[AdminAuthorize]
 public class ItemsController : DberriesController
 {
     private readonly IItemsService _itemsService;
@@ -42,7 +43,7 @@ public class ItemsController : DberriesController
         return CreatedAtRoute("GetItem", new { id = result.Id }, result);
     }
 
-    [HttpPut("{id:guid}")]
+    [HttpPatch("{id:guid}")]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] ItemDto input)
     {
         Validate(input);

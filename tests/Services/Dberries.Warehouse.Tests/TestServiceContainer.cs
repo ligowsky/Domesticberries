@@ -1,5 +1,8 @@
 using Dberries.Warehouse.Infrastructure;
 using Dberries.Warehouse.Persistence;
+using MassTransit;
+using MassTransit.Testing;
+using MassTransit.Transports;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +29,8 @@ public class TestServiceContainer : IDisposable
         services.AddInfrastructure();
         services.AddRepositories();
 
+        services.AddMassTransitTestHarness();
+        
         _services = services.BuildServiceProvider();
 
         using (var scope = _services.CreateScope())
