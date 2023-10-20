@@ -12,9 +12,6 @@ public static class AddAuthOptionsExtensions
 
         if (authOptions is null)
             throw new Exception("Authentication options are required");
-
-        if (string.IsNullOrEmpty(authOptions.XApiKey))
-            throw new Exception("X-API-Key is required");
         
         services.Configure<AuthOptions>(section);
     }
