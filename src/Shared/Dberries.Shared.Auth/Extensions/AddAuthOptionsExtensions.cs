@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Dberries;
 
-public static class AddApiKeyAuthorizationExtensions
+public static class AddAuthOptionsExtensions
 {
-    public static void AddApiKeyAuthorization(this IServiceCollection services, IConfiguration configuration)
+    public static void AddAuthOptions(this IServiceCollection services, IConfiguration configuration)
     {
         var section = configuration.GetSection("Authentication");
         var authOptions = section.Get<AuthOptions>();

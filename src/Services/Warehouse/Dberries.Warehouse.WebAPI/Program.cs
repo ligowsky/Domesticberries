@@ -13,7 +13,7 @@ builder.Services.AddPresentation();
 
 builder.Services.AddApiExceptionHandler();
 
-builder.Services.AddApiKeyAuthorization(builder.Configuration);
+builder.Services.AddAuthOptions(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
