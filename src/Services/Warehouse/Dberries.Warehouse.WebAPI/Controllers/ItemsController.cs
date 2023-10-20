@@ -14,7 +14,7 @@ public class ItemsController : DberriesController
     }
 
     [HttpGet]
-    [XApiKeyAuthorization]
+    [AdminAuthorize]
     public async Task<IActionResult> GetPageAsync([FromQuery] PageRequest pageRequest)
     {
         var items = await _itemsService.GetPageAsync(pageRequest);
@@ -24,7 +24,7 @@ public class ItemsController : DberriesController
     }
 
     [HttpGet("{id:guid}", Name = "GetItem")]
-    [XApiKeyAuthorization]
+    [AdminAuthorize]
     public async Task<IActionResult> GetAsync([FromRoute] Guid id)
     {
         var item = await _itemsService.GetAsync(id);
@@ -34,7 +34,7 @@ public class ItemsController : DberriesController
     }
 
     [HttpPost]
-    [XApiKeyAuthorization]
+    [AdminAuthorize]
     public async Task<IActionResult> AddAsync([FromBody] ItemDto input)
     {
         Validate(input);
@@ -46,7 +46,7 @@ public class ItemsController : DberriesController
     }
 
     [HttpPatch("{id:guid}")]
-    [XApiKeyAuthorization]
+    [AdminAuthorize]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] ItemDto input)
     {
         Validate(input);
@@ -58,7 +58,7 @@ public class ItemsController : DberriesController
     }
 
     [HttpDelete("{id:guid}")]
-    [XApiKeyAuthorization]
+    [AdminAuthorize]
     public async Task<IActionResult> RemoveAsync([FromRoute] Guid id)
     {
         await _itemsService.RemoveAsync(id);

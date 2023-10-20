@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 namespace Dberries;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class XApiKeyAuthorizationAttribute : Attribute, IAuthorizationFilter
+public class AdminAuthorizeAttribute : Attribute, IAuthorizationFilter
 {
     private static AuthOptions? _authOptions;
 
