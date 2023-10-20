@@ -16,11 +16,11 @@ public class AdminAuthorizeAttribute : Attribute, IAuthorizationFilter
         _authOptions ??= context.HttpContext.RequestServices
             .GetRequiredService<IOptions<AuthOptions>>().Value;
 
-        var key = GetXApiKey(context.HttpContext.Request);
-        ValidateXApiKey(key);
+        var key = GetApiKey(context.HttpContext.Request);
+        ValidateApiKey(key);
     }
 
-    private static string GetXApiKey(HttpRequest request)
+    private static string GetApiKey(HttpRequest request)
     {
         var authHeaders = request.Headers["X-API-Key"];
 
@@ -38,7 +38,7 @@ public class AdminAuthorizeAttribute : Attribute, IAuthorizationFilter
         return header.Split(" ").Last();
     }
 
-    private void ValidateXApiKey(string userXApiKey)
+    private void ValidateApiKey(string userXApiKey)
     {
         if (userXApiKey != _authOptions?.XApiKey)
             throw ApiException.Unauthorized("Invalid X-API-KEY");
