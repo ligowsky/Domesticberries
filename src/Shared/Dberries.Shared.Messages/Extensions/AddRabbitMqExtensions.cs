@@ -15,11 +15,20 @@ public static class AddRabbitMqExtensions
         if (rabbitMqOptions is null)
             throw new Exception("RabbitMQ options are required");
 
+        if (string.IsNullOrEmpty(rabbitMqOptions.Host))
+            throw new Exception("RabbitMQ Host is required");
+
+        if (string.IsNullOrEmpty(rabbitMqOptions.Username))
+            throw new Exception("RabbitMQ Username is required");
+
+        if (string.IsNullOrEmpty(rabbitMqOptions.Password))
+            throw new Exception("RabbitMQ Password is required");
+
         services.Configure<RabbitMqOptions>(section);
         
         configurator.UsingRabbitMq((context, cfg) =>
         {
-            cfg.Host(rabbitMqOptions!.Host, h =>
+            cfg.Host(rabbitMqOptions.Host, h =>
             {
                 h.Username(rabbitMqOptions.Username);
                 h.Password(rabbitMqOptions.Password);
