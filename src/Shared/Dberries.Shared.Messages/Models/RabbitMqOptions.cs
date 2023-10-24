@@ -18,13 +18,13 @@ public class RabbitMqOptions
             throw new Exception("RabbitMQ options are required");
         
         if (string.IsNullOrEmpty(rabbitMqOptions.Host))
-            throw new Exception("RabbitMQ Host is required");
+            throw new Exception($"RabbitMQ {nameof(Host)} is required");
 
         if (string.IsNullOrEmpty(rabbitMqOptions.Username))
-            throw new Exception("RabbitMQ Username is required");
+            throw new Exception($"RabbitMQ {nameof(Username)} is required");
 
         if (string.IsNullOrEmpty(rabbitMqOptions.Password))
-            throw new Exception("RabbitMQ Password is required");
+            throw new Exception($"RabbitMQ {nameof(Password)} is required");
 
         services.Configure<RabbitMqOptions>(section);
         

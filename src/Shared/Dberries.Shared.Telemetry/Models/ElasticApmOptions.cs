@@ -20,25 +20,17 @@ public class ElasticApmOptions
         if (elasticApmOptions is null)
             throw new Exception("ElasticApm options are required");
         
-        var apmUrl = section.GetValue<string>("ServerUrl");
-        
-        if (string.IsNullOrEmpty(apmUrl))
-            throw new Exception("ElasticApm ServerUrl is required");
+        if (string.IsNullOrEmpty(elasticApmOptions.ServerUrl))
+            throw new Exception($"ElasticApm {nameof(ServerUrl)} is required");
 
-        var nodeUri = section.GetValue<string>("ElasticsearchNodeUri");
+        if (string.IsNullOrEmpty(elasticApmOptions.ElasticsearchNodeUri))
+            throw new Exception($"ElasticApm {nameof(ElasticsearchNodeUri)} is required");
 
-        if (string.IsNullOrEmpty(nodeUri))
-            throw new Exception("ElasticApm ElasticsearchNodeUri is required");
-        
-        var environment = section.GetValue<string>("Environment");
+        if (string.IsNullOrEmpty(elasticApmOptions.Environment))
+            throw new Exception($"ElasticApm {nameof(Environment)} is required");
 
-        if (string.IsNullOrEmpty(environment))
-            throw new Exception("ElasticApm Environment is required");
-        
-        var serviceName = section.GetValue<string>("ServiceName");
-
-        if (string.IsNullOrEmpty(serviceName))
-            throw new Exception("ElasticApm ServiceName is required");
+        if (string.IsNullOrEmpty(elasticApmOptions.ServiceName))
+            throw new Exception($"ElasticApm {nameof(ServiceName)} is required");
 
         builder.Services.Configure<ElasticApmOptions>(section);
         
