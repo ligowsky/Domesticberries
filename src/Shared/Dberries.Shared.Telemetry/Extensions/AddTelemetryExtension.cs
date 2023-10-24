@@ -54,8 +54,12 @@ public static class AddTelemetryExtension
                         o.SetDbStatementForText = true;
                         o.SetDbStatementForStoredProcedure = true;
                     })
-                    .AddHttpClientInstrumentation(
-                        o => { o.RecordException = true; })
+                    .AddHttpClientInstrumentation(o =>
+                    {
+                        o.RecordException = true;
+                        o.EnrichWithHttpRequestMessage = HttpClientEnrichUtility.EnrichWithHttpRequestMessage;
+                        o.EnrichWithHttpResponseMessage = HttpClientEnrichUtility.EnrichWithHttpResponseMessage;
+                    })
                     .AddOtlpExporter(cfg => { cfg.Endpoint = new Uri(elasticApmOptions.ServerUrl); });
             });
 
