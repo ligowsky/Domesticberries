@@ -16,7 +16,7 @@ public class AuthOptions
             throw new Exception("Authentication options are required");
         
         if (string.IsNullOrEmpty(authOptions.XApiKey))
-            throw new Exception("X-API-Key is required");
+            throw new Exception($"{nameof(XApiKey)} is required");
         
         services.Configure<AuthOptions>(section);
 
