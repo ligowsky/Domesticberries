@@ -1,7 +1,6 @@
 using BitzArt;
 using MassTransit.Logging;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Logs;
@@ -57,8 +56,12 @@ public static class AddTelemetryExtension
                     .AddHttpClientInstrumentation(o =>
                     {
                         o.RecordException = true;
-                        o.EnrichWithHttpRequestMessage = HttpClientEnrichUtility.EnrichWithHttpRequestMessage;
-                        o.EnrichWithHttpResponseMessage = HttpClientEnrichUtility.EnrichWithHttpResponseMessage;
+
+                        if (elasticApmOptions.EnrichOutboundHttpRequests)
+                        {
+                            o.EnrichWithHttpRequestMessage = HttpClientEnrichUtility.EnrichWithHttpRequestMessage;
+                            o.EnrichWithHttpResponseMessage = HttpClientEnrichUtility.EnrichWithHttpResponseMessage;
+                        }
                     })
                     .AddOtlpExporter(cfg => { cfg.Endpoint = new Uri(elasticApmOptions.ServerUrl); });
             });

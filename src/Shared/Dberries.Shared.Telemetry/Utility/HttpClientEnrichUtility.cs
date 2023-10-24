@@ -14,6 +14,6 @@ internal static class HttpClientEnrichUtility
     internal static void EnrichWithHttpResponseMessage(Activity activity, HttpResponseMessage message)
     {
         activity.AddTag("response.headers", JsonSerializer.Serialize(message.Headers));
-        activity.AddTag("response.body", message.Content?.ReadAsStringAsync().Result);
+        activity.AddTag("response.body", message.Content.ReadAsStringAsync().Result);
     }
 }
