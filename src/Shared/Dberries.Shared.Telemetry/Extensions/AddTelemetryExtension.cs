@@ -13,7 +13,8 @@ public static class AddTelemetryExtension
 {
     public static WebApplicationBuilder AddTelemetry(this WebApplicationBuilder builder)
     {
-        var options = DberriesApplicationOptions.Get<ElasticApmOptions>(builder.Services, builder.Configuration, "ElasticApm");
+        var options =
+            DberriesApplicationOptions.Get<ElasticApmOptions>(builder.Services, builder.Configuration, "ElasticApm");
 
         var resourceBuilder = ResourceBuilder.CreateDefault()
             .AddService(options.ServiceName)

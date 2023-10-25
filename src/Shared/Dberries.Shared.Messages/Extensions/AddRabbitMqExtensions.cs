@@ -10,7 +10,7 @@ public static class AddRabbitMqExtensions
         IConfiguration configuration)
     {
         var options = DberriesApplicationOptions.Get<RabbitMqOptions>(services, configuration, "RabbitMQ");
-        
+
         configurator.UsingRabbitMq((context, cfg) =>
         {
             cfg.Host(options.Host, h =>

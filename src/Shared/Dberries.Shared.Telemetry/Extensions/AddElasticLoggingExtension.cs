@@ -7,7 +7,8 @@ public static class AddElasticLoggingExtension
 {
     public static WebApplicationBuilder AddElasticLogging(this WebApplicationBuilder builder)
     {
-        var options = DberriesApplicationOptions.Get<ElasticApmOptions>(builder.Services, builder.Configuration, "ElasticApm");
+        var options =
+            DberriesApplicationOptions.Get<ElasticApmOptions>(builder.Services, builder.Configuration, "ElasticApm");
 
         var nodeUris = new List<Uri> { new Uri(options.ElasticsearchNodeUri) }.ToArray();
 
