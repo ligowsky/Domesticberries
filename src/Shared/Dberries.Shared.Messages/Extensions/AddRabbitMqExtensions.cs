@@ -9,29 +9,14 @@ public static class AddRabbitMqExtensions
     public static void AddRabbitMq(this IBusRegistrationConfigurator configurator, IServiceCollection services,
         IConfiguration configuration)
     {
-        var section = configuration.GetSection("RabbitMQ");
-        var rabbitMqOptions = section.Get<RabbitMqOptions>();
+        var options = DberriesApplicationOptions.Get<RabbitMqOptions>(services, configuration, "RabbitMQ");
 
-        if (rabbitMqOptions is null)
-            throw new Exception("RabbitMQ options are required");
-        
-        if (string.IsNullOrEmpty(rabbitMqOptions.Host))
-            throw new Exception("RabbitMQ Host is required");
-
-        if (string.IsNullOrEmpty(rabbitMqOptions.Username))
-            throw new Exception("RabbitMQ Username is required");
-
-        if (string.IsNullOrEmpty(rabbitMqOptions.Password))
-            throw new Exception("RabbitMQ Password is required");
-
-        services.Configure<RabbitMqOptions>(section);
-        
         configurator.UsingRabbitMq((context, cfg) =>
         {
-            cfg.Host(rabbitMqOptions.Host, h =>
+            cfg.Host(options.Host, h =>
             {
-                h.Username(rabbitMqOptions.Username);
-                h.Password(rabbitMqOptions.Password);
+                h.Username(options.Username);
+                h.Password(options.Password);
             });
 
             cfg.ConfigureEndpoints(context);
