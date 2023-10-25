@@ -25,7 +25,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Dberries.Store.Infrastructure\Dberries.Store.Infrastructure.csproj" />
       <ProjectReference Include="..\Dberries.Store.Persistence\Dberries.Store.Persistence.csproj" />
+      <ProjectReference Include="..\Dberries.Store.Presentation\Dberries.Store.Presentation.csproj" />
     </ItemGroup>
 
 </Project>

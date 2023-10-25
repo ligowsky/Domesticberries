@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Abstractions\Dberries.Shared.Abstractions.csproj" />
+    </ItemGroup>
+
 </Project>

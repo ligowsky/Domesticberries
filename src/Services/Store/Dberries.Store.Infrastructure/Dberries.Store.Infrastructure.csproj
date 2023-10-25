@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Dberries.Store.Persistence\Dberries.Store.Persistence.csproj" />
+      <ProjectReference Include="..\Dberries.Store.Core\Dberries.Store.Core.csproj" />
     </ItemGroup>
 
 </Project>
