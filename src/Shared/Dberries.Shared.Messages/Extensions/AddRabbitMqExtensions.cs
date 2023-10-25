@@ -9,14 +9,14 @@ public static class AddRabbitMqExtensions
     public static void AddRabbitMq(this IBusRegistrationConfigurator configurator, IServiceCollection services,
         IConfiguration configuration)
     {
-        var rabbitMqOptions = RabbitMqOptions.GetOptions(services, configuration);
+        var options = DberriesApplicationOptions.Get<RabbitMqOptions>(services, configuration, "RabbitMQ");
         
         configurator.UsingRabbitMq((context, cfg) =>
         {
-            cfg.Host(rabbitMqOptions.Host, h =>
+            cfg.Host(options.Host, h =>
             {
-                h.Username(rabbitMqOptions.Username);
-                h.Password(rabbitMqOptions.Password);
+                h.Username(options.Username);
+                h.Password(options.Password);
             });
 
             cfg.ConfigureEndpoints(context);

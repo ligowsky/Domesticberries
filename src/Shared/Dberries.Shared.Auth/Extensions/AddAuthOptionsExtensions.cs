@@ -7,6 +7,6 @@ public static class AddAuthOptionsExtensions
 {
     public static void AddAuthOptions(this IServiceCollection services, IConfiguration configuration)
     {
-        AuthOptions.GetOptions(services, configuration);
+        DberriesApplicationOptions.Get<AuthOptions>(services, configuration, "Authentication");
     }
 }

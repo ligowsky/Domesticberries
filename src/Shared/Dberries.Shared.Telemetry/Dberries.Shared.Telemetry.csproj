@@ -21,5 +21,9 @@
       <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.5.1-beta.1" />
       <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.5.1-beta.1" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Dberries.Shared.Options\Dberries.Shared.Options.csproj" />
+    </ItemGroup>
     
 </Project>

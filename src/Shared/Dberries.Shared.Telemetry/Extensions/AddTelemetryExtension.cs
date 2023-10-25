@@ -13,18 +13,15 @@ public static class AddTelemetryExtension
 {
     public static WebApplicationBuilder AddTelemetry(this WebApplicationBuilder builder)
     {
-        var elasticApmOptions = ElasticApmOptions.GetOptions(builder);
-
-        if (elasticApmOptions is null)
-            throw new Exception("ElasticApm options are required");
+        var options = DberriesApplicationOptions.Get<ElasticApmOptions>(builder.Services, builder.Configuration, "ElasticApm");
 
         var resourceBuilder = ResourceBuilder.CreateDefault()
-            .AddService(elasticApmOptions.ServiceName)
+            .AddService(options.ServiceName)
             .AddTelemetrySdk()
             .AddAttributes(
                 new KeyValuePair<string, object>[]
                 {
-                    new("deployment.environment", elasticApmOptions.Environment)
+                    new("deployment.environment", options.Environment)
                 })
             .AddEnvironmentVariableDetector();
 
@@ -32,7 +29,7 @@ public static class AddTelemetryExtension
             .AddOpenTelemetry(x =>
             {
                 x.SetResourceBuilder(resourceBuilder)
-                    .AddOtlpExporter(cfg => { cfg.Endpoint = new Uri(elasticApmOptions.ServerUrl); });
+                    .AddOtlpExporter(cfg => { cfg.Endpoint = new Uri(options.ServerUrl); });
 
                 x.IncludeFormattedMessage = true;
                 x.IncludeScopes = true;
@@ -57,13 +54,13 @@ public static class AddTelemetryExtension
                     {
                         o.RecordException = true;
 
-                        if (elasticApmOptions.EnrichOutboundHttpRequests)
+                        if (options.EnrichOutboundHttpRequests)
                         {
                             o.EnrichWithHttpRequestMessage = HttpClientEnrichUtility.EnrichWithHttpRequestMessage;
                             o.EnrichWithHttpResponseMessage = HttpClientEnrichUtility.EnrichWithHttpResponseMessage;
                         }
                     })
-                    .AddOtlpExporter(cfg => { cfg.Endpoint = new Uri(elasticApmOptions.ServerUrl); });
+                    .AddOtlpExporter(cfg => { cfg.Endpoint = new Uri(options.ServerUrl); });
             });
 
         ExceptionTelemetry.EnableOpenTelemetry();
