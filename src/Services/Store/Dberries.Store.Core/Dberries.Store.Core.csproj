@@ -11,8 +11,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Repositories\" />
       <Folder Include="Services\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="BitzArt.Pagination.EntityFrameworkCore" Version="1.14.0" />
     </ItemGroup>
 
 </Project>
