@@ -4,9 +4,11 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>Dberries.Store</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Messages\Dberries.Shared.Messages.csproj" />
       <ProjectReference Include="..\Dberries.Store.Core\Dberries.Store.Core.csproj" />
     </ItemGroup>
 
