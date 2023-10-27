@@ -18,7 +18,7 @@ public class ItemsService : IItemsService
 
     public async Task<Item> GetAsync(Guid id)
     {
-        return await _itemsRepository.GetByExternalIdAsync(id);
+        return await _itemsRepository.GetAsync(id);
     }
 
     public Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, string query)

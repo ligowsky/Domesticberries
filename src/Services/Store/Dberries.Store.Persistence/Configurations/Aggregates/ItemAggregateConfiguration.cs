@@ -13,7 +13,7 @@ public class ItemAggregateConfiguration : IEntityTypeConfiguration<Item>
 
         builder.HasIndex(x => x.ExternalId)
             .IsUnique()
-            .IsDescending(false);
+            .IsDescending();
 
         builder.Property(x => x.Name)
             .IsRequired()

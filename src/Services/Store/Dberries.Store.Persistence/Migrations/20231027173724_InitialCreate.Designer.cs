@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dberries.Store.Persistence.Migrations
 {
     [DbContext(typeof(MsSqlDbContext))]
-    [Migration("20231027142149_InitialCreate")]
+    [Migration("20231027173724_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -47,6 +47,7 @@ namespace Dberries.Store.Persistence.Migrations
 
                     b.HasIndex("ExternalId")
                         .IsUnique()
+                        .IsDescending()
                         .HasFilter("[ExternalId] IS NOT NULL");
 
                     b.ToTable("Items", "Item");

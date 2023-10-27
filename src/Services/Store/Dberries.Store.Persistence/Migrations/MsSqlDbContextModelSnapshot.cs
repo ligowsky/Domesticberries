@@ -44,6 +44,7 @@ namespace Dberries.Store.Persistence.Migrations
 
                     b.HasIndex("ExternalId")
                         .IsUnique()
+                        .IsDescending()
                         .HasFilter("[ExternalId] IS NOT NULL");
 
                     b.ToTable("Items", "Item");

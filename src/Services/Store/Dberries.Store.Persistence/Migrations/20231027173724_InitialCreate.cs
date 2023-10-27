@@ -101,6 +101,7 @@ namespace Dberries.Store.Persistence.Migrations
                 table: "Items",
                 column: "ExternalId",
                 unique: true,
+                descending: new bool[0],
                 filter: "[ExternalId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
