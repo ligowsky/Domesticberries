@@ -23,7 +23,7 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
 
     public async Task<Location> Add(Location location)
     {
-        var locationExists = await CheckExistsByExternalIdAsync(location.ExternalId!.Value);
+        var locationExists = await CheckExistsByExternalIdAsync<Location>(location.ExternalId!.Value);
         
         if (locationExists)
             throw ApiException.BadRequest($"{nameof(Location)} with id '{location.ExternalId}' already exists");
@@ -46,12 +46,5 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
     public Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, int quantity)
     {
         throw new NotImplementedException();
-    }
-
-    private async Task<bool> CheckExistsByExternalIdAsync(Guid id)
-    {
-        return await Db.Set<Location>()
-            .Where(x => x.ExternalId == id)
-            .AnyAsync();
     }
 }

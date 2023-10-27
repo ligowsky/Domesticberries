@@ -24,4 +24,9 @@ public class RepositoryBase : IRepository
         if (!entityExists)
             throw ApiException.NotFound($"{typeof(T).Name} with id '{id}' is not found");
     }
+    
+    protected async Task<bool> CheckExistsByExternalIdAsync<T>(Guid id) where T : class, IExternalId
+    {
+        return await Db.Set<T>().Where(x => x.ExternalId == id).AnyAsync();
+    }
 }

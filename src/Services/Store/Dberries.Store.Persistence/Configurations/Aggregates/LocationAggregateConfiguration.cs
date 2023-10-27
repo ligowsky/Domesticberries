@@ -14,7 +14,7 @@ public class LocationAggregateConfiguration : IEntityTypeConfiguration<Location>
         
         builder.HasIndex(x => x.ExternalId)
             .IsUnique()
-            .IsDescending(false);
+            .IsDescending();
 
         builder.Property(x => x.Name)
             .IsRequired()
