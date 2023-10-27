@@ -6,7 +6,7 @@ public static class LocationMappingExtensions
     {
         return new LocationDto
         {
-            Id = model.Id,
+            Id = model.ExternalId,
             Name = model.Name
         };
     }

@@ -58,6 +58,9 @@ namespace Dberries.Store.Persistence.Migrations
                     b.Property<Guid?>("ExternalId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ItemId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
@@ -67,24 +70,12 @@ namespace Dberries.Store.Persistence.Migrations
 
                     b.HasIndex("ExternalId")
                         .IsUnique()
+                        .IsDescending()
                         .HasFilter("[ExternalId] IS NOT NULL");
 
+                    b.HasIndex("ItemId");
+
                     b.ToTable("Locations", "Location");
-                });
-
-            modelBuilder.Entity("ItemLocation", b =>
-                {
-                    b.Property<Guid>("ItemsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("LocationsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ItemsId", "LocationsId");
-
-                    b.HasIndex("LocationsId");
-
-                    b.ToTable("LocationItem", (string)null);
                 });
 
             modelBuilder.Entity("Dberries.Store.Item", b =>
@@ -113,19 +104,48 @@ namespace Dberries.Store.Persistence.Migrations
                     b.Navigation("Ratings");
                 });
 
-            modelBuilder.Entity("ItemLocation", b =>
+            modelBuilder.Entity("Dberries.Store.Location", b =>
                 {
                     b.HasOne("Dberries.Store.Item", null)
-                        .WithMany()
-                        .HasForeignKey("ItemsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Locations")
+                        .HasForeignKey("ItemId");
 
-                    b.HasOne("Dberries.Store.Location", null)
-                        .WithMany()
-                        .HasForeignKey("LocationsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.OwnsMany("Dberries.Store.Stock", "Stock", b1 =>
+                        {
+                            b1.Property<Guid>("LocationId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<Guid?>("ItemId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int?>("Quantity")
+                                .IsRequired()
+                                .HasColumnType("int");
+
+                            b1.HasKey("LocationId", "ItemId");
+
+                            b1.HasIndex("ItemId");
+
+                            b1.ToTable("Stock", "Location");
+
+                            b1.HasOne("Dberries.Store.Item", "Item")
+                                .WithMany()
+                                .HasForeignKey("ItemId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+
+                            b1.WithOwner()
+                                .HasForeignKey("LocationId");
+
+                            b1.Navigation("Item");
+                        });
+
+                    b.Navigation("Stock");
+                });
+
+            modelBuilder.Entity("Dberries.Store.Item", b =>
+                {
+                    b.Navigation("Locations");
                 });
 #pragma warning restore 612, 618
         }

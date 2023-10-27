@@ -2,7 +2,7 @@ using BitzArt;
 using BitzArt.Pagination;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dberries.Store;
+namespace Dberries.Store.Persistence;
 
 public class ItemsRepository : RepositoryBase, IItemsRepository
 {

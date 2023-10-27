@@ -1,7 +1,7 @@
 using BitzArt;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dberries.Store;
+namespace Dberries.Store.Persistence;
 
 public class LocationsRepository : RepositoryBase, ILocationsRepository
 {
