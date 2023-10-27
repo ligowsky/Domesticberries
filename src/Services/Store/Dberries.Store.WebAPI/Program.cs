@@ -1,3 +1,4 @@
+using Dberries;
 using Dberries.Store.Persistence;
 using Dberries.Warehouse.Infrastructure;
 
@@ -9,6 +10,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.AddTelemetry();
+builder.AddElasticLogging();
 
 var app = builder.Build();
 

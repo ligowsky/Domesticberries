@@ -15,7 +15,7 @@ public static class LocationMappingExtensions
     {
         return new Location
         {
-            Id = dto.Id,
+            ExternalId = dto.Id,
             Name = dto.Name
         };
     }

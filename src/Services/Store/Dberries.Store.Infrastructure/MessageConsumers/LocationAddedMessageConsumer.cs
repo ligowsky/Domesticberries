@@ -17,7 +17,7 @@ public class LocationAddedMessageConsumer : IConsumer<LocationAddedMessage>
         var message = context.Message;
         var location = message.Location.ToModel();
 
-        _locationsRepository.Add(location);
+        await _locationsRepository.Add(location);
         await _locationsRepository.SaveChangesAsync();
     }
 }

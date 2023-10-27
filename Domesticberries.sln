@@ -69,7 +69,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Shared.Auth", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Shared.Telemetry", "src\Shared\Dberries.Shared.Telemetry\Dberries.Shared.Telemetry.csproj", "{F04181F9-65F9-47BE-B164-76B2A69A335D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Shared.Options", "src\Shared\Dberries.Shared.Options\Dberries.Shared.Options.csproj", "{7E0517B9-2AE8-4ACB-91CA-CEA8A40C8050}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Shared.Common", "src\Shared\Dberries.Shared.Common\Dberries.Shared.Common.csproj", "{7E0517B9-2AE8-4ACB-91CA-CEA8A40C8050}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
