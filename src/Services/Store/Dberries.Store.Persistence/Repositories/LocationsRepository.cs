@@ -23,10 +23,7 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
 
     public async Task<Location> Add(Location location)
     {
-        var locationExists = await CheckExistsByExternalIdAsync<Location>(location.ExternalId!.Value);
-        
-        if (locationExists)
-            throw ApiException.BadRequest($"{nameof(Location)} with id '{location.ExternalId}' already exists");
+        await CheckExistsByExternalIdAsync<Location>(location.ExternalId!.Value, true);
 
         Db.Set<Location>().Add(location);
 

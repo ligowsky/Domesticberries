@@ -26,11 +26,17 @@ public class RepositoryBase : IRepository
         if (!entityExists)
             throw ApiException.NotFound($"{typeof(T).Name} with id '{id}' is not found");
     }
-    
-    protected async Task<bool> CheckExistsByExternalIdAsync<T>(Guid id) where T : class, IExternalId
+
+    protected async Task<bool> CheckExistsByExternalIdAsync<T>(Guid id, bool throwException = false)
+        where T : class, IExternalId
     {
-        return await Db.Set<T>()
+        var entityExists = await Db.Set<T>()
             .Where(x => x.ExternalId == id)
             .AnyAsync();
+
+        if (entityExists && throwException)
+            throw ApiException.BadRequest($"{typeof(T).Name} with id '{id}' already exists");
+
+        return entityExists;
     }
 }
