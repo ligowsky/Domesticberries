@@ -105,6 +105,14 @@ namespace Dberries.Store.Persistence.Migrations
                 name: "IX_LocationItem_LocationsId",
                 table: "LocationItem",
                 column: "LocationsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Locations_ExternalId",
+                schema: "Location",
+                table: "Locations",
+                column: "ExternalId",
+                unique: true,
+                filter: "[ExternalId] IS NOT NULL");
         }
 
         /// <inheritdoc />
