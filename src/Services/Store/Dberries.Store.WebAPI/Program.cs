@@ -1,6 +1,6 @@
 using Dberries;
 using Dberries.Store.Persistence;
-using Dberries.Warehouse.Infrastructure;
+using Dberries.Store.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

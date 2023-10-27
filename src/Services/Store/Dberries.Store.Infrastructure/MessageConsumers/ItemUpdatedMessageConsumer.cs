@@ -2,7 +2,7 @@ using BitzArt;
 using Dberries.Warehouse;
 using MassTransit;
 
-namespace Dberries.Store;
+namespace Dberries.Store.Infrastructure;
 
 public class ItemUpdatedMessageConsumer : IConsumer<ItemUpdatedMessage>
 {

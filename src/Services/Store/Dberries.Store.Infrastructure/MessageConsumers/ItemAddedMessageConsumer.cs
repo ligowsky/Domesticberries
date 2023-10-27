@@ -1,7 +1,7 @@
 using Dberries.Warehouse;
 using MassTransit;
 
-namespace Dberries.Store;
+namespace Dberries.Store.Infrastructure;
 
 public class ItemAddedMessageConsumer : IConsumer<ItemAddedMessage>
 {

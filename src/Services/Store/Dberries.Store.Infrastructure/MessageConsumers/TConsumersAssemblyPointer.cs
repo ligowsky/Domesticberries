@@ -1,4 +1,4 @@
-namespace Dberries.Store;
+namespace Dberries.Store.Infrastructure;
 
 public interface TConsumersAssemblyPointer
 {
