@@ -7,7 +7,6 @@ public class Item : IEntity, IExternalId
     public string? Name { get; set; }
     public string? Description { get; set; }
     public ICollection<Rating>? Ratings { get; set; }
-    public ICollection<Location>? Locations { get; set; }
     
     public Item(string? name, string? description)
     {

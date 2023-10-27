@@ -39,18 +39,11 @@ namespace Dberries.Store.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ExternalId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Locations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Locations_Items_ItemId",
-                        column: x => x.ItemId,
-                        principalSchema: "Item",
-                        principalTable: "Items",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -120,12 +113,6 @@ namespace Dberries.Store.Persistence.Migrations
                 filter: "[ExternalId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Locations_ItemId",
-                schema: "Location",
-                table: "Locations",
-                column: "ItemId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Stock_ItemId",
                 schema: "Location",
                 table: "Stock",
@@ -144,12 +131,12 @@ namespace Dberries.Store.Persistence.Migrations
                 schema: "Location");
 
             migrationBuilder.DropTable(
-                name: "Locations",
-                schema: "Location");
-
-            migrationBuilder.DropTable(
                 name: "Items",
                 schema: "Item");
+
+            migrationBuilder.DropTable(
+                name: "Locations",
+                schema: "Location");
         }
     }
 }

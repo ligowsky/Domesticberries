@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dberries.Store.Persistence.Migrations
 {
     [DbContext(typeof(MsSqlDbContext))]
-    [Migration("20231027135452_InitialCreate")]
+    [Migration("20231027142149_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -61,9 +61,6 @@ namespace Dberries.Store.Persistence.Migrations
                     b.Property<Guid?>("ExternalId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ItemId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
@@ -75,8 +72,6 @@ namespace Dberries.Store.Persistence.Migrations
                         .IsUnique()
                         .IsDescending()
                         .HasFilter("[ExternalId] IS NOT NULL");
-
-                    b.HasIndex("ItemId");
 
                     b.ToTable("Locations", "Location");
                 });
@@ -109,10 +104,6 @@ namespace Dberries.Store.Persistence.Migrations
 
             modelBuilder.Entity("Dberries.Store.Location", b =>
                 {
-                    b.HasOne("Dberries.Store.Item", null)
-                        .WithMany("Locations")
-                        .HasForeignKey("ItemId");
-
                     b.OwnsMany("Dberries.Store.Stock", "Stock", b1 =>
                         {
                             b1.Property<Guid>("LocationId")
@@ -144,11 +135,6 @@ namespace Dberries.Store.Persistence.Migrations
                         });
 
                     b.Navigation("Stock");
-                });
-
-            modelBuilder.Entity("Dberries.Store.Item", b =>
-                {
-                    b.Navigation("Locations");
                 });
 #pragma warning restore 612, 618
         }
