@@ -21,10 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Telemetry\Dberries.Shared.Telemetry.csproj" />
       <ProjectReference Include="..\Dberries.Store.Infrastructure\Dberries.Store.Infrastructure.csproj" />
       <ProjectReference Include="..\Dberries.Store.Persistence\Dberries.Store.Persistence.csproj" />

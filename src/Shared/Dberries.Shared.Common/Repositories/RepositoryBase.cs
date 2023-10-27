@@ -17,14 +17,16 @@ public class RepositoryBase : IRepository
         return await Db.SaveChangesAsync();
     }
 
-    protected async Task CheckExistsAsync<T>(Guid id) where T : class, IEntity
+    protected async Task<bool> CheckExistsAsync<T>(Guid id, bool throwException = false) where T : class, IEntity
     {
         var entityExists = await Db.Set<T>()
             .Where(x => x.Id == id)
             .AnyAsync();
 
-        if (!entityExists)
-            throw ApiException.NotFound($"{typeof(T).Name} with id '{id}' is not found");
+        if (!entityExists && throwException)
+            throw ApiException.NotFound($"{typeof(T).Name} with Id '{id}' is not found");
+        
+        return entityExists;
     }
 
     protected async Task<bool> CheckExistsByExternalIdAsync<T>(Guid id, bool throwException = false)
@@ -35,7 +37,7 @@ public class RepositoryBase : IRepository
             .AnyAsync();
 
         if (entityExists && throwException)
-            throw ApiException.BadRequest($"{typeof(T).Name} with id '{id}' already exists");
+            throw ApiException.BadRequest($"{typeof(T).Name} with ExternalId '{id}' already exists");
 
         return entityExists;
     }

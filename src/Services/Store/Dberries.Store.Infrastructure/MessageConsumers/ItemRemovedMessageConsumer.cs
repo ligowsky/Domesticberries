@@ -17,7 +17,7 @@ public class ItemRemovedMessageConsumer : IConsumer<ItemRemovedMessage>
         var message = context.Message;
         var id = message.Id;
 
-        var existingItem = await _itemsRepository.GetAsync(id);
+        var existingItem = await _itemsRepository.GetByExternalIdAsync(id);
         _itemsRepository.Remove(existingItem);
         await _itemsRepository.SaveChangesAsync();
     }

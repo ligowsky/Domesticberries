@@ -18,7 +18,7 @@ public class ItemUpdatedMessageConsumer : IConsumer<ItemUpdatedMessage>
         var message = context.Message;
         var item = message.Item.ToModel();
 
-        var existingItem = await _itemsRepository.GetAsync(item.ExternalId!.Value);
+        var existingItem = await _itemsRepository.GetByExternalIdAsync(item.ExternalId!.Value);
 
         existingItem.Patch(item)
             .Property(x => x.Name)

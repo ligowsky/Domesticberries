@@ -17,7 +17,7 @@ public class ItemAddedMessageConsumer : IConsumer<ItemAddedMessage>
         var message = context.Message;
         var item = message.Item.ToModel();
 
-        _itemsRepository.Add(item);
+        await _itemsRepository.AddAsync(item);
         await _itemsRepository.SaveChangesAsync();
     }
 }

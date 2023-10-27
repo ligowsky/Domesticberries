@@ -6,7 +6,7 @@ public static class ItemMappingExtensions
     {
         return new ItemDto
         {
-            Id = model.ExternalId,
+            Id = model.Id,
             Name = model.Name,
             Description = model.Description
         };

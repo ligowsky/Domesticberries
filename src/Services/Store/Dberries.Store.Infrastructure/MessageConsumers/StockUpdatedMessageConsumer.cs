@@ -17,7 +17,7 @@ public class StockUpdatedMessageConsumer : IConsumer<StockUpdatedMessage>
         var message = context.Message;
         var locationId = message.LocationId;
         var stock = message.Stock;
-        var itemId = stock!.Item!.Id!.Value;
+        var itemId = stock!.ItemId!.Value;
         var quantity = stock.Quantity!.Value;
 
         await _locationsRepository.UpdateStockAsync(locationId, itemId, quantity);

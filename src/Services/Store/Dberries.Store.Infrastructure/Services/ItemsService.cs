@@ -18,7 +18,7 @@ public class ItemsService : IItemsService
 
     public async Task<Item> GetAsync(Guid id)
     {
-        return await _itemsRepository.GetAsync(id);
+        return await _itemsRepository.GetByExternalIdAsync(id);
     }
 
     public Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, string query)
@@ -28,7 +28,7 @@ public class ItemsService : IItemsService
 
     public Task<PageResult<Location>> GetAvailabilityAsync(PageRequest pageRequest, Guid id)
     {
-        throw new NotImplementedException();
+        return _itemsRepository.GetAvailabilityAsync(pageRequest, id);
     }
 
     public Task UpdateRatingAsync(Guid id, byte value)
