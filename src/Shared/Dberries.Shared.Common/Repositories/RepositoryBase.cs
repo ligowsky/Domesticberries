@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dberries;
 
-public class RepositoryBase : IRepository
+public abstract class RepositoryBase : IRepository
 {
     protected readonly AppDbContext Db;
 
@@ -17,7 +17,7 @@ public class RepositoryBase : IRepository
         return await Db.SaveChangesAsync();
     }
 
-    protected async Task<bool> CheckExistsAsync<T>(Guid id, bool throwException = false) where T : class, IEntity
+    public async Task<bool> CheckExistsAsync<T>(Guid id, bool throwException = false) where T : class, IEntity
     {
         var entityExists = await Db.Set<T>()
             .Where(x => x.Id == id)
@@ -29,7 +29,7 @@ public class RepositoryBase : IRepository
         return entityExists;
     }
 
-    protected async Task<bool> CheckExistsByExternalIdAsync<T>(Guid id, bool throwException = false)
+    public async Task<bool> CheckExistsByExternalIdAsync<T>(Guid id, bool throwException = false)
         where T : class, IExternalId
     {
         var entityExists = await Db.Set<T>()

@@ -11,13 +11,16 @@ public class LocationRemovedMessageConsumer : IConsumer<LocationRemovedMessage>
     {
         _locationsRepository = locationsRepository;
     }
-    
+
     public async Task Consume(ConsumeContext<LocationRemovedMessage> context)
     {
         var message = context.Message;
         var id = message.Id;
-        
-        var existingLocation = await _locationsRepository.GetAsync(id);
+
+        var existingLocation = await _locationsRepository.GetAsync(id, false);
+
+        if (existingLocation is null) return;
+
         _locationsRepository.Remove(existingLocation);
         await _locationsRepository.SaveChangesAsync();
     }

@@ -18,10 +18,17 @@ public class LocationUpdatedMessageConsumer : IConsumer<LocationUpdatedMessage>
         var message = context.Message;
         var location = message.Location.ToModel();
         
-        var existingLocation = await _locationsRepository.GetAsync(location.ExternalId!.Value);
+        var existingLocation = await _locationsRepository.GetAsync(location.ExternalId!.Value, false);
 
-        existingLocation.Patch(location)
-            .Property(x => x.Name);
+        if (existingLocation is null)
+        {
+            _locationsRepository.Add(location);
+        }
+        else
+        {
+            existingLocation.Patch(location)
+                .Property(x => x.Name);
+        }
 
         await _locationsRepository.SaveChangesAsync();
     }

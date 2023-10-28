@@ -17,7 +17,8 @@ public class LocationAddedMessageConsumer : IConsumer<LocationAddedMessage>
         var message = context.Message;
         var location = message.Location.ToModel();
 
-        await _locationsRepository.Add(location);
+        await _locationsRepository.CheckExistsByExternalIdAsync<Location>(location.ExternalId!.Value, true);
+        _locationsRepository.Add(location);
         await _locationsRepository.SaveChangesAsync();
     }
 }

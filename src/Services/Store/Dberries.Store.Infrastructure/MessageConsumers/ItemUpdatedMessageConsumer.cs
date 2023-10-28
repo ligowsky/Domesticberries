@@ -18,12 +18,19 @@ public class ItemUpdatedMessageConsumer : IConsumer<ItemUpdatedMessage>
         var message = context.Message;
         var item = message.Item.ToModel();
 
-        var existingItem = await _itemsRepository.GetByExternalIdAsync(item.ExternalId!.Value);
+        var existingItem = await _itemsRepository.GetByExternalIdAsync(item.ExternalId!.Value, false);
 
-        existingItem.Patch(item)
-            .Property(x => x.Name)
-            .Property(x => x.Description);
-
+        if (existingItem is null)
+        {
+            _itemsRepository.AddAsync(item);
+        }
+        else
+        {
+            existingItem.Patch(item)
+                .Property(x => x.Name)
+                .Property(x => x.Description);
+        }
+        
         await _itemsRepository.SaveChangesAsync();
     }
 }

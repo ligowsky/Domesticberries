@@ -16,11 +16,11 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             .OrderBy(x => x.Id)
             .ToPageAsync(pageRequest);
     }
-    
+
     public async Task<Item> GetAsync(Guid id)
     {
         var item = await Db.Set<Item>()
-            .Where(x => x.Id! == id)
+            .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
 
         if (item is null)
@@ -29,22 +29,20 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         return item;
     }
 
-    public async Task<Item> GetByExternalIdAsync(Guid id)
+    public async Task<Item?> GetByExternalIdAsync(Guid id, bool throwException = true)
     {
         var item = await Db.Set<Item>()
-            .Where(x => x.ExternalId! == id)
+            .Where(x => x.ExternalId == id)
             .FirstOrDefaultAsync();
 
-        if (item is null)
+        if (item is null & throwException)
             throw ApiException.NotFound($"{nameof(Item)} with External '{id}' is not found");
 
         return item;
     }
 
-    public async Task<Item> AddAsync(Item item)
+    public Item AddAsync(Item item)
     {
-        await CheckExistsByExternalIdAsync<Item>(item.ExternalId!.Value, true);
-
         Db.Set<Item>().Add(item);
 
         return item;
