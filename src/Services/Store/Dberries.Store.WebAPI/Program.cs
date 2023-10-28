@@ -1,3 +1,4 @@
+using BitzArt.ApiExceptions.AspNetCore;
 using Dberries;
 using Dberries.Store.Persistence;
 using Dberries.Store.Infrastructure;
@@ -25,6 +26,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseApiExceptionHandler();
 
 app.MapControllers();
 
