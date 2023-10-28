@@ -14,8 +14,7 @@ public class ItemAddedMessageConsumer : IConsumer<ItemAddedMessage>
 
     public async Task Consume(ConsumeContext<ItemAddedMessage> context)
     {
-        var message = context.Message;
-        var item = message.Item.ToModel();
+        var item = context.Message.Item.ToModel();
 
         await _itemsRepository.CheckExistsByExternalIdAsync<Item>(item.ExternalId!.Value, true);
         _itemsRepository.AddAsync(item);

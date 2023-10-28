@@ -14,8 +14,7 @@ public class ItemRemovedMessageConsumer : IConsumer<ItemRemovedMessage>
 
     public async Task Consume(ConsumeContext<ItemRemovedMessage> context)
     {
-        var message = context.Message;
-        var id = message.Id;
+        var id = context.Message.Id;
 
         var existingItem = await _itemsRepository.GetByExternalIdAsync(id, false);
 

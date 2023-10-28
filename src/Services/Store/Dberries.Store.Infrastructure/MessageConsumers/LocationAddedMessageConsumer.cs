@@ -14,8 +14,7 @@ public class LocationAddedMessageConsumer : IConsumer<LocationAddedMessage>
     
     public async Task Consume(ConsumeContext<LocationAddedMessage> context)
     {
-        var message = context.Message;
-        var location = message.Location.ToModel();
+        var location = context.Message.Location.ToModel();
 
         await _locationsRepository.CheckExistsByExternalIdAsync<Location>(location.ExternalId!.Value, true);
         _locationsRepository.Add(location);
