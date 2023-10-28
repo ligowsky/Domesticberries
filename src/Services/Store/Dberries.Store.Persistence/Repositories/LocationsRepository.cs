@@ -33,21 +33,6 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
         Db.Set<Location>().Remove(location);
     }
 
-    public async Task<Stock?> GetStockAsync(Guid locationId, Guid itemId)
-    {
-        await CheckExistsByExternalIdAsync<Location>(locationId, true);
-        await CheckExistsByExternalIdAsync<Item>(itemId, true);
-
-        return await Db.Set<Location>()
-            .AsNoTracking()
-            .Where(x => x.ExternalId == locationId)
-            .SelectMany(x => x.Stock!
-                .Where(y => y.ItemId == itemId))
-            .Include(x => x.Item)
-            .OrderBy(x => x.ItemId)
-            .FirstOrDefaultAsync();
-    }
-
     public async Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, int quantity)
     {
         if (quantity < 0)
