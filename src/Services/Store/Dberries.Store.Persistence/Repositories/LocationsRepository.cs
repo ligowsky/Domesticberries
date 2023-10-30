@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dberries.Store.Persistence;
 
-public class LocationsRepository : EntityRepository, ILocationsRepository
+public class LocationsRepository : RepositoryBase, ILocationsRepository
 {
     public LocationsRepository(AppDbContext db) : base(db)
     {
@@ -21,8 +21,9 @@ public class LocationsRepository : EntityRepository, ILocationsRepository
         return location;
     }
 
-    public Location Add(Location location)
+    public async Task<Location> AddAsync(Location location)
     {
+        await Db.CheckExistsByExternalIdAsync(typeof(Location), location.ExternalId!.Value, true);
         Db.Set<Location>().Add(location);
 
         return location;

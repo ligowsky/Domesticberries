@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dberries.Warehouse.Persistence;
 
-public class LocationsRepository : EntityRepository, ILocationsRepository
+public class LocationsRepository : RepositoryBase, ILocationsRepository
 {
     public LocationsRepository(AppDbContext db) : base(db)
     {
@@ -41,7 +41,7 @@ public class LocationsRepository : EntityRepository, ILocationsRepository
 
     public async Task<PageResult<Stock>> GetStockPageAsync(Guid locationId, PageRequest pageRequest)
     {
-        await CheckExistsAsync<Location>(locationId, true);
+        await Db.CheckExistsAsync<Location>(locationId, true);
 
         return await Db.Set<Location>()
             .AsNoTracking()
@@ -54,8 +54,8 @@ public class LocationsRepository : EntityRepository, ILocationsRepository
 
     public async Task<Stock?> GetStockAsync(Guid locationId, Guid itemId)
     {
-        await CheckExistsAsync<Location>(locationId, true);
-        await CheckExistsAsync<Item>(itemId, true);
+        await Db.CheckExistsAsync<Location>(locationId, true);
+        await Db.CheckExistsAsync<Item>(itemId, true);
 
         return await Db.Set<Location>()
             .AsNoTracking()
@@ -72,7 +72,7 @@ public class LocationsRepository : EntityRepository, ILocationsRepository
         if (quantity < 0)
             throw ApiException.BadRequest($"Invalid quantity: {quantity}. Quantity must be greater than 0.");
 
-        await CheckExistsAsync<Item>(itemId, true);
+        await Db.CheckExistsAsync<Item>(itemId, true);
 
         var location = await Db.Set<Location>()
             .Where(x => x.Id == locationId)

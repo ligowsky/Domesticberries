@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dberries.Warehouse.Persistence;
 
-public class ItemsRepository : EntityRepository, IItemsRepository
+public class ItemsRepository : RepositoryBase, IItemsRepository
 {
     public ItemsRepository(AppDbContext db) : base(db)
     {

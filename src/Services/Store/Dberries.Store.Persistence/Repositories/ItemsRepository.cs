@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dberries.Store.Persistence;
 
-public class ItemsRepository : EntityRepository, IItemsRepository
+public class ItemsRepository : RepositoryBase, IItemsRepository
 {
     public ItemsRepository(AppDbContext db) : base(db)
     {
@@ -41,8 +41,9 @@ public class ItemsRepository : EntityRepository, IItemsRepository
         return item;
     }
 
-    public Item AddAsync(Item item)
+    public async Task<Item> AddAsync(Item item)
     {
+        await Db.CheckExistsByExternalIdAsync(typeof(Item), item.ExternalId!.Value, true);
         Db.Set<Item>().Add(item);
 
         return item;
@@ -55,7 +56,7 @@ public class ItemsRepository : EntityRepository, IItemsRepository
 
     public async Task<PageResult<Location>> GetAvailabilityAsync(PageRequest pageRequest, Guid id)
     {
-        await CheckExistsAsync<Item>(id, true);
+        await Db.CheckExistsAsync<Item>(id, true);
 
         return await Db.Set<Location>()
             .Where(x => x.Stock!

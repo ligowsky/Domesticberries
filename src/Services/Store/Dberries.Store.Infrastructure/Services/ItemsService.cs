@@ -24,7 +24,6 @@ public class ItemsService : IItemsService
 
     public async Task AddAsync(Item item)
     {
-        await _itemsRepository.CheckExistsByExternalIdAsync(typeof(Item), item.ExternalId!.Value, true);
         _itemsRepository.AddAsync(item);
         await _itemsRepository.SaveChangesAsync();
     }

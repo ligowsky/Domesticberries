@@ -13,8 +13,7 @@ public class LocationsService : ILocationsService
 
     public async Task AddAsync(Location location)
     {
-        await _locationsRepository.CheckExistsByExternalIdAsync(typeof(Location), location.ExternalId!.Value, true);
-        _locationsRepository.Add(location);
+        await _locationsRepository.AddAsync(location);
         await _locationsRepository.SaveChangesAsync();
     }
 
@@ -24,7 +23,7 @@ public class LocationsService : ILocationsService
 
         if (existingLocation is null)
         {
-            _locationsRepository.Add(location);
+            await _locationsRepository.AddAsync(location);
         }
         else
         {

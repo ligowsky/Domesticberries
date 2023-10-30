@@ -4,15 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dberries;
 
-public abstract class EntityRepository : RepositoryBase, IEntityRepository
+public static class DbContextExtensions
 {
-    protected EntityRepository(AppDbContext db) : base(db)
+    public static async Task<bool> CheckExistsAsync<T>(this DbContext db, Guid id, bool throwException = false)
+        where T : class, IEntity
     {
-    }
-    
-    public async Task<bool> CheckExistsAsync<T>(Guid id, bool throwException = false) where T : class, IEntity
-    {
-        var entityExists = await Db.Set<T>()
+        var entityExists = await db.Set<T>()
             .Where(x => x.Id == id)
             .AnyAsync();
 
@@ -21,8 +18,8 @@ public abstract class EntityRepository : RepositoryBase, IEntityRepository
 
         return entityExists;
     }
-
-    public async Task<bool> CheckExistsByExternalIdAsync<TExternalKey>(Type entityType, TExternalKey id,
+    
+    public static async Task<bool> CheckExistsByExternalIdAsync<TExternalKey>(this DbContext db, Type entityType, TExternalKey id,
         bool throwException = false)
     {
         var typeImplementsInterface = entityType.GetInterfaces()
@@ -32,17 +29,17 @@ public abstract class EntityRepository : RepositoryBase, IEntityRepository
             throw new ArgumentException(
                 $"{entityType.Name} must implement {typeof(IEntityWithExternalKey<>).Name} interface");
 
-        return await (Task<bool>)GetType()
+        return await (Task<bool>)typeof(DbContextExtensions)
             .GetMethods(BindingFlags.NonPublic)
             .First(x => x.Name == nameof(CheckExistsByExternalIdAsync))
             .MakeGenericMethod(entityType, typeof(TExternalKey))
-            .Invoke(this, new object[] { id!, throwException })!;
+            .Invoke(null, new object[] { db, id!, throwException })!;
     }
 
-    private async Task<bool> CheckExistsByExternalIdAsync<TEntity, TExternalKey>(TExternalKey id,
+    private static async Task<bool> CheckExistsByExternalIdAsync<TEntity, TExternalKey>(DbContext db, TExternalKey id,
         bool throwException = false) where TEntity : class, IEntityWithExternalKey<TExternalKey>
     {
-        var entityExists = await Db.Set<TEntity>()
+        var entityExists = await db.Set<TEntity>()
             .Where(x => x.ExternalId!.Equals(id))
             .AnyAsync();
 
