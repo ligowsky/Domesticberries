@@ -30,13 +30,13 @@ public class ItemsService : IItemsService
         return item;
     }
 
-    public async Task UpdateAsync(Item item)
+    public async Task<Item> UpdateAsync(Item item)
     {
         var existingItem = await _itemsRepository.GetByExternalIdAsync(item.ExternalId!.Value, false);
 
         if (existingItem is null)
         {
-            await _itemsRepository.AddAsync(item);
+            existingItem = await _itemsRepository.AddAsync(item);
         }
         else
         {
@@ -46,6 +46,8 @@ public class ItemsService : IItemsService
         }
         
         await _itemsRepository.SaveChangesAsync();
+
+        return existingItem;
     }
 
     public async Task RemoveAsync(Guid id)
