@@ -18,16 +18,17 @@ public static class DbContextExtensions
 
         return entityExists;
     }
-    
-    public static async Task<bool> CheckExistsByExternalIdAsync<TExternalKey>(this DbContext db, Type entityType, TExternalKey id,
+
+    public static async Task<bool> CheckExistsByExternalIdAsync<TExternalKey>(this DbContext db, Type entityType,
+        TExternalKey id,
         bool throwException = false)
     {
         var typeImplementsInterface = entityType.GetInterfaces()
-            .Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEntityWithExternalKey<>));
+            .Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEntityWithExternalId<>));
 
         if (!typeImplementsInterface)
             throw new ArgumentException(
-                $"{entityType.Name} must implement {typeof(IEntityWithExternalKey<>).Name} interface");
+                $"{entityType.Name} must implement {typeof(IEntityWithExternalId<>).Name} interface");
 
         return await (Task<bool>)typeof(DbContextExtensions)
             .GetMethods(BindingFlags.NonPublic)
@@ -37,7 +38,8 @@ public static class DbContextExtensions
     }
 
     private static async Task<bool> CheckExistsByExternalIdAsync<TEntity, TExternalKey>(DbContext db, TExternalKey id,
-        bool throwException = false) where TEntity : class, IEntityWithExternalKey<TExternalKey>
+        bool throwException = false) where TEntity : class, IEntityWithExternalId<TExternalKey>
+        where TExternalKey : struct
     {
         var entityExists = await db.Set<TEntity>()
             .Where(x => x.ExternalId!.Equals(id))

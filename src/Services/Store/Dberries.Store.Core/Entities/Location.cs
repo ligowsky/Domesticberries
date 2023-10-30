@@ -1,6 +1,6 @@
 namespace Dberries.Store;
 
-public class Location : IEntityWithExternalKey<Guid?>
+public class Location : IEntityWithExternalId<Guid>
 {
     public Guid? Id { get; set; }
     public Guid? ExternalId { get; set; }
