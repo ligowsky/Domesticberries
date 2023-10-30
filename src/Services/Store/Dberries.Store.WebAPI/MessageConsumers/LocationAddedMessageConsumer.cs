@@ -1,7 +1,7 @@
 using Dberries.Warehouse;
 using MassTransit;
 
-namespace Dberries.Store.Infrastructure;
+namespace Dberries.Store.WebAPI;
 
 public class LocationAddedMessageConsumer : IConsumer<LocationAddedMessage>
 {
@@ -11,12 +11,12 @@ public class LocationAddedMessageConsumer : IConsumer<LocationAddedMessage>
     {
         _locationsRepository = locationsRepository;
     }
-    
+
     public async Task Consume(ConsumeContext<LocationAddedMessage> context)
     {
         var location = context.Message.Location.ToModel();
 
-        await _locationsRepository.CheckExistsByExternalIdAsync<Location>(location.ExternalId!.Value, true);
+        await _locationsRepository.CheckExistsByExternalIdAsync(typeof(Location), location.ExternalId!.Value, true);
         _locationsRepository.Add(location);
         await _locationsRepository.SaveChangesAsync();
     }

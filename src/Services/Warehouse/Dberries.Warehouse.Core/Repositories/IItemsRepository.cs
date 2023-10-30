@@ -2,7 +2,7 @@ using BitzArt.Pagination;
 
 namespace Dberries.Warehouse;
 
-public interface IItemsRepository : IRepository
+public interface IItemsRepository : IEntityRepository
 {
     public Task<PageResult<Item>> GetPageAsync(PageRequest pageRequest);
     public Task<Item> GetAsync(Guid id);

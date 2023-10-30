@@ -2,7 +2,7 @@ using BitzArt.Pagination;
 
 namespace Dberries.Warehouse;
 
-public interface ILocationsRepository : IRepository
+public interface ILocationsRepository : IEntityRepository
 {
     public Task<PageResult<Location>> GetPageAsync(PageRequest pageRequest);
     public Task<Location> GetAsync(Guid id);

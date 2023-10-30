@@ -20,7 +20,7 @@
 
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Common\Dberries.Shared.Common.csproj" />
+      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.EFCore\Dberries.Shared.EFCore.csproj" />
       <ProjectReference Include="..\Dberries.Warehouse.Core\Dberries.Warehouse.Core.csproj" />
 
 

@@ -1,6 +1,6 @@
 namespace Dberries.Store;
 
-public interface ILocationsRepository : IRepository
+public interface ILocationsRepository : IEntityRepository
 {
     public Task<Location?> GetAsync(Guid id, bool throwException);
     public Location Add(Location location);

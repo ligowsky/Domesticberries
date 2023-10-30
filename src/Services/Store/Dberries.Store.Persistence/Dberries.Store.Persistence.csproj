@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Common\Dberries.Shared.Common.csproj" />
+      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.EFCore\Dberries.Shared.EFCore.csproj" />
       <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Contracts\Dberries.Shared.Contracts.csproj" />
       <ProjectReference Include="..\Dberries.Store.Core\Dberries.Store.Core.csproj" />
     </ItemGroup>

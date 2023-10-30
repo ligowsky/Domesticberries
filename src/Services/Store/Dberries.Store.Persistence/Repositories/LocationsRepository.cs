@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dberries.Store.Persistence;
 
-public class LocationsRepository : RepositoryBase, ILocationsRepository
+public class LocationsRepository : EntityRepository, ILocationsRepository
 {
     public LocationsRepository(AppDbContext db) : base(db)
     {

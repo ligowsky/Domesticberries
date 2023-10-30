@@ -1,6 +1,6 @@
 namespace Dberries.Store;
 
-public class Item : IEntity, IExternalId
+public class Item : IEntityWithExternalKey<Guid?>
 {
     public Guid? Id { get; set; }
     public Guid? ExternalId { get; set; }

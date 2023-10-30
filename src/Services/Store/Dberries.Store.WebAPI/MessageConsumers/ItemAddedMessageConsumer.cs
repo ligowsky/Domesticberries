@@ -1,7 +1,7 @@
 using Dberries.Warehouse;
 using MassTransit;
 
-namespace Dberries.Store.Infrastructure;
+namespace Dberries.Store.WebAPI;
 
 public class ItemAddedMessageConsumer : IConsumer<ItemAddedMessage>
 {
@@ -16,7 +16,7 @@ public class ItemAddedMessageConsumer : IConsumer<ItemAddedMessage>
     {
         var item = context.Message.Item.ToModel();
 
-        await _itemsRepository.CheckExistsByExternalIdAsync<Item>(item.ExternalId!.Value, true);
+        var x = await _itemsRepository.CheckExistsByExternalIdAsync(typeof(Item), item.ExternalId!.Value, true);
         _itemsRepository.AddAsync(item);
         await _itemsRepository.SaveChangesAsync();
     }

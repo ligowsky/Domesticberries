@@ -1,7 +1,7 @@
 using Dberries.Warehouse;
 using MassTransit;
 
-namespace Dberries.Store.Infrastructure;
+namespace Dberries.Store.WebAPI;
 
 public class ItemRemovedMessageConsumer : IConsumer<ItemRemovedMessage>
 {

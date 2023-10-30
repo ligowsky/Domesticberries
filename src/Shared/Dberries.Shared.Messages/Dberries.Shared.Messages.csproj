@@ -17,7 +17,7 @@
     
     <ItemGroup>
       <ProjectReference Include="..\Dberries.Shared.Contracts\Dberries.Shared.Contracts.csproj" />
-      <ProjectReference Include="..\Dberries.Shared.Common\Dberries.Shared.Common.csproj" />
+      <ProjectReference Include="..\Dberries.Shared.EFCore\Dberries.Shared.EFCore.csproj" />
     </ItemGroup>
     
 </Project>
