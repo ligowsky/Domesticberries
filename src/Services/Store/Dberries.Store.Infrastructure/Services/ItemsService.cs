@@ -32,7 +32,7 @@ public class ItemsService : IItemsService
 
     public async Task<Item> UpdateAsync(Item item)
     {
-        var existingItem = await _itemsRepository.GetByExternalIdAsync(item.ExternalId!.Value, false);
+        var existingItem = await _itemsRepository.GetByExternalIdAsync(item.ExternalId!.Value);
 
         if (existingItem is null)
         {
@@ -52,7 +52,7 @@ public class ItemsService : IItemsService
 
     public async Task RemoveAsync(Guid id)
     {
-        var existingItem = await _itemsRepository.GetByExternalIdAsync(id, false);
+        var existingItem = await _itemsRepository.GetByExternalIdAsync(id);
 
         if (existingItem is null) return;
         
