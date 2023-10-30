@@ -22,10 +22,12 @@ public class ItemsService : IItemsService
         return await _itemsRepository.GetAsync(id);
     }
 
-    public async Task AddAsync(Item item)
+    public async Task<Item> AddAsync(Item item)
     {
         await _itemsRepository.AddAsync(item);
         await _itemsRepository.SaveChangesAsync();
+
+        return item;
     }
 
     public async Task UpdateAsync(Item item)
