@@ -11,10 +11,12 @@ public class LocationsService : ILocationsService
         _locationsRepository = locationsRepository;
     }
 
-    public async Task AddAsync(Location location)
+    public async Task<Location> AddAsync(Location location)
     {
         await _locationsRepository.AddAsync(location);
         await _locationsRepository.SaveChangesAsync();
+
+        return location;
     }
 
     public async Task UpdateAsync(Location location)
