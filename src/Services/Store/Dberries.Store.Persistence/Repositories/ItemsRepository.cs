@@ -29,16 +29,11 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         return item;
     }
 
-    public async Task<Item?> GetByExternalIdAsync(Guid id, bool throwException = true)
+    public async Task<Item?> GetByExternalIdAsync(Guid id)
     {
-        var item = await Db.Set<Item>()
+        return await Db.Set<Item>()
             .Where(x => x.ExternalId == id)
             .FirstOrDefaultAsync();
-
-        if (item is null & throwException)
-            throw ApiException.NotFound($"{nameof(Item)} with External '{id}' is not found");
-
-        return item;
     }
 
     public async Task<Item> AddAsync(Item item)
