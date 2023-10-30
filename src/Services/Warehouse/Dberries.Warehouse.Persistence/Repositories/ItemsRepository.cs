@@ -29,13 +29,13 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
 
     public Item Add(Item item)
     {
-        Db.Set<Item>().Add(item);
+        Db.Add(item);
 
         return item;
     }
 
     public void Remove(Item item)
     {
-        Db.Set<Item>().Remove(item);
+        Db.Remove(item);
     }
 }

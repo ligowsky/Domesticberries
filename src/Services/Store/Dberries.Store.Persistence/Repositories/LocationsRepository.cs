@@ -23,7 +23,7 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
 
     public async Task<Location> AddAsync(Location location)
     {
-        await Db.CheckExistsByExternalIdAsync(typeof(Location), location.ExternalId!.Value, true);
+        await Db.ThrowIfExistsByExternalIdAsync(typeof(Location), location.ExternalId!.Value);
         Db.Set<Location>().Add(location);
 
         return location;

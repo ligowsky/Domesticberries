@@ -6,22 +6,34 @@ namespace Dberries;
 
 public static class DbContextExtensions
 {
-    public static async Task<bool> CheckExistsAsync<T>(this DbContext db, Guid id, bool throwException = false)
+    public static async Task<bool> CheckIfExistsAsync<T>(this DbContext db, Guid id)
         where T : class, IEntity
     {
-        var entityExists = await db.Set<T>()
+        return await db.Set<T>()
             .Where(x => x.Id == id)
             .AnyAsync();
-
-        if (!entityExists && throwException)
-            throw ApiException.NotFound($"{typeof(T).Name} with Id '{id}' is not found");
-
-        return entityExists;
     }
 
-    public static async Task<bool> CheckExistsByExternalIdAsync<TExternalKey>(this DbContext db, Type entityType,
-        TExternalKey id,
-        bool throwException = false)
+    public static async Task ThrowIfExistsAsync<T>(this DbContext db, Guid id)
+        where T : class, IEntity
+    {
+        var entityExists = await CheckIfExistsAsync<T>(db, id);
+
+        if (entityExists)
+            throw ApiException.NotFound($"{typeof(T).Name} with Id '{id}' already exists");
+    }
+
+    public static async Task ThrowIfNotExistsAsync<T>(this DbContext db, Guid id)
+        where T : class, IEntity
+    {
+        var entityExists = await CheckIfExistsAsync<T>(db, id);
+
+        if (!entityExists)
+            throw ApiException.NotFound($"{typeof(T).Name} with Id '{id}' is not found");
+    }
+
+    public static async Task<bool> CheckIfExistsByExternalIdAsync<TExternalKey>(this DbContext db, Type entityType,
+        TExternalKey id)
     {
         var typeImplementsInterface = entityType.GetInterfaces()
             .Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEntityWithExternalId<>));
@@ -32,22 +44,35 @@ public static class DbContextExtensions
 
         return await (Task<bool>)typeof(DbContextExtensions)
             .GetMethods(BindingFlags.NonPublic)
-            .First(x => x.Name == nameof(CheckExistsByExternalIdAsync))
+            .First(x => x.Name == nameof(CheckIfExistsByExternalIdAsync))
             .MakeGenericMethod(entityType, typeof(TExternalKey))
-            .Invoke(null, new object[] { db, id!, throwException })!;
+            .Invoke(null, new object[] { db, id! })!;
     }
 
-    private static async Task<bool> CheckExistsByExternalIdAsync<TEntity, TExternalKey>(DbContext db, TExternalKey id,
-        bool throwException = false) where TEntity : class, IEntityWithExternalId<TExternalKey>
+    private static async Task<bool> CheckIfExistsByExternalIdAsync<TEntity, TExternalKey>(DbContext db, TExternalKey id)
+        where TEntity : class, IEntityWithExternalId<TExternalKey>
         where TExternalKey : struct
     {
-        var entityExists = await db.Set<TEntity>()
+        return await db.Set<TEntity>()
             .Where(x => x.ExternalId!.Equals(id))
             .AnyAsync();
+    }
 
-        if (entityExists && throwException)
-            throw ApiException.BadRequest($"{typeof(TEntity).Name} with ExternalId '{id}' already exists");
+    public static async Task ThrowIfExistsByExternalIdAsync<TExternalKey>(this DbContext db, Type entityType,
+        TExternalKey id)
+    {
+        var entityExists = await CheckIfExistsByExternalIdAsync(db, entityType, id);
 
-        return entityExists;
+        if (entityExists)
+            throw ApiException.BadRequest($"{entityType.Name} with ExternalId '{id}' already exists");
+    }
+
+    public static async Task ThrowIfNotExistsByExternalIdAsync<TExternalKey>(this DbContext db, Type entityType,
+        TExternalKey id)
+    {
+        var entityExists = await CheckIfExistsByExternalIdAsync(db, entityType, id);
+
+        if (!entityExists)
+            throw ApiException.BadRequest($"{entityType.Name} with ExternalId '{id}' is not found");
     }
 }

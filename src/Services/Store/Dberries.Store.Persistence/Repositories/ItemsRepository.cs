@@ -43,20 +43,20 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
 
     public async Task<Item> AddAsync(Item item)
     {
-        await Db.CheckExistsByExternalIdAsync(typeof(Item), item.ExternalId!.Value, true);
-        Db.Set<Item>().Add(item);
+        await Db.ThrowIfExistsByExternalIdAsync(typeof(Item), item.ExternalId!.Value);
+        Db.Add(item);
 
         return item;
     }
 
     public void Remove(Item item)
     {
-        Db.Set<Item>().Remove(item);
+        Db.Remove(item);
     }
 
     public async Task<PageResult<Location>> GetAvailabilityAsync(PageRequest pageRequest, Guid id)
     {
-        await Db.CheckExistsAsync<Item>(id, true);
+        await Db.ThrowIfNotExistsAsync<Item>(id);
 
         return await Db.Set<Location>()
             .Where(x => x.Stock!

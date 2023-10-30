@@ -29,19 +29,19 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
 
     public Location Add(Location location)
     {
-        Db.Set<Location>().Add(location);
+        Db.Add(location);
 
         return location;
     }
 
     public void Remove(Location location)
     {
-        Db.Set<Location>().Remove(location);
+        Db.Remove(location);
     }
 
     public async Task<PageResult<Stock>> GetStockPageAsync(Guid locationId, PageRequest pageRequest)
     {
-        await Db.CheckExistsAsync<Location>(locationId, true);
+        await Db.ThrowIfNotExistsAsync<Location>(locationId);
 
         return await Db.Set<Location>()
             .AsNoTracking()
@@ -54,8 +54,8 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
 
     public async Task<Stock?> GetStockAsync(Guid locationId, Guid itemId)
     {
-        await Db.CheckExistsAsync<Location>(locationId, true);
-        await Db.CheckExistsAsync<Item>(itemId, true);
+        await Db.ThrowIfNotExistsAsync<Location>(locationId);
+        await Db.ThrowIfNotExistsAsync<Item>(itemId);
 
         return await Db.Set<Location>()
             .AsNoTracking()
@@ -72,7 +72,7 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
         if (quantity < 0)
             throw ApiException.BadRequest($"Invalid quantity: {quantity}. Quantity must be greater than 0.");
 
-        await Db.CheckExistsAsync<Item>(itemId, true);
+        await Db.ThrowIfNotExistsAsync<Item>(itemId);
 
         var location = await Db.Set<Location>()
             .Where(x => x.Id == locationId)
