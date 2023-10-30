@@ -7,5 +7,6 @@ public static class AddServicesExtension
     public static void AddServices(this IServiceCollection services)
     {
         services.AddScoped<IItemsService, ItemsService>();
+        services.AddScoped<ILocationsService, LocationsService>();
     }
 }
