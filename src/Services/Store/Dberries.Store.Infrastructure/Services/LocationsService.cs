@@ -21,7 +21,7 @@ public class LocationsService : ILocationsService
 
     public async Task UpdateAsync(Location location)
     {
-        var existingLocation = await _locationsRepository.GetAsync(location.ExternalId!.Value, false);
+        var existingLocation = await _locationsRepository.GetAsync(location.ExternalId!.Value);
 
         if (existingLocation is null)
         {
@@ -38,7 +38,7 @@ public class LocationsService : ILocationsService
 
     public async Task RemoveAsync(Guid id)
     {
-        var existingLocation = await _locationsRepository.GetAsync(id, false);
+        var existingLocation = await _locationsRepository.GetAsync(id);
 
         if (existingLocation is null) return;
 
