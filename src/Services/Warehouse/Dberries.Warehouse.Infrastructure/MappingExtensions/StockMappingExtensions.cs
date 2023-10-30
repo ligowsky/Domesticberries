@@ -6,6 +6,7 @@ public static class StockMappingExtensions
     {
         return new StockDto
         {
+            ItemId = model.ItemId,
             Item = model.Item?.ToDto(),
             Quantity = model.Quantity
         };

@@ -4,10 +4,16 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>Dberries.Store</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Dberries.Store.Persistence\Dberries.Store.Persistence.csproj" />
+      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Messages\Dberries.Shared.Messages.csproj" />
+      <ProjectReference Include="..\Dberries.Store.Core\Dberries.Store.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="BitzArt.Patcher" Version="1.0.0" />
     </ItemGroup>
 
 </Project>

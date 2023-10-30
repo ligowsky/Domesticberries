@@ -2,5 +2,5 @@ namespace Dberries;
 
 public interface IRepository
 {
-    Task<int> SaveChangesAsync();
+    public Task<int> SaveChangesAsync();
 }

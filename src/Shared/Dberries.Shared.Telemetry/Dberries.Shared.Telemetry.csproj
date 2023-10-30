@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Dberries.Shared.Options\Dberries.Shared.Options.csproj" />
+      <ProjectReference Include="..\Dberries.Shared.EFCore\Dberries.Shared.EFCore.csproj" />
     </ItemGroup>
     
 </Project>

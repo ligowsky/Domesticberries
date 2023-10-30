@@ -6,10 +6,13 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Contracts\Dberries.Shared.Contracts.csproj" />
+      <ProjectReference Include="..\Dberries.Store.Core\Dberries.Store.Core.csproj" />
+    </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Dberries.Store.Core\Dberries.Store.Core.csproj" />
-      <ProjectReference Include="..\Dberries.Store.Infrastructure\Dberries.Store.Infrastructure.csproj" />
+      <Folder Include="Extensions\" />
     </ItemGroup>
 
 </Project>

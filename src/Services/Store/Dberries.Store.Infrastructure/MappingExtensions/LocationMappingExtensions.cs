@@ -7,8 +7,7 @@ public static class LocationMappingExtensions
         return new LocationDto
         {
             Id = model.Id,
-            Name = model.Name,
-            Items = model.Items?.Select(x => x.ToDto()).ToList()
+            Name = model.Name
         };
     }
 
@@ -16,9 +15,8 @@ public static class LocationMappingExtensions
     {
         return new Location
         {
-            Id = dto.Id,
-            Name = dto.Name,
-            Items = dto.Items?.Select(x => x.ToModel()).ToList()
+            ExternalId = dto.Id,
+            Name = dto.Name
         };
     }
 }

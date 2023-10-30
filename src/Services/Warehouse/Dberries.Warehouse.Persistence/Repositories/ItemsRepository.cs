@@ -22,20 +22,20 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             .FirstOrDefaultAsync();
 
         if (result is null)
-            throw ApiException.NotFound($"{nameof(Item)} with id '{id}' is not found");
+            throw ApiException.NotFound($"{nameof(Item)} with Id '{id}' is not found");
 
         return result;
     }
 
     public Item Add(Item item)
     {
-        Db.Set<Item>().Add(item);
+        Db.Add(item);
 
         return item;
     }
 
     public void Remove(Item item)
     {
-        Db.Set<Item>().Remove(item);
+        Db.Remove(item);
     }
 }

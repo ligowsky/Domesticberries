@@ -22,26 +22,26 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
             .FirstOrDefaultAsync();
 
         if (result is null)
-            throw ApiException.NotFound($"{nameof(Location)} with id '{id}' is not found");
+            throw ApiException.NotFound($"{nameof(Location)} with Id '{id}' is not found");
 
         return result;
     }
 
     public Location Add(Location location)
     {
-        Db.Set<Location>().Add(location);
+        Db.Add(location);
 
         return location;
     }
 
     public void Remove(Location location)
     {
-        Db.Set<Location>().Remove(location);
+        Db.Remove(location);
     }
 
     public async Task<PageResult<Stock>> GetStockPageAsync(Guid locationId, PageRequest pageRequest)
     {
-        await CheckExistsAsync<Location>(locationId);
+        await Db.ThrowIfNotExistsAsync<Location>(locationId);
 
         return await Db.Set<Location>()
             .AsNoTracking()
@@ -54,13 +54,14 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
 
     public async Task<Stock?> GetStockAsync(Guid locationId, Guid itemId)
     {
-        await CheckExistsAsync<Location>(locationId);
-        await CheckExistsAsync<Item>(itemId);
+        await Db.ThrowIfNotExistsAsync<Location>(locationId);
+        await Db.ThrowIfNotExistsAsync<Item>(itemId);
 
         return await Db.Set<Location>()
             .AsNoTracking()
             .Where(x => x.Id == locationId)
-            .SelectMany(x => x.Stock!.Where(y => y.ItemId == itemId))
+            .SelectMany(x => x.Stock!
+                .Where(y => y.ItemId == itemId))
             .Include(x => x.Item)
             .OrderBy(x => x.ItemId)
             .FirstOrDefaultAsync();
@@ -71,15 +72,16 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
         if (quantity < 0)
             throw ApiException.BadRequest($"Invalid quantity: {quantity}. Quantity must be greater than 0.");
 
-        await CheckExistsAsync<Item>(itemId);
+        await Db.ThrowIfNotExistsAsync<Item>(itemId);
 
         var location = await Db.Set<Location>()
             .Where(x => x.Id == locationId)
-            .Include(x => x.Stock!.Where(y => y.ItemId == itemId))
+            .Include(x => x.Stock!
+                .Where(y => y.ItemId == itemId))
             .FirstOrDefaultAsync();
 
         if (location is null)
-            throw ApiException.NotFound($"{nameof(Location)} with id '{locationId}' is not found");
+            throw ApiException.NotFound($"{nameof(Location)} with Id '{locationId}' is not found");
 
         var stock = location.Stock!.FirstOrDefault(x => x.ItemId == itemId);
 

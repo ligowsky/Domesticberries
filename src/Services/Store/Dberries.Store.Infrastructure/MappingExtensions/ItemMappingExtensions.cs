@@ -8,7 +8,7 @@ public static class ItemMappingExtensions
         {
             Id = model.Id,
             Name = model.Name,
-            Description = model.Description,
+            Description = model.Description
         };
     }
 
@@ -16,7 +16,7 @@ public static class ItemMappingExtensions
     {
         return new Item
         {
-            Id = dto.Id,
+            ExternalId = dto.Id,
             Name = dto.Name,
             Description = dto.Description
         };
