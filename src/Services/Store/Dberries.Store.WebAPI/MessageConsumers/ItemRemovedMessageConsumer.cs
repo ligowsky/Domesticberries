@@ -5,22 +5,16 @@ namespace Dberries.Store.WebAPI;
 
 public class ItemRemovedMessageConsumer : IConsumer<ItemRemovedMessage>
 {
-    private readonly IItemsRepository _itemsRepository;
+    private readonly IItemsService _itemsService;
 
-    public ItemRemovedMessageConsumer(IItemsRepository itemsRepository)
+    public ItemRemovedMessageConsumer(IItemsService itemsService)
     {
-        _itemsRepository = itemsRepository;
+        _itemsService = itemsService;
     }
 
     public async Task Consume(ConsumeContext<ItemRemovedMessage> context)
     {
         var id = context.Message.Id;
-
-        var existingItem = await _itemsRepository.GetByExternalIdAsync(id, false);
-
-        if (existingItem is null) return;
-        
-        _itemsRepository.Remove(existingItem);
-        await _itemsRepository.SaveChangesAsync();
+        await _itemsService.RemoveAsync(id);
     }
 }

@@ -5,19 +5,16 @@ namespace Dberries.Store.WebAPI;
 
 public class LocationAddedMessageConsumer : IConsumer<LocationAddedMessage>
 {
-    private readonly ILocationsRepository _locationsRepository;
+    private readonly ILocationsService _locationsService;
 
-    public LocationAddedMessageConsumer(ILocationsRepository locationsRepository)
+    public LocationAddedMessageConsumer(ILocationsService locationsService)
     {
-        _locationsRepository = locationsRepository;
+        _locationsService = locationsService;
     }
 
     public async Task Consume(ConsumeContext<LocationAddedMessage> context)
     {
         var location = context.Message.Location.ToModel();
-
-        await _locationsRepository.CheckExistsByExternalIdAsync(typeof(Location), location.ExternalId!.Value, true);
-        _locationsRepository.Add(location);
-        await _locationsRepository.SaveChangesAsync();
+        await _locationsService.AddAsync(location);
     }
 }

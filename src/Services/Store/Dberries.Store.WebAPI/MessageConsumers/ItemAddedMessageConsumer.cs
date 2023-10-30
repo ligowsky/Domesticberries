@@ -5,19 +5,16 @@ namespace Dberries.Store.WebAPI;
 
 public class ItemAddedMessageConsumer : IConsumer<ItemAddedMessage>
 {
-    private readonly IItemsRepository _itemsRepository;
+    private readonly IItemsService _itemsService;
 
-    public ItemAddedMessageConsumer(IItemsRepository itemsRepository)
+    public ItemAddedMessageConsumer(IItemsService itemsService)
     {
-        _itemsRepository = itemsRepository;
+        _itemsService = itemsService;
     }
 
     public async Task Consume(ConsumeContext<ItemAddedMessage> context)
     {
         var item = context.Message.Item.ToModel();
-
-        var x = await _itemsRepository.CheckExistsByExternalIdAsync(typeof(Item), item.ExternalId!.Value, true);
-        _itemsRepository.AddAsync(item);
-        await _itemsRepository.SaveChangesAsync();
+        await _itemsService.AddAsync(item);
     }
 }

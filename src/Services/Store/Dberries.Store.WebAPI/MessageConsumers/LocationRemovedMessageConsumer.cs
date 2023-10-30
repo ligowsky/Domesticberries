@@ -5,22 +5,16 @@ namespace Dberries.Store.WebAPI;
 
 public class LocationRemovedMessageConsumer : IConsumer<LocationRemovedMessage>
 {
-    private readonly ILocationsRepository _locationsRepository;
+    private readonly ILocationsService _locationsService;
 
-    public LocationRemovedMessageConsumer(ILocationsRepository locationsRepository)
+    public LocationRemovedMessageConsumer(ILocationsService locationsService)
     {
-        _locationsRepository = locationsRepository;
+        _locationsService = locationsService;
     }
 
     public async Task Consume(ConsumeContext<LocationRemovedMessage> context)
     {
         var id = context.Message.Id;
-
-        var existingLocation = await _locationsRepository.GetAsync(id, false);
-
-        if (existingLocation is null) return;
-
-        _locationsRepository.Remove(existingLocation);
-        await _locationsRepository.SaveChangesAsync();
+        await _locationsService.RemoveAsync(id);
     }
 }

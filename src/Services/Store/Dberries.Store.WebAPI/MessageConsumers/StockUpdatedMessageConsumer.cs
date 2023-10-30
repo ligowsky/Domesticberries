@@ -5,11 +5,11 @@ namespace Dberries.Store.WebAPI;
 
 public class StockUpdatedMessageConsumer : IConsumer<StockUpdatedMessage>
 {
-    private readonly ILocationsRepository _locationsRepository;
-
-    public StockUpdatedMessageConsumer(ILocationsRepository locationsRepository)
+    private readonly ILocationsService _locationsService;
+    
+    public StockUpdatedMessageConsumer(ILocationsService locationsService)
     {
-        _locationsRepository = locationsRepository;
+        _locationsService = locationsService;
     }
     
     public async Task Consume(ConsumeContext<StockUpdatedMessage> context)
@@ -20,7 +20,6 @@ public class StockUpdatedMessageConsumer : IConsumer<StockUpdatedMessage>
         var itemId = stock!.ItemId!.Value;
         var quantity = stock.Quantity!.Value;
 
-        await _locationsRepository.UpdateStockAsync(locationId, itemId, quantity);
-        await _locationsRepository.SaveChangesAsync();
+        await _locationsService.UpdateStockAsync(locationId, itemId, quantity);
     }
 }

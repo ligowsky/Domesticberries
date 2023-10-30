@@ -1,4 +1,3 @@
-using BitzArt;
 using Dberries.Warehouse;
 using MassTransit;
 
@@ -6,29 +5,16 @@ namespace Dberries.Store.WebAPI;
 
 public class LocationUpdatedMessageConsumer : IConsumer<LocationUpdatedMessage>
 {
-    private readonly ILocationsRepository _locationsRepository;
+    private readonly ILocationsService _locationsService;
 
-    public LocationUpdatedMessageConsumer(ILocationsRepository locationsRepository)
+    public LocationUpdatedMessageConsumer(ILocationsService locationsService)
     {
-        _locationsRepository = locationsRepository;
+        _locationsService = locationsService;
     }
-    
+
     public async Task Consume(ConsumeContext<LocationUpdatedMessage> context)
     {
         var location = context.Message.Location.ToModel();
-        
-        var existingLocation = await _locationsRepository.GetAsync(location.ExternalId!.Value, false);
-
-        if (existingLocation is null)
-        {
-            _locationsRepository.Add(location);
-        }
-        else
-        {
-            existingLocation.Patch(location)
-                .Property(x => x.Name);
-        }
-
-        await _locationsRepository.SaveChangesAsync();
+        await _locationsService.UpdateAsync(location);
     }
 }
