@@ -24,7 +24,7 @@ public class ItemsService : IItemsService
 
     public async Task AddAsync(Item item)
     {
-        _itemsRepository.AddAsync(item);
+        await _itemsRepository.AddAsync(item);
         await _itemsRepository.SaveChangesAsync();
     }
 
@@ -34,7 +34,7 @@ public class ItemsService : IItemsService
 
         if (existingItem is null)
         {
-            _itemsRepository.AddAsync(item);
+            await _itemsRepository.AddAsync(item);
         }
         else
         {
