@@ -9,11 +9,15 @@ namespace Dberries.Store.Tests;
 public class ItemsServiceTests
 {
     private readonly IItemsService _itemsService;
+    private readonly ILocationsService _locationsService;
+    private readonly AppDbContext _db;
 
     public ItemsServiceTests(TestServiceContainer testServiceContainer)
     {
         var serviceProvider = testServiceContainer.ServiceProvider;
         _itemsService = serviceProvider.GetRequiredService<IItemsService>();
+        _locationsService = serviceProvider.GetRequiredService<ILocationsService>();
+        _db = serviceProvider.GetRequiredService<AppDbContext>();
     }
 
     [Fact]
@@ -62,9 +66,9 @@ public class ItemsServiceTests
     {
         // Arrange
         var itemId = Guid.NewGuid();
-        Task Action() => _itemsService.GetAsync(itemId);
 
         // Assert
+        Task Action() => _itemsService.GetAsync(itemId);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 
@@ -89,9 +93,9 @@ public class ItemsServiceTests
         // Arrange
         var item = EntityGenerator.GenerateItem();
         await _itemsService.AddAsync(item);
-        Task Action() => _itemsService.AddAsync(item);
 
         // Assert
+        Task Action() => _itemsService.AddAsync(item);
         await Assert.ThrowsAsync<BadRequestApiException>(Action);
     }
 
@@ -155,12 +159,70 @@ public class ItemsServiceTests
         var item = EntityGenerator.GenerateItem();
         item = await _itemsService.AddAsync(item);
 
-        Task Action() => _itemsService.GetAsync(item.Id!.Value);
-
         // Act
         await _itemsService.RemoveAsync(item.ExternalId!.Value);
 
         // Assert
+        Task Action() => _itemsService.GetAsync(item.Id!.Value);
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
+    }
+    
+    [Fact]
+    public async Task RemoveItem_NotExistingItem_NotFoundApiExceptionNotThrown()
+    {
+        // Arrange
+        var itemId = Guid.NewGuid();
+        
+        // Assert
+        var exception = await Record.ExceptionAsync(() => _itemsService.RemoveAsync(itemId));
+        Assert.Null(exception);
+    }
+
+    [Fact]
+    public async Task GetAvailability_ExistingItem_ItemAvailabilityReceived()
+    {
+        // Arrange
+        var item = EntityGenerator.GenerateItem();
+        item = await _itemsService.AddAsync(item);
+
+        const int locationCount = 10;
+        const int itemsQuantity = 5;
+
+        var locations = Enumerable.Range(0, locationCount)
+            .Select(EntityGenerator.GenerateLocation).ToList();
+
+        foreach (var location in locations)
+        {
+            await _locationsService.AddAsync(location);
+
+            var stock = EntityGenerator.GenerateStock(itemsQuantity);
+            await _locationsService.UpdateStockAsync(location.ExternalId!.Value, item.ExternalId!.Value,
+                stock.Quantity!.Value);
+
+            _db.ChangeTracker.Clear();
+        }
+
+        // Assert
+        var itemAvailabilityList = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
+
+        Assert.NotNull(itemAvailabilityList);
+        Assert.Equal(locationCount, itemAvailabilityList.Count);
+
+        foreach (var itemAvailability in itemAvailabilityList)
+        {
+            Assert.Contains(locations, x => x.ExternalId == itemAvailability.Location!.ExternalId);
+            Assert.Equal(itemAvailability.Quantity, itemsQuantity);
+        }
+    }
+
+    [Fact]
+    public async Task GetAvailability_NotExistingItem_NotFoundApiExceptionThrown()
+    {
+        // Arrange
+        var itemId = Guid.NewGuid();
+        
+        // Assert
+        Task Action() => _itemsService.GetAvailabilityAsync(itemId);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 }
