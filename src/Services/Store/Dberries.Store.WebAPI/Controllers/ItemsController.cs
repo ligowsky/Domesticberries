@@ -32,10 +32,10 @@ public class ItemsController : ControllerBase
     }
 
     [HttpGet("{id:guid}/availability", Name = "GetAvailability")]
-    public async Task<IActionResult> GetAvailabilityAsync([FromQuery] PageRequest pageRequest, [FromRoute] Guid id)
+    public async Task<IActionResult> GetAvailabilityAsync([FromRoute] Guid id)
     {
-        var locations = await _itemsService.GetAvailabilityAsync(pageRequest, id);
-        var result = locations.Convert(x => x.ToDto());
+        var itemAvailabilityList = await _itemsService.GetAvailabilityAsync(id);
+        var result = itemAvailabilityList.Select(x => x.ToDto());
 
         return Ok(result);
     }

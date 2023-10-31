@@ -65,9 +65,9 @@ public class ItemsService : IItemsService
         throw new NotImplementedException();
     }
 
-    public Task<PageResult<Location>> GetAvailabilityAsync(PageRequest pageRequest, Guid id)
+    public Task<ICollection<ItemAvailability>> GetAvailabilityAsync(Guid id)
     {
-        return _itemsRepository.GetAvailabilityAsync(pageRequest, id);
+        return _itemsRepository.GetAvailabilityAsync(id);
     }
 
     public Task UpdateRatingAsync(Guid id, byte value)

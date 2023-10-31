@@ -19,13 +19,13 @@ public class LocationsService : ILocationsService
         return location;
     }
 
-    public async Task UpdateAsync(Location location)
+    public async Task<Location> UpdateAsync(Location location)
     {
         var existingLocation = await _locationsRepository.GetAsync(location.ExternalId!.Value);
 
         if (existingLocation is null)
         {
-            await _locationsRepository.AddAsync(location);
+            existingLocation = await _locationsRepository.AddAsync(location);
         }
         else
         {
@@ -34,6 +34,8 @@ public class LocationsService : ILocationsService
         }
 
         await _locationsRepository.SaveChangesAsync();
+
+        return existingLocation;
     }
 
     public async Task RemoveAsync(Guid id)
@@ -46,9 +48,11 @@ public class LocationsService : ILocationsService
         await _locationsRepository.SaveChangesAsync();
     }
     
-    public async Task UpdateStockAsync(Guid locationId, Guid itemId, int quantity)
+    public async Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, int quantity)
     {
-        await _locationsRepository.UpdateStockAsync(locationId, itemId, quantity);
+        var updatedStock = await _locationsRepository.UpdateStockAsync(locationId, itemId, quantity);
         await _locationsRepository.SaveChangesAsync();
+
+        return updatedStock;
     }
 }

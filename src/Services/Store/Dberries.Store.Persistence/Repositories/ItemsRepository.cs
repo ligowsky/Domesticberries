@@ -49,14 +49,32 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         Db.Remove(item);
     }
 
-    public async Task<PageResult<Location>> GetAvailabilityAsync(PageRequest pageRequest, Guid id)
+    public async Task<ICollection<ItemAvailability>> GetAvailabilityAsync(Guid id)
     {
         await Db.ThrowIfNotExistsAsync<Item>(id);
 
-        return await Db.Set<Location>()
+        var locations = await Db.Set<Location>()
             .Where(x => x.Stock!
                 .Any(y => y.ItemId == id))
+            .Include(x => x.Stock!.Where(y => y.ItemId == id))
             .OrderBy(x => x.Id)
-            .ToPageAsync(pageRequest);
+            .ToListAsync();
+
+        var itemAvailabilityList = new List<ItemAvailability>();
+
+        foreach (var location in locations)
+        {
+            var quantity = location.Stock!.First(x => x.ItemId == id).Quantity;
+
+            var itemAvailability = new ItemAvailability
+            {
+                Location = location,
+                Quantity = quantity
+            };
+
+            itemAvailabilityList.Add(itemAvailability);
+        }
+
+        return itemAvailabilityList;
     }
 }
