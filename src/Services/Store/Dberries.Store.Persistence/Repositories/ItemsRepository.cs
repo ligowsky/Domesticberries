@@ -53,28 +53,16 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
     {
         await Db.ThrowIfNotExistsAsync<Item>(id);
 
-        var locations = await Db.Set<Location>()
+        return await Db.Set<Location>()
             .Where(x => x.Stock!
                 .Any(y => y.ItemId == id))
-            .Include(x => x.Stock!.Where(y => y.ItemId == id))
             .OrderBy(x => x.Id)
-            .ToListAsync();
-
-        var itemAvailabilityList = new List<ItemAvailability>();
-
-        foreach (var location in locations)
-        {
-            var quantity = location.Stock!.First(x => x.ItemId == id).Quantity;
-
-            var itemAvailability = new ItemAvailability
+            .Select(x => new ItemAvailability
             {
-                Location = location,
-                Quantity = quantity
-            };
-
-            itemAvailabilityList.Add(itemAvailability);
-        }
-
-        return itemAvailabilityList;
+                LocationId = x.Id,
+                LocationName = x.Name,
+                Quantity = x.Stock!.First(y => y.ItemId == id).Quantity
+            })
+            .ToListAsync();
     }
 }

@@ -210,7 +210,7 @@ public class ItemsServiceTests
 
         foreach (var itemAvailability in itemAvailabilityList)
         {
-            Assert.Contains(locations, x => x.ExternalId == itemAvailability.Location!.ExternalId);
+            Assert.Contains(locations, x => x.Id == itemAvailability.LocationId);
             Assert.Equal(itemAvailability.Quantity, itemsQuantity);
         }
     }

@@ -143,8 +143,7 @@ public class LocationsServiceTests
         Assert.NotNull(itemAvailabilityList);
         Assert.Equal(1, itemAvailabilityList.Count);
         Assert.NotNull(itemAvailability);
-        Assert.Equal(location.Id, itemAvailability.Location!.Id);
-        Assert.Equal(location.ExternalId, itemAvailability.Location!.ExternalId);
+        Assert.Equal(location.Id, itemAvailability.LocationId);
         Assert.Equal(quantity, itemAvailability.Quantity);
     }
 
@@ -174,8 +173,7 @@ public class LocationsServiceTests
         Assert.NotNull(itemAvailabilityList);
         Assert.Equal(1, itemAvailabilityList.Count);
         Assert.NotNull(itemAvailability);
-        Assert.Equal(location.Id, itemAvailability.Location!.Id);
-        Assert.Equal(location.ExternalId, itemAvailability.Location!.ExternalId);
+        Assert.Equal(location.Id, itemAvailability.LocationId);
         Assert.Equal(quantity, itemAvailability.Quantity);
     }
 

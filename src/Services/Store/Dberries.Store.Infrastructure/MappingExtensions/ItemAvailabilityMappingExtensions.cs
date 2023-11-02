@@ -6,8 +6,8 @@ public static class ItemAvailabilityMappingExtensions
     {
         return new ItemAvailabilityDto
         {
-            LocationId = model.Location!.Id,
-            LocationName = model.Location.Name,
+            LocationId = model.LocationId,
+            LocationName = model.LocationName,
             ItemQuantity = model.Quantity
         };
     }
