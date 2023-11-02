@@ -138,7 +138,7 @@ public class LocationsServiceTests
 
         // Assert 
         var itemAvailability = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
-        var itemAvailabilityDetailsList = itemAvailability.ItemAvailabilityDetailsList.ToList();
+        var itemAvailabilityDetailsList = itemAvailability.Details.ToList();
         var itemAvailabilityDetail = itemAvailabilityDetailsList.FirstOrDefault();
 
         Assert.NotNull(itemAvailability);
@@ -169,7 +169,7 @@ public class LocationsServiceTests
 
         // Assert
         var itemAvailability = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
-        var itemAvailabilityDetailsList = itemAvailability.ItemAvailabilityDetailsList.ToList();
+        var itemAvailabilityDetailsList = itemAvailability.Details.ToList();
         var itemAvailabilityDetail = itemAvailabilityDetailsList.FirstOrDefault();
 
         Assert.NotNull(itemAvailability);
@@ -200,7 +200,7 @@ public class LocationsServiceTests
 
         // Assert
         var itemAvailability = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
-        var itemAvailabilityDetailsList = itemAvailability.ItemAvailabilityDetailsList.ToList();
+        var itemAvailabilityDetailsList = itemAvailability.Details.ToList();
         
         Assert.NotNull(itemAvailability);
         Assert.Empty(itemAvailabilityDetailsList);

@@ -204,7 +204,7 @@ public class ItemsServiceTests
 
         // Assert
         var itemAvailability = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
-        var itemAvailabilityDetailsList = itemAvailability.ItemAvailabilityDetailsList.ToList();
+        var itemAvailabilityDetailsList = itemAvailability.Details.ToList();
 
         Assert.NotNull(itemAvailability);
         Assert.Equal(locationCount, itemAvailabilityDetailsList.Count);

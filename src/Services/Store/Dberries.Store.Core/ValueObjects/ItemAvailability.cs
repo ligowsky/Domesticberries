@@ -2,10 +2,10 @@ namespace Dberries.Store;
 
 public class ItemAvailability
 {
-    public IEnumerable<ItemAvailabilityDetails> ItemAvailabilityDetailsList { get; set; }
+    public IEnumerable<ItemAvailabilityDetails> Details { get; set; }
 
-    public ItemAvailability(IEnumerable<ItemAvailabilityDetails> itemAvailabilityDetailsList )
+    public ItemAvailability(IEnumerable<ItemAvailabilityDetails> details )
     {
-        ItemAvailabilityDetailsList = itemAvailabilityDetailsList;
+        Details = details;
     }
 }
