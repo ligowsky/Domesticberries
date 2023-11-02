@@ -137,14 +137,15 @@ public class LocationsServiceTests
         await _locationsService.UpdateStockAsync(location.ExternalId!.Value, item.ExternalId!.Value, quantity);
 
         // Assert 
-        var itemAvailabilityList = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
-        var itemAvailability = itemAvailabilityList.FirstOrDefault();
+        var itemAvailability = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
+        var itemAvailabilityDetailsList = itemAvailability.ItemAvailabilityDetailsList.ToList();
+        var itemAvailabilityDetail = itemAvailabilityDetailsList.FirstOrDefault();
 
-        Assert.NotNull(itemAvailabilityList);
-        Assert.Equal(1, itemAvailabilityList.Count);
         Assert.NotNull(itemAvailability);
-        Assert.Equal(location.Id, itemAvailability.LocationId);
-        Assert.Equal(quantity, itemAvailability.Quantity);
+        Assert.Single(itemAvailabilityDetailsList);
+        Assert.NotNull(itemAvailabilityDetail);
+        Assert.Equal(location.Id, itemAvailabilityDetail.LocationId);
+        Assert.Equal(quantity, itemAvailabilityDetail.Quantity);
     }
 
     [Fact]
@@ -167,14 +168,15 @@ public class LocationsServiceTests
         await _locationsService.UpdateStockAsync(location.ExternalId!.Value, item.ExternalId!.Value, quantity);
 
         // Assert
-        var itemAvailabilityList = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
-        var itemAvailability = itemAvailabilityList.FirstOrDefault();
+        var itemAvailability = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
+        var itemAvailabilityDetailsList = itemAvailability.ItemAvailabilityDetailsList.ToList();
+        var itemAvailabilityDetail = itemAvailabilityDetailsList.FirstOrDefault();
 
-        Assert.NotNull(itemAvailabilityList);
-        Assert.Equal(1, itemAvailabilityList.Count);
         Assert.NotNull(itemAvailability);
-        Assert.Equal(location.Id, itemAvailability.LocationId);
-        Assert.Equal(quantity, itemAvailability.Quantity);
+        Assert.Single(itemAvailabilityDetailsList);
+        Assert.NotNull(itemAvailabilityDetail);
+        Assert.Equal(location.Id, itemAvailabilityDetail.LocationId);
+        Assert.Equal(quantity, itemAvailabilityDetail.Quantity);
     }
 
     [Fact]
@@ -197,10 +199,11 @@ public class LocationsServiceTests
         await _locationsService.UpdateStockAsync(location.ExternalId!.Value, item.ExternalId!.Value, quantity);
 
         // Assert
-        var itemAvailabilityList = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
-
-        Assert.NotNull(itemAvailabilityList);
-        Assert.Equal(quantity, itemAvailabilityList.Count);
+        var itemAvailability = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
+        var itemAvailabilityDetailsList = itemAvailability.ItemAvailabilityDetailsList.ToList();
+        
+        Assert.NotNull(itemAvailability);
+        Assert.Empty(itemAvailabilityDetailsList);
     }
 
     [Fact]

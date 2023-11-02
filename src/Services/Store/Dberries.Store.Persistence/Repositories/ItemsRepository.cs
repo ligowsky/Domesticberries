@@ -49,20 +49,22 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         Db.Remove(item);
     }
 
-    public async Task<ICollection<ItemAvailability>> GetAvailabilityAsync(Guid id)
+    public async Task<ItemAvailability> GetAvailabilityAsync(Guid id)
     {
         await Db.ThrowIfNotExistsAsync<Item>(id);
 
-        return await Db.Set<Location>()
+        var itemAvailabilityList = await Db.Set<Location>()
             .Where(x => x.Stock!
                 .Any(y => y.ItemId == id))
             .OrderBy(x => x.Id)
-            .Select(x => new ItemAvailability
+            .Select(x => new ItemAvailabilityDetails
             {
                 LocationId = x.Id,
                 LocationName = x.Name,
                 Quantity = x.Stock!.First(y => y.ItemId == id).Quantity
             })
             .ToListAsync();
+
+        return new ItemAvailability(itemAvailabilityList);
     }
 }

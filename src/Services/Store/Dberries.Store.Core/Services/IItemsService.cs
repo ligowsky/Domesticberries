@@ -10,6 +10,6 @@ public interface IItemsService
     public Task<Item> UpdateAsync(Item item);
     public Task RemoveAsync(Guid id);
     public Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, string query);
-    public Task<ICollection<ItemAvailability>> GetAvailabilityAsync(Guid id);
+    public Task<ItemAvailability> GetAvailabilityAsync(Guid id);
     public Task UpdateRatingAsync(Guid id, byte value);
 }

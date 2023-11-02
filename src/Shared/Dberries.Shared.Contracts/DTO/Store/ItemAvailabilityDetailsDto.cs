@@ -1,6 +1,6 @@
 namespace Dberries;
 
-public class ItemAvailabilityDto
+public class ItemAvailabilityDetailsDto
 {
     public Guid? LocationId { get; set; }
     public string? LocationName { get; set; }

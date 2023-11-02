@@ -2,9 +2,9 @@ namespace Dberries.Store;
 
 public static class ItemAvailabilityMappingExtensions
 {
-    public static ItemAvailabilityDto ToDto(this ItemAvailability model)
+    public static ItemAvailabilityDetailsDto ToDto(this ItemAvailabilityDetails model)
     {
-        return new ItemAvailabilityDto
+        return new ItemAvailabilityDetailsDto
         {
             LocationId = model.LocationId,
             LocationName = model.LocationName,

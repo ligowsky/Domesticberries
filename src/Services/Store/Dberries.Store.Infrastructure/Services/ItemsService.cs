@@ -65,7 +65,7 @@ public class ItemsService : IItemsService
         throw new NotImplementedException();
     }
 
-    public Task<ICollection<ItemAvailability>> GetAvailabilityAsync(Guid id)
+    public Task<ItemAvailability> GetAvailabilityAsync(Guid id)
     {
         return _itemsRepository.GetAvailabilityAsync(id);
     }
