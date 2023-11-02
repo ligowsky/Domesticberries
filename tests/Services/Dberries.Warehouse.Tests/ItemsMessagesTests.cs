@@ -18,7 +18,7 @@ public class ItemsMessagesTests
     }
 
     [Fact]
-    public async Task AddItem_NewItem_MessagePublished()
+    public async Task AddItem_NewItem_PublishesMessage()
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
@@ -39,7 +39,7 @@ public class ItemsMessagesTests
     }
 
     [Fact]
-    public async Task UpdateItem_ExistingItem_MessagePublished()
+    public async Task UpdateItem_ExistingItem_PublishesMessage()
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
@@ -71,15 +71,15 @@ public class ItemsMessagesTests
         // Assert
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
 
-        var isMessagePublished = _harness.Published
+        var isPublishesMessage = _harness.Published
             .Select<ItemUpdatedMessage>()
             .Any(x => x.Context.Message.Item.Id == item.Id);
 
-        Assert.False(isMessagePublished);
+        Assert.False(isPublishesMessage);
     }
 
     [Fact]
-    public async Task RemoveItem_ExistingItem_MessagePublished()
+    public async Task RemoveItem_ExistingItem_PublishesMessage()
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
@@ -108,10 +108,10 @@ public class ItemsMessagesTests
         // Assert
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
 
-        var isMessagePublished = _harness.Published
+        var isPublishesMessage = _harness.Published
             .Select<ItemRemovedMessage>()
             .Any(x => x.Context.Message.Id == itemId);
 
-        Assert.False(isMessagePublished);
+        Assert.False(isPublishesMessage);
     }
 }

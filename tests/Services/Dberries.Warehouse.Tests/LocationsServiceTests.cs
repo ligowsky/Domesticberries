@@ -21,7 +21,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task GetLocationsPage_ExistingLocations_LocationsReceived()
+    public async Task GetLocationsPage_ExistingLocations_ReturnsLocationsPage()
     {
         // Arrange
         const int locationsCount = 10;
@@ -44,23 +44,23 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task GetLocation_ExistingLocation_LocationReceived()
+    public async Task GetLocation_ExistingLocation_ReturnsLocation()
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();
         await _locationsService.AddAsync(location);
 
         // Assert
-        var receivedLocation = await _locationsService.GetAsync(location.Id!.Value);
+        var returnedLocation = await _locationsService.GetAsync(location.Id!.Value);
 
-        Assert.NotNull(receivedLocation);
-        Assert.Equal(location.Id, receivedLocation.Id);
-        Assert.Equal(location.Name, receivedLocation.Name);
-        Assert.Equal(location.Coordinates, receivedLocation.Coordinates);
+        Assert.NotNull(returnedLocation);
+        Assert.Equal(location.Id, returnedLocation.Id);
+        Assert.Equal(location.Name, returnedLocation.Name);
+        Assert.Equal(location.Coordinates, returnedLocation.Coordinates);
     }
 
     [Fact]
-    public async Task GetLocation_NotExistingLocation_NotFoundApiExceptionThrown()
+    public async Task GetLocation_NotExistingLocation_ThrowsNotFoundApiException()
     {
         // Arrange
         var locationId = Guid.NewGuid();
@@ -71,7 +71,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task AddLocation_NewLocation_LocationAdded()
+    public async Task AddLocation_NewLocation_AddsLocation()
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();
@@ -90,7 +90,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task UpdateLocation_ExistingLocation_LocationUpdated()
+    public async Task UpdateLocation_ExistingLocation_UpdatesLocation()
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();
@@ -117,7 +117,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task UpdateLocation_NotExistingLocation_NotFoundApiExceptionThrown()
+    public async Task UpdateLocation_NotExistingLocation_ThrowsNotFoundApiException()
     {
         // Arrange
         var locationId = Guid.NewGuid();
@@ -129,7 +129,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task RemoveLocation_ExistingLocation_LocationRemoved()
+    public async Task RemoveLocation_ExistingLocation_RemovesLocation()
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();
@@ -144,7 +144,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task RemoveLocation_NotExistingLocation_NotFoundApiExceptionThrown()
+    public async Task RemoveLocation_NotExistingLocation_ThrowsNotFoundApiException()
     {
         // Arrange
         var locationId = Guid.NewGuid();
@@ -155,7 +155,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task GetStockPage_ExistingStock_StockPageReceived()
+    public async Task GetStockPage_ExistingStock_ReturnsStockPage()
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();
@@ -191,7 +191,7 @@ public class LocationsServiceTests
     [InlineData(1)]
     [InlineData(10)]
     [InlineData(100)]
-    public async Task UpdateStock_NewStock_StockAdded(int quantity)
+    public async Task UpdateStock_NewStock_AddsStock(int quantity)
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();
@@ -217,7 +217,7 @@ public class LocationsServiceTests
     [InlineData(10)]
     [InlineData(100)]
     [InlineData(1000)]
-    public async Task UpdateStock_ExistingStock_StockUpdated(int quantity)
+    public async Task UpdateStock_ExistingStock_UpdatesStock(int quantity)
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();
@@ -245,7 +245,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task UpdateStock_ZeroQuantity_StockRemoved()
+    public async Task UpdateStock_ZeroQuantity_RemovesStock()
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();
@@ -269,7 +269,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task UpdateStock_NotExistingLocation_NotFoundApiExceptionThrown()
+    public async Task UpdateStock_NotExistingLocation_ThrowsNotFoundApiException()
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
@@ -284,7 +284,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task UpdateStock_NotExistingItem_NotFoundApiExceptionThrown()
+    public async Task UpdateStock_NotExistingItem_ThrowsNotFoundApiException()
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();
@@ -299,7 +299,7 @@ public class LocationsServiceTests
     }
 
     [Fact]
-    public async Task UpdateStock_NegativeQuantity_BadRequestApiExceptionThrown()
+    public async Task UpdateStock_NegativeQuantity_ThrowsBadRequestApiException()
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();

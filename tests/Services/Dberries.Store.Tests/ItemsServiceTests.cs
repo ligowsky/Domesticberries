@@ -21,7 +21,7 @@ public class ItemsServiceTests
     }
 
     [Fact]
-    public async Task GetItemsPage_ExistingItems_ItemsReceived()
+    public async Task GetItemsPage_ExistingItems_ReturnsItemsPage()
     {
         // Arrange
         const int itemsCount = 10;
@@ -44,25 +44,25 @@ public class ItemsServiceTests
     }
 
     [Fact]
-    public async Task GetItem_ExistingItem_ItemReceived()
+    public async Task GetItem_ExistingItem_ReturnsItem()
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
         await _itemsService.AddAsync(item);
 
         // Act
-        var receivedItem = await _itemsService.GetAsync(item.Id!.Value);
+        var returnedItem = await _itemsService.GetAsync(item.Id!.Value);
 
         // Assert
-        Assert.NotNull(receivedItem);
-        Assert.Equal(item.Id, receivedItem.Id);
-        Assert.Equal(item.ExternalId, receivedItem.ExternalId);
-        Assert.Equal(item.Name, receivedItem.Name);
-        Assert.Equal(item.Description, receivedItem.Description);
+        Assert.NotNull(returnedItem);
+        Assert.Equal(item.Id, returnedItem.Id);
+        Assert.Equal(item.ExternalId, returnedItem.ExternalId);
+        Assert.Equal(item.Name, returnedItem.Name);
+        Assert.Equal(item.Description, returnedItem.Description);
     }
 
     [Fact]
-    public async Task GetItem_NotExistingItem_NotFoundApiExceptionThrown()
+    public async Task GetItem_NotExistingItem_ThrowsNotFoundApiException()
     {
         // Arrange
         var itemId = Guid.NewGuid();
@@ -73,7 +73,7 @@ public class ItemsServiceTests
     }
 
     [Fact]
-    public async Task AddItem_NewItem_ItemAdded()
+    public async Task AddItem_NewItem_AddsItem()
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
@@ -88,7 +88,7 @@ public class ItemsServiceTests
     }
 
     [Fact]
-    public async Task AddItem_ExistingItem_BadRequestApiExceptionThrown()
+    public async Task AddItem_ExistingItem_ThrowsBadRequestApiException()
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
@@ -128,7 +128,7 @@ public class ItemsServiceTests
     }
 
     [Fact]
-    public async Task UpdateItem_NotExistingItem_ItemAdded()
+    public async Task UpdateItem_NotExistingItem_AddsItem()
     {
         // Arrange
         var item = new Item
@@ -153,7 +153,7 @@ public class ItemsServiceTests
     }
 
     [Fact]
-    public async Task RemoveItem_ExistingItem_ItemRemoved()
+    public async Task RemoveItem_ExistingItem_RemovesItem()
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
@@ -168,7 +168,7 @@ public class ItemsServiceTests
     }
     
     [Fact]
-    public async Task RemoveItem_NotExistingItem_NotFoundApiExceptionNotThrown()
+    public async Task RemoveItem_NotExistingItem_DoesNotThrowNotFoundApiException()
     {
         // Arrange
         var itemId = Guid.NewGuid();
@@ -179,7 +179,7 @@ public class ItemsServiceTests
     }
 
     [Fact]
-    public async Task GetAvailability_ExistingItem_ItemAvailabilityReceived()
+    public async Task GetAvailability_ExistingItem_ReturnsItemAvailabilityList()
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
@@ -216,7 +216,7 @@ public class ItemsServiceTests
     }
 
     [Fact]
-    public async Task GetAvailability_NotExistingItem_NotFoundApiExceptionThrown()
+    public async Task GetAvailability_NotExistingItem_ThrowsNotFoundApiException()
     {
         // Arrange
         var itemId = Guid.NewGuid();
