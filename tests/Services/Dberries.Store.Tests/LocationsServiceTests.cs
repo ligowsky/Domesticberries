@@ -138,14 +138,14 @@ public class LocationsServiceTests
 
         // Assert 
         var itemAvailability = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
-        var itemAvailabilityDetailsList = itemAvailability.Details.ToList();
-        var itemAvailabilityDetail = itemAvailabilityDetailsList.FirstOrDefault();
+        var availabilityDetails = itemAvailability.Details.ToList();
+        var availabilityDetail = availabilityDetails.FirstOrDefault();
 
         Assert.NotNull(itemAvailability);
-        Assert.Single(itemAvailabilityDetailsList);
-        Assert.NotNull(itemAvailabilityDetail);
-        Assert.Equal(location.Id, itemAvailabilityDetail.LocationId);
-        Assert.Equal(quantity, itemAvailabilityDetail.Quantity);
+        Assert.Single(availabilityDetails);
+        Assert.NotNull(availabilityDetail);
+        Assert.Equal(location.Id, availabilityDetail.LocationId);
+        Assert.Equal(quantity, availabilityDetail.Quantity);
     }
 
     [Fact]
@@ -169,14 +169,14 @@ public class LocationsServiceTests
 
         // Assert
         var itemAvailability = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
-        var itemAvailabilityDetailsList = itemAvailability.Details.ToList();
-        var itemAvailabilityDetail = itemAvailabilityDetailsList.FirstOrDefault();
+        var availabilityDetails = itemAvailability.Details.ToList();
+        var availabilityDetail = availabilityDetails.FirstOrDefault();
 
         Assert.NotNull(itemAvailability);
-        Assert.Single(itemAvailabilityDetailsList);
-        Assert.NotNull(itemAvailabilityDetail);
-        Assert.Equal(location.Id, itemAvailabilityDetail.LocationId);
-        Assert.Equal(quantity, itemAvailabilityDetail.Quantity);
+        Assert.Single(availabilityDetails);
+        Assert.NotNull(availabilityDetail);
+        Assert.Equal(location.Id, availabilityDetail.LocationId);
+        Assert.Equal(quantity, availabilityDetail.Quantity);
     }
 
     [Fact]
@@ -200,10 +200,10 @@ public class LocationsServiceTests
 
         // Assert
         var itemAvailability = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
-        var itemAvailabilityDetailsList = itemAvailability.Details.ToList();
+        var availabilityDetails = itemAvailability.Details.ToList();
         
         Assert.NotNull(itemAvailability);
-        Assert.Empty(itemAvailabilityDetailsList);
+        Assert.Empty(availabilityDetails);
     }
 
     [Fact]
