@@ -1,6 +1,9 @@
+using System.Text.Json.Serialization;
+
 namespace Dberries;
 
 public class ItemAvailabilityResponseDto
 {
-    public IEnumerable<ItemAvailabilityInLocationDto> AvailableInLocations { get; set; }
+    [JsonPropertyName("availableInLocations")] 
+    public IEnumerable<ItemAvailabilityInLocationDto>? AvailableInLocations { get; set; }
 }
