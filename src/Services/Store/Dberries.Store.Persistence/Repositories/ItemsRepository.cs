@@ -49,15 +49,15 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         Db.Remove(item);
     }
 
-    public async Task<ItemAvailability> GetAvailabilityAsync(Guid id)
+    public async Task<ItemAvailabilityResponse> GetAvailabilityAsync(Guid id)
     {
         await Db.ThrowIfNotExistsAsync<Item>(id);
 
-        var itemAvailabilityList = await Db.Set<Location>()
+        var availableInLocations = await Db.Set<Location>()
             .Where(x => x.Stock!
                 .Any(y => y.ItemId == id))
             .OrderBy(x => x.Id)
-            .Select(x => new ItemAvailabilityDetails
+            .Select(x => new ItemAvailabilityInLocation
             {
                 LocationId = x.Id,
                 LocationName = x.Name,
@@ -65,6 +65,6 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             })
             .ToListAsync();
 
-        return new ItemAvailability(itemAvailabilityList);
+        return new ItemAvailabilityResponse(availableInLocations);
     }
 }

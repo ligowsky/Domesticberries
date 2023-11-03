@@ -1,6 +1,6 @@
 namespace Dberries.Store;
 
-public class ItemAvailabilityDetails
+public class ItemAvailabilityInLocation
 {
     public Guid? LocationId { get; set; }
     public string? LocationName { get; set; }

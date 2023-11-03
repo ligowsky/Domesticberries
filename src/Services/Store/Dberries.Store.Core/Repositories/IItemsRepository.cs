@@ -9,5 +9,5 @@ public interface IItemsRepository : IRepository
     public Task<Item?> GetByExternalIdAsync(Guid id);
     public Task<Item> AddAsync(Item item);
     public void Remove(Item item);
-    public Task<ItemAvailability> GetAvailabilityAsync(Guid id);
+    public Task<ItemAvailabilityResponse> GetAvailabilityAsync(Guid id);
 }

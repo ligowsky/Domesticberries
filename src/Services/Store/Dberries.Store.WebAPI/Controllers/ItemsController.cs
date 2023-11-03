@@ -35,7 +35,7 @@ public class ItemsController : ControllerBase
     public async Task<IActionResult> GetAvailabilityAsync([FromRoute] Guid id)
     {
         var itemAvailability = await _itemsService.GetAvailabilityAsync(id);
-        var result = itemAvailability.Details.Select(x => x.ToDto());
+        var result = itemAvailability.ToDto();
 
         return Ok(result);
     }

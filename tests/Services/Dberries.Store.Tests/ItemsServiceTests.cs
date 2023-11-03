@@ -204,15 +204,15 @@ public class ItemsServiceTests
 
         // Assert
         var itemAvailability = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
-        var availabilityDetails = itemAvailability.Details.ToList();
+        var availabilityInLocations = itemAvailability.AvailableInLocations.ToList();
 
         Assert.NotNull(itemAvailability);
-        Assert.Equal(locationCount, availabilityDetails.Count);
+        Assert.Equal(locationCount, availabilityInLocations.Count);
 
-        foreach (var availabilityDetail in availabilityDetails)
+        foreach (var availabilityInLocation in availabilityInLocations)
         {
-            Assert.Contains(locations, x => x.Id == availabilityDetail.LocationId);
-            Assert.Equal(availabilityDetail.Quantity, itemsQuantity);
+            Assert.Contains(locations, x => x.Id == availabilityInLocation.LocationId);
+            Assert.Equal(availabilityInLocation.Quantity, itemsQuantity);
         }
     }
 
