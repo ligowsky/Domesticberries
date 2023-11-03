@@ -4,18 +4,18 @@ namespace Dberries;
 
 public class ItemDto
 {
-    [JsonPropertyName("id")]
+    [JsonPropertyName("id")] 
     public Guid? Id { get; set; }
 
-    [JsonPropertyName("name")]
+    [JsonPropertyName("name")] 
     public string? Name { get; set; }
 
-    [JsonPropertyName("description")]
+    [JsonPropertyName("description")] 
     public string? Description { get; set; }
 
-    [JsonPropertyName("score")]
+    [JsonPropertyName("score")] 
     public int? Score { get; set; }
 
-    [JsonPropertyName("locations")]
+    [JsonPropertyName("locations")] 
     public IEnumerable<LocationDto>? Locations { get; set; }
 }

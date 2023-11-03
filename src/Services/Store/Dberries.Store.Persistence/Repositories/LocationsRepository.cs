@@ -9,16 +9,11 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
     {
     }
 
-    public async Task<Location?> GetAsync(Guid id, bool throwException)
+    public async Task<Location?> GetAsync(Guid id)
     {
-        var location = await Db.Set<Location>()
+        return await Db.Set<Location>()
             .Where(x => x.ExternalId! == id)
             .FirstOrDefaultAsync();
-
-        if (location is null && throwException)
-            throw ApiException.NotFound($"{nameof(Location)} with id '{id}' is not found");
-
-        return location;
     }
 
     public async Task<Location> AddAsync(Location location)
@@ -54,7 +49,7 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
 
         if (location is null)
             throw ApiException.NotFound($"{nameof(Location)} with ExternalId '{locationId}' is not found");
-        
+
 
         var stock = location.Stock!.FirstOrDefault(x => x.ItemId == item.Id);
 

@@ -4,9 +4,9 @@ namespace Dberries;
 
 public class CoordinatesDto
 {
-    [JsonPropertyName("latitude")]
+    [JsonPropertyName("latitude")] 
     public double Latitude { get; set; }
 
-    [JsonPropertyName("longitude")]
+    [JsonPropertyName("longitude")] 
     public double Longitude { get; set; }
 }

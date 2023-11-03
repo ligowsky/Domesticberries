@@ -11,7 +11,7 @@ public class ItemsService : IItemsService
     {
         _itemsRepository = itemsRepository;
     }
-    
+
     public async Task<PageResult<Item>> GetPageAsync(PageRequest pageRequest)
     {
         return await _itemsRepository.GetPageAsync(pageRequest);
@@ -22,19 +22,21 @@ public class ItemsService : IItemsService
         return await _itemsRepository.GetAsync(id);
     }
 
-    public async Task AddAsync(Item item)
+    public async Task<Item> AddAsync(Item item)
     {
-        _itemsRepository.AddAsync(item);
+        await _itemsRepository.AddAsync(item);
         await _itemsRepository.SaveChangesAsync();
+
+        return item;
     }
 
-    public async Task UpdateAsync(Item item)
+    public async Task<Item> UpdateAsync(Item item)
     {
-        var existingItem = await _itemsRepository.GetByExternalIdAsync(item.ExternalId!.Value, false);
+        var existingItem = await _itemsRepository.GetByExternalIdAsync(item.ExternalId!.Value);
 
         if (existingItem is null)
         {
-            _itemsRepository.AddAsync(item);
+            existingItem = await _itemsRepository.AddAsync(item);
         }
         else
         {
@@ -42,16 +44,18 @@ public class ItemsService : IItemsService
                 .Property(x => x.Name)
                 .Property(x => x.Description);
         }
-        
+
         await _itemsRepository.SaveChangesAsync();
+
+        return existingItem;
     }
 
     public async Task RemoveAsync(Guid id)
     {
-        var existingItem = await _itemsRepository.GetByExternalIdAsync(id, false);
+        var existingItem = await _itemsRepository.GetByExternalIdAsync(id);
 
         if (existingItem is null) return;
-        
+
         _itemsRepository.Remove(existingItem);
         await _itemsRepository.SaveChangesAsync();
     }
@@ -61,9 +65,9 @@ public class ItemsService : IItemsService
         throw new NotImplementedException();
     }
 
-    public Task<PageResult<Location>> GetAvailabilityAsync(PageRequest pageRequest, Guid id)
+    public Task<ItemAvailabilityResponse> GetAvailabilityAsync(Guid id)
     {
-        return _itemsRepository.GetAvailabilityAsync(pageRequest, id);
+        return _itemsRepository.GetAvailabilityAsync(id);
     }
 
     public Task UpdateRatingAsync(Guid id, byte value)

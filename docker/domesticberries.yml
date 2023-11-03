@@ -36,7 +36,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     networks:
       - domesticberries
-      
+  
   store-webapi:
     image: ${DOCKER_REGISTRY-}store-webapi
     container_name: store-webapi

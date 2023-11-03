@@ -8,11 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Dberries.Shared.Validation\Dberries.Shared.Validation.csproj" />
+        <ProjectReference Include="..\Dberries.Shared.Validation\Dberries.Shared.Validation.csproj"/>
     </ItemGroup>
 
 </Project>

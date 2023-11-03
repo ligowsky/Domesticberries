@@ -10,7 +10,7 @@ public class LocationAggregateConfiguration : IEntityTypeConfiguration<Location>
         builder.ToTable("Locations", "Location");
 
         builder.HasKey(x => x.Id);
-        
+
         builder.HasIndex(x => x.ExternalId)
             .IsUnique()
             .IsDescending();

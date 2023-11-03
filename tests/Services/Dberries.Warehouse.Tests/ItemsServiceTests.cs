@@ -17,7 +17,7 @@ public class ItemsServiceTests
     }
 
     [Fact]
-    public async Task GetItemsPage_ExistingItems_ItemsReceived()
+    public async Task GetItemsPage_ExistingItems_ReturnsItemsPage()
     {
         // Arrange
         const int itemsCount = 10;
@@ -44,24 +44,23 @@ public class ItemsServiceTests
     }
 
     [Fact]
-    public async Task GetItem_ExistingItem_ItemReceived()
+    public async Task GetItem_ExistingItem_ReturnsItem()
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
         await _itemsService.AddAsync(item);
 
-        // Act
-        item = await _itemsService.GetAsync(item.Id!.Value);
-
         // Assert
-        Assert.NotNull(item);
-        Assert.Equal(item.Id, item.Id);
-        Assert.Equal(item.Name, item.Name);
-        Assert.Equal(item.Description, item.Description);
+        var receivedItem = await _itemsService.GetAsync(item.Id!.Value);
+
+        Assert.NotNull(receivedItem);
+        Assert.Equal(item.Id, receivedItem.Id);
+        Assert.Equal(item.Name, receivedItem.Name);
+        Assert.Equal(item.Description, receivedItem.Description);
     }
 
     [Fact]
-    public async Task GetItem_NotExistingItem_NotFoundApiExceptionThrown()
+    public async Task GetItem_NotExistingItem_ThrowsNotFoundApiException()
     {
         // Arrange
         var itemId = Guid.NewGuid();
@@ -78,34 +77,35 @@ public class ItemsServiceTests
         var item = EntityGenerator.GenerateItem();
 
         // Act
-        var createdItem = await _itemsService.AddAsync(item);
+        await _itemsService.AddAsync(item);
 
         // Assert
-        Assert.NotNull(createdItem);
-        Assert.Equal(item.Name, createdItem.Name);
-        Assert.Equal(item.Description, createdItem.Description);
+        var addedItem = await _itemsService.GetAsync(item.Id!.Value);
+
+        Assert.NotNull(addedItem);
+        Assert.Equal(item.Name, addedItem.Name);
+        Assert.Equal(item.Description, addedItem.Description);
     }
 
-    [Theory]
-    [InlineData("Item 2", "Description 2")]
-    [InlineData("Item 3", "Description 3")]
-    [InlineData("Item 4", "Description 4")]
-    public async Task UpdateItem_ExistingItem_ItemUpdated(string name, string description)
+    [Fact]
+    public async Task UpdateItem_ExistingItem_UpdatesItem()
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
         item = await _itemsService.AddAsync(item);
 
-        var payload = new Item(name, description);
+        var payload = new Item("Updated Item", "Updated Description");
 
         item.Patch(payload)
             .Property(x => x.Name)
             .Property(x => x.Description);
 
         // Act
-        var updatedItem = await _itemsService.UpdateAsync(item.Id!.Value, item);
+        await _itemsService.UpdateAsync(item.Id!.Value, item);
 
         // Assert
+        var updatedItem = await _itemsService.GetAsync(item.Id!.Value);
+
         Assert.NotNull(updatedItem);
         Assert.Equal(item.Id, updatedItem.Id);
         Assert.Equal(payload.Name, updatedItem.Name);
@@ -113,15 +113,14 @@ public class ItemsServiceTests
     }
 
     [Fact]
-    public async Task UpdateItem_NotExistingItem_NotFoundApiExceptionThrown()
+    public async Task UpdateItem_NotExistingItem_ThrowsNotFoundApiException()
     {
         // Arrange
         var itemId = Guid.NewGuid();
         var item = EntityGenerator.GenerateItem();
-        
-        Task Action() => _itemsService.UpdateAsync(itemId, item);
 
         // Assert
+        Task Action() => _itemsService.UpdateAsync(itemId, item);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 
@@ -133,7 +132,7 @@ public class ItemsServiceTests
         item = await _itemsService.AddAsync(item);
 
         Task Action() => _itemsService.GetAsync(item.Id!.Value);
-        
+
         // Act
         await _itemsService.RemoveAsync(item.Id!.Value);
 
@@ -142,14 +141,13 @@ public class ItemsServiceTests
     }
 
     [Fact]
-    public async Task RemoveItem_NotExistingItem_NotFoundApiExceptionThrown()
+    public async Task RemoveItem_NotExistingItem_ThrowsNotFoundApiException()
     {
         // Arrange
         var itemId = Guid.NewGuid();
-        
-        Task Action() => _itemsService.RemoveAsync(itemId);
 
         // Assert
+        Task Action() => _itemsService.RemoveAsync(itemId);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 }

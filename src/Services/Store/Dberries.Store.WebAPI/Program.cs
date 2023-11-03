@@ -1,7 +1,7 @@
 using BitzArt.ApiExceptions.AspNetCore;
 using Dberries;
-using Dberries.Store.Persistence;
 using Dberries.Store.Infrastructure;
+using Dberries.Store.Persistence;
 using Dberries.Store.WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);

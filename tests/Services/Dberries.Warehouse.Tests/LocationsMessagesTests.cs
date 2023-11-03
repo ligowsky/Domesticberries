@@ -20,7 +20,7 @@ public class LocationsMessagesTests
     }
 
     [Fact]
-    public async Task AddLocation_NewLocation_MessagePublished()
+    public async Task AddLocation_NewLocation_PublishesMessage()
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();
@@ -41,7 +41,7 @@ public class LocationsMessagesTests
     }
 
     [Fact]
-    public async Task UpdateLocation_ExistingLocation_MessagePublished()
+    public async Task UpdateLocation_ExistingLocation_PublishesMessage()
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();
@@ -75,15 +75,15 @@ public class LocationsMessagesTests
         // Assert
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
 
-        var isMessagePublished = _harness.Published
+        var isPublishesMessage = _harness.Published
             .Select<LocationUpdatedMessage>()
             .Any(x => x.Context.Message.Location.Id == location.Id);
 
-        Assert.False(isMessagePublished);
+        Assert.False(isPublishesMessage);
     }
 
     [Fact]
-    public async Task RemoveLocation_ExistingLocation_MessagePublished()
+    public async Task RemoveLocation_ExistingLocation_PublishesMessage()
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();
@@ -112,15 +112,15 @@ public class LocationsMessagesTests
         // Assert
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
 
-        var isMessagePublished = _harness.Published
+        var isPublishesMessage = _harness.Published
             .Select<LocationRemovedMessage>()
             .Any(x => x.Context.Message.Id == locationId);
 
-        Assert.False(isMessagePublished);
+        Assert.False(isPublishesMessage);
     }
 
     [Fact]
-    public async Task UpdateStock_NewStock_MessagePublished()
+    public async Task UpdateStock_NewStock_PublishesMessage()
     {
         // Arrange
         var location = EntityGenerator.GenerateLocation();
@@ -167,14 +167,14 @@ public class LocationsMessagesTests
         // Assert
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
 
-        var isMessagePublished = _harness.Published
+        var isPublishesMessage = _harness.Published
             .Select<StockUpdatedMessage>()
             .Any(x =>
                 x.Context.Message.LocationId == locationId &&
                 x.Context.Message.Stock?.Item?.Id == item.Id
             );
 
-        Assert.False(isMessagePublished);
+        Assert.False(isPublishesMessage);
     }
 
     [Fact]
@@ -193,13 +193,13 @@ public class LocationsMessagesTests
         // Assert
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
 
-        var isMessagePublished = _harness.Published
+        var isPublishesMessage = _harness.Published
             .Select<StockUpdatedMessage>()
             .Any(x =>
                 x.Context.Message.LocationId == location.Id &&
                 x.Context.Message.Stock?.Item?.Id == itemId
             );
 
-        Assert.False(isMessagePublished);
+        Assert.False(isPublishesMessage);
     }
 }

@@ -1,4 +1,4 @@
-namespace Dberries.Warehouse.Tests;
+namespace Dberries.Store.Tests;
 
 public static class EntityGenerator
 {
@@ -6,12 +6,8 @@ public static class EntityGenerator
     {
         return new Location
         {
+            ExternalId = Guid.NewGuid(),
             Name = $"Location {number}",
-            Coordinates = new Coordinates
-            {
-                Latitude = 1,
-                Longitude = 1
-            }
         };
     }
 
@@ -19,6 +15,7 @@ public static class EntityGenerator
     {
         return new Item
         {
+            ExternalId = Guid.NewGuid(),
             Name = $"Item {number}",
             Description = $"Description {number}"
         };

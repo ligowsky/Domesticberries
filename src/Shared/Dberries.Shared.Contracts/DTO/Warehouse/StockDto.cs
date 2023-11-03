@@ -4,12 +4,12 @@ namespace Dberries;
 
 public class StockDto
 {
-    [JsonPropertyName("itemId")]
+    [JsonPropertyName("itemId")] 
     public Guid? ItemId { get; set; }
-    
-    [JsonPropertyName("item")]
+
+    [JsonPropertyName("item")] 
     public ItemDto? Item { get; set; }
 
-    [JsonPropertyName("quantity")]
+    [JsonPropertyName("quantity")] 
     public int? Quantity { get; set; }
 }

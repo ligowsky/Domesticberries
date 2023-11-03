@@ -7,25 +7,25 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
-    <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
+    <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' "/>
+    <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' "/>
     <ItemGroup>
-        <PackageReference Include="BitzArt.ApiExceptions.AspNetCore" Version="1.18.2" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+        <PackageReference Include="BitzArt.ApiExceptions.AspNetCore" Version="1.18.2"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="..\..\..\..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Telemetry\Dberries.Shared.Telemetry.csproj" />
-      <ProjectReference Include="..\Dberries.Store.Infrastructure\Dberries.Store.Infrastructure.csproj" />
-      <ProjectReference Include="..\Dberries.Store.Persistence\Dberries.Store.Persistence.csproj" />
-      <ProjectReference Include="..\Dberries.Store.Presentation\Dberries.Store.Presentation.csproj" />
+        <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Telemetry\Dberries.Shared.Telemetry.csproj"/>
+        <ProjectReference Include="..\Dberries.Store.Infrastructure\Dberries.Store.Infrastructure.csproj"/>
+        <ProjectReference Include="..\Dberries.Store.Persistence\Dberries.Store.Persistence.csproj"/>
+        <ProjectReference Include="..\Dberries.Store.Presentation\Dberries.Store.Presentation.csproj"/>
     </ItemGroup>
 
 </Project>

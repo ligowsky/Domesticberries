@@ -29,16 +29,11 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         return item;
     }
 
-    public async Task<Item?> GetByExternalIdAsync(Guid id, bool throwException = true)
+    public async Task<Item?> GetByExternalIdAsync(Guid id)
     {
-        var item = await Db.Set<Item>()
+        return await Db.Set<Item>()
             .Where(x => x.ExternalId == id)
             .FirstOrDefaultAsync();
-
-        if (item is null & throwException)
-            throw ApiException.NotFound($"{nameof(Item)} with External '{id}' is not found");
-
-        return item;
     }
 
     public async Task<Item> AddAsync(Item item)
@@ -54,14 +49,22 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         Db.Remove(item);
     }
 
-    public async Task<PageResult<Location>> GetAvailabilityAsync(PageRequest pageRequest, Guid id)
+    public async Task<ItemAvailabilityResponse> GetAvailabilityAsync(Guid id)
     {
         await Db.ThrowIfNotExistsAsync<Item>(id);
 
-        return await Db.Set<Location>()
+        var availableInLocations = await Db.Set<Location>()
             .Where(x => x.Stock!
                 .Any(y => y.ItemId == id))
             .OrderBy(x => x.Id)
-            .ToPageAsync(pageRequest);
+            .Select(x => new ItemAvailabilityInLocation
+            {
+                LocationId = x.Id,
+                LocationName = x.Name,
+                Quantity = x.Stock!.First(y => y.ItemId == id).Quantity
+            })
+            .ToListAsync();
+
+        return new ItemAvailabilityResponse(availableInLocations);
     }
 }

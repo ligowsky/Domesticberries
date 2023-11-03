@@ -43,7 +43,7 @@ public static class DbContextExtensions
                 $"{entityType.Name} must implement {typeof(IEntityWithExternalId<>).Name} interface");
 
         return await (Task<bool>)typeof(DbContextExtensions)
-            .GetMethods(BindingFlags.NonPublic)
+            .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
             .First(x => x.Name == nameof(CheckIfExistsByExternalIdAsync))
             .MakeGenericMethod(entityType, typeof(TExternalKey))
             .Invoke(null, new object[] { db, id! })!;

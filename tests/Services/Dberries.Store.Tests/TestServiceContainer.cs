@@ -1,9 +1,11 @@
-using Dberries.Auth.Persistence;
+using Dberries.Store.Infrastructure;
+using Dberries.Store.Persistence;
+using MassTransit;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Dberries.Auth.Tests;
+namespace Dberries.Store.Tests;
 
 [CollectionDefinition("Service Collection")]
 public class ContainerCollection : ICollectionFixture<TestServiceContainer>
@@ -24,6 +26,10 @@ public class TestServiceContainer : IDisposable
 
         services.AddDbContext<TestDbContext>(x => x.UseSqlite(sqliteConnection));
         services.AddScoped<AppDbContext>(x => x.GetRequiredService<TestDbContext>());
+        services.AddServices();
+        services.AddRepositories();
+
+        services.AddMassTransitTestHarness();
 
         _services = services.BuildServiceProvider();
 

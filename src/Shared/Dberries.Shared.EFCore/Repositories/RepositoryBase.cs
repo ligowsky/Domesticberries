@@ -1,7 +1,3 @@
-using System.Reflection;
-using BitzArt;
-using Microsoft.EntityFrameworkCore;
-
 namespace Dberries;
 
 public abstract class RepositoryBase : IRepository

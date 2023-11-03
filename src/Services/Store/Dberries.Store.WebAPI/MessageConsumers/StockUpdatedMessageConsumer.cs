@@ -6,12 +6,12 @@ namespace Dberries.Store.WebAPI;
 public class StockUpdatedMessageConsumer : IConsumer<StockUpdatedMessage>
 {
     private readonly ILocationsService _locationsService;
-    
+
     public StockUpdatedMessageConsumer(ILocationsService locationsService)
     {
         _locationsService = locationsService;
     }
-    
+
     public async Task Consume(ConsumeContext<StockUpdatedMessage> context)
     {
         var message = context.Message;
