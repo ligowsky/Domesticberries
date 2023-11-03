@@ -47,7 +47,7 @@ public class LocationsService : ILocationsService
         _locationsRepository.Remove(existingLocation);
         await _locationsRepository.SaveChangesAsync();
     }
-    
+
     public async Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, int quantity)
     {
         var updatedStock = await _locationsRepository.UpdateStockAsync(locationId, itemId, quantity);

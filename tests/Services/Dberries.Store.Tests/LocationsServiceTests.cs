@@ -201,7 +201,7 @@ public class LocationsServiceTests
         // Assert
         var itemAvailability = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
         var availabilityDetails = itemAvailability.Details.ToList();
-        
+
         Assert.NotNull(itemAvailability);
         Assert.Empty(availabilityDetails);
     }

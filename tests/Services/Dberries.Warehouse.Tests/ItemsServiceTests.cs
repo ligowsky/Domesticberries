@@ -49,10 +49,10 @@ public class ItemsServiceTests
         // Arrange
         var item = EntityGenerator.GenerateItem();
         await _itemsService.AddAsync(item);
-        
+
         // Assert
         var receivedItem = await _itemsService.GetAsync(item.Id!.Value);
-        
+
         Assert.NotNull(receivedItem);
         Assert.Equal(item.Id, receivedItem.Id);
         Assert.Equal(item.Name, receivedItem.Name);
@@ -81,7 +81,7 @@ public class ItemsServiceTests
 
         // Assert
         var addedItem = await _itemsService.GetAsync(item.Id!.Value);
-        
+
         Assert.NotNull(addedItem);
         Assert.Equal(item.Name, addedItem.Name);
         Assert.Equal(item.Description, addedItem.Description);
@@ -105,7 +105,7 @@ public class ItemsServiceTests
 
         // Assert
         var updatedItem = await _itemsService.GetAsync(item.Id!.Value);
-        
+
         Assert.NotNull(updatedItem);
         Assert.Equal(item.Id, updatedItem.Id);
         Assert.Equal(payload.Name, updatedItem.Name);
@@ -132,7 +132,7 @@ public class ItemsServiceTests
         item = await _itemsService.AddAsync(item);
 
         Task Action() => _itemsService.GetAsync(item.Id!.Value);
-        
+
         // Act
         await _itemsService.RemoveAsync(item.Id!.Value);
 

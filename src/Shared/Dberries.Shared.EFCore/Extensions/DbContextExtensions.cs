@@ -41,7 +41,7 @@ public static class DbContextExtensions
         if (!typeImplementsInterface)
             throw new ArgumentException(
                 $"{entityType.Name} must implement {typeof(IEntityWithExternalId<>).Name} interface");
-        
+
         return await (Task<bool>)typeof(DbContextExtensions)
             .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
             .First(x => x.Name == nameof(CheckIfExistsByExternalIdAsync))

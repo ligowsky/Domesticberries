@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Abstractions\Dberries.Shared.Abstractions.csproj" />
+        <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Abstractions\Dberries.Shared.Abstractions.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="BitzArt.ApiExceptions" Version="1.18.2" />
-      <PackageReference Include="BitzArt.Pagination.EntityFrameworkCore" Version="1.14.0" />
+        <PackageReference Include="BitzArt.ApiExceptions" Version="1.18.2"/>
+        <PackageReference Include="BitzArt.Pagination.EntityFrameworkCore" Version="1.14.0"/>
     </ItemGroup>
 
 </Project>

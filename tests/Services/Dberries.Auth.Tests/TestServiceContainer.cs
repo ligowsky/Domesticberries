@@ -6,7 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Dberries.Auth.Tests;
 
 [CollectionDefinition("Service Collection")]
-public class ContainerCollection : ICollectionFixture<TestServiceContainer> { }
+public class ContainerCollection : ICollectionFixture<TestServiceContainer>
+{
+}
 
 public class TestServiceContainer : IDisposable
 {

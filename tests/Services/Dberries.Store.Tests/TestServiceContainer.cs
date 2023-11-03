@@ -8,7 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Dberries.Store.Tests;
 
 [CollectionDefinition("Service Collection")]
-public class ContainerCollection : ICollectionFixture<TestServiceContainer> { }
+public class ContainerCollection : ICollectionFixture<TestServiceContainer>
+{
+}
 
 public class TestServiceContainer : IDisposable
 {
@@ -28,7 +30,7 @@ public class TestServiceContainer : IDisposable
         services.AddRepositories();
 
         services.AddMassTransitTestHarness();
-        
+
         _services = services.BuildServiceProvider();
 
         using (var scope = _services.CreateScope())

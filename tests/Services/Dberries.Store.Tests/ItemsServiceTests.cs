@@ -166,13 +166,13 @@ public class ItemsServiceTests
         Task Action() => _itemsService.GetAsync(item.Id!.Value);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
-    
+
     [Fact]
     public async Task RemoveItem_NotExistingItem_DoesNotThrowNotFoundApiException()
     {
         // Arrange
         var itemId = Guid.NewGuid();
-        
+
         // Assert
         var exception = await Record.ExceptionAsync(() => _itemsService.RemoveAsync(itemId));
         Assert.Null(exception);
@@ -221,7 +221,7 @@ public class ItemsServiceTests
     {
         // Arrange
         var itemId = Guid.NewGuid();
-        
+
         // Assert
         Task Action() => _itemsService.GetAvailabilityAsync(itemId);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);

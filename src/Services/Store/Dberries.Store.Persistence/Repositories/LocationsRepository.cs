@@ -49,7 +49,7 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
 
         if (location is null)
             throw ApiException.NotFound($"{nameof(Location)} with ExternalId '{locationId}' is not found");
-        
+
 
         var stock = location.Stock!.FirstOrDefault(x => x.ItemId == item.Id);
 

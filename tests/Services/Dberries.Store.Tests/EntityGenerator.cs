@@ -10,7 +10,7 @@ public static class EntityGenerator
             Name = $"Location {number}",
         };
     }
-    
+
     public static Item GenerateItem(int number = 1)
     {
         return new Item

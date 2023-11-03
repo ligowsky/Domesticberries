@@ -8,15 +8,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="BitzArt.ApiExceptions" Version="1.18.2" />
+        <PackageReference Include="BitzArt.ApiExceptions" Version="1.18.2"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Dberries.Shared.EFCore\Dberries.Shared.EFCore.csproj" />
+        <ProjectReference Include="..\Dberries.Shared.EFCore\Dberries.Shared.EFCore.csproj"/>
     </ItemGroup>
-    
+
 </Project>

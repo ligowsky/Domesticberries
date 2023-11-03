@@ -11,7 +11,7 @@ public class ItemsService : IItemsService
     {
         _itemsRepository = itemsRepository;
     }
-    
+
     public async Task<PageResult<Item>> GetPageAsync(PageRequest pageRequest)
     {
         return await _itemsRepository.GetPageAsync(pageRequest);
@@ -44,7 +44,7 @@ public class ItemsService : IItemsService
                 .Property(x => x.Name)
                 .Property(x => x.Description);
         }
-        
+
         await _itemsRepository.SaveChangesAsync();
 
         return existingItem;
@@ -55,7 +55,7 @@ public class ItemsService : IItemsService
         var existingItem = await _itemsRepository.GetByExternalIdAsync(id);
 
         if (existingItem is null) return;
-        
+
         _itemsRepository.Remove(existingItem);
         await _itemsRepository.SaveChangesAsync();
     }
