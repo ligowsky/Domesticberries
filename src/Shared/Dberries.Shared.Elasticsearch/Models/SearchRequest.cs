@@ -1,18 +1,18 @@
 using System.Text.Json.Serialization;
 
-namespace Dberries.Store.Presentation;
+namespace Dberries;
 
-public class SearchQuery
+public class SearchRequest : ISearchRequest
 {
     [JsonPropertyName("q")] 
     public string? Q { get; set; }
 
-    public SearchQuery()
+    public SearchRequest()
         : this(string.Empty)
     {
     }
 
-    public SearchQuery(string? q)
+    public SearchRequest(string? q)
     {
         Q = q;
     }

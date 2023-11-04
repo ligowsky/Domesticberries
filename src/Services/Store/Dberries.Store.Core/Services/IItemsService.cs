@@ -9,7 +9,7 @@ public interface IItemsService
     public Task<Item> AddAsync(Item item);
     public Task<Item> UpdateAsync(Item item);
     public Task RemoveAsync(Guid id);
-    public Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, string query);
+    public Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, ISearchRequest searchRequest);
     public Task<ItemAvailabilityResponse> GetAvailabilityAsync(Guid id);
     public Task UpdateRatingAsync(Guid id, byte value);
 }

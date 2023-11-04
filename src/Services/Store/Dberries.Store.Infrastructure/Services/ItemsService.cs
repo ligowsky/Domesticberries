@@ -70,14 +70,14 @@ public class ItemsService : IItemsService
         await _elasticClient.DeleteAsync<Item>(id, x => x.Index("items"));
     }
 
-    public async Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, string query)
+    public async Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, ISearchRequest searchRequest)
     {
         var searchResponse = await _elasticClient.SearchAsync<Item>(x => x
             .From(pageRequest.Offset!.Value)
             .Size(pageRequest.Limit!.Value)
             .Query(q => q
                 .MultiMatch(m => m
-                    .Query(query)
+                    .Query(searchRequest.Q)
                     .Fields(fs => fs
                         .Field(f => f.Name)
                         .Field(f => f.Description)
