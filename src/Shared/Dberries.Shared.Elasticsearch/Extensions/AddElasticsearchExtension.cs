@@ -13,6 +13,8 @@ public static class AddElasticsearchExtension
                 "Elasticsearch");
 
         var settings = new ConnectionSettings(new Uri(options.ServerUrl));
+        settings.DefaultIndex(options.DefaultIndex);
+        
         var client = new ElasticClient(settings);
         
         builder.Services.AddSingleton<IElasticClient>(client);

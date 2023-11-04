@@ -1,4 +1,5 @@
 using BitzArt.Pagination;
+using Dberries.Store.Presentation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dberries.Store.WebAPI;
@@ -27,6 +28,16 @@ public class ItemsController : ControllerBase
     {
         var item = await _itemsService.GetAsync(id);
         var result = item.ToDto();
+
+        return Ok(result);
+    }
+
+    [HttpPost("search")]
+    public async Task<IActionResult> SearchAsync([FromQuery] PageRequest pageRequest,
+        [FromBody] SearchQuery searchQuery)
+    {
+        var items = await _itemsService.SearchAsync(pageRequest, searchQuery.Q);
+        var result = items.Convert(x => x.ToDto());
 
         return Ok(result);
     }

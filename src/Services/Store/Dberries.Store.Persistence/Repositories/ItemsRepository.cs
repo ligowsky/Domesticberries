@@ -36,6 +36,14 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             .FirstOrDefaultAsync();
     }
 
+    public async Task<PageResult<Item>> GetByIdsAsync(PageRequest pageRequest, IEnumerable<Guid> ids)
+    {
+        return await Db.Set<Item>()
+            .Where(item => ids.Contains(item.Id!.Value))
+            .OrderBy(x => x.Id)
+            .ToPageAsync(pageRequest);
+    }
+
     public async Task<Item> AddAsync(Item item)
     {
         await Db.ThrowIfExistsByExternalIdAsync(typeof(Item), item.ExternalId!.Value);

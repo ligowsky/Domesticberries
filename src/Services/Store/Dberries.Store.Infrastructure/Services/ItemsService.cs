@@ -70,9 +70,25 @@ public class ItemsService : IItemsService
         await _elasticClient.DeleteAsync<Item>(id, x => x.Index("items"));
     }
 
-    public Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, string query)
+    public async Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, string query)
     {
-        throw new NotImplementedException();
+        var searchResponse = await _elasticClient.SearchAsync<Item>(x => x
+            .From(pageRequest.Offset!.Value)
+            .Size(pageRequest.Limit!.Value)
+            .Query(q => q
+                .MultiMatch(m => m
+                    .Query(query)
+                    .Fields(fs => fs
+                        .Field(f => f.Name)
+                        .Field(f => f.Description)
+                    )
+                )
+            )
+        );
+
+        var itemIds = searchResponse.Documents.Select(x => x.Id!.Value);
+
+        return await _itemsRepository.GetByIdsAsync(pageRequest, itemIds);
     }
 
     public Task<ItemAvailabilityResponse> GetAvailabilityAsync(Guid id)
