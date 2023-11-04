@@ -1,15 +1,18 @@
 using BitzArt;
 using BitzArt.Pagination;
+using Nest;
 
 namespace Dberries.Store.Infrastructure;
 
 public class ItemsService : IItemsService
 {
     private readonly IItemsRepository _itemsRepository;
+    private readonly IElasticClient _elasticClient;
 
-    public ItemsService(IItemsRepository itemsRepository)
+    public ItemsService(IItemsRepository itemsRepository, IElasticClient elasticClient)
     {
         _itemsRepository = itemsRepository;
+        _elasticClient = elasticClient;
     }
 
     public async Task<PageResult<Item>> GetPageAsync(PageRequest pageRequest)
@@ -26,6 +29,8 @@ public class ItemsService : IItemsService
     {
         await _itemsRepository.AddAsync(item);
         await _itemsRepository.SaveChangesAsync();
+
+        await _elasticClient.IndexAsync(item, x => x.Index("items"));
 
         return item;
     }
@@ -47,6 +52,8 @@ public class ItemsService : IItemsService
 
         await _itemsRepository.SaveChangesAsync();
 
+        await _elasticClient.IndexAsync(existingItem, x => x.Index("items"));
+
         return existingItem;
     }
 
@@ -57,7 +64,10 @@ public class ItemsService : IItemsService
         if (existingItem is null) return;
 
         _itemsRepository.Remove(existingItem);
+
         await _itemsRepository.SaveChangesAsync();
+
+        await _elasticClient.DeleteAsync<Item>(id, x => x.Index("items"));
     }
 
     public Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, string query)

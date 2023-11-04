@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Elasticsearch\Dberries.Shared.Elasticsearch.csproj" />
         <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Messages\Dberries.Shared.Messages.csproj"/>
         <ProjectReference Include="..\Dberries.Store.Core\Dberries.Store.Core.csproj"/>
     </ItemGroup>

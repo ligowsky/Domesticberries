@@ -7,7 +7,7 @@ using Dberries.Store.WebAPI;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistence(builder.Configuration);
-builder.Services.AddInfrastructure(builder.Configuration, typeof(IConsumersAssemblyPointer).Assembly);
+builder.AddInfrastructure(typeof(IConsumersAssemblyPointer).Assembly);
 
 builder.Services.AddApiExceptionHandler();
 
