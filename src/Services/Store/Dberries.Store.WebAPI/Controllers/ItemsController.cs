@@ -36,7 +36,7 @@ public class ItemsController : ControllerBase
     public async Task<IActionResult> SearchAsync([FromQuery] PageRequest pageRequest,
         [FromBody] SearchQuery searchQuery)
     {
-        var items = await _itemsService.SearchAsync(pageRequest, searchQuery.Q);
+        var items = await _itemsService.SearchAsync(pageRequest, searchQuery.Q!);
         var result = items.Convert(x => x.ToDto());
 
         return Ok(result);
