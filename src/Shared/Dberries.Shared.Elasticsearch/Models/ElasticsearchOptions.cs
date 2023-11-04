@@ -1,7 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Dberries;
 
 public class ElasticsearchOptions
 {
-    public required string ServerUrl { get; set; }
-    public required string DefaultIndex { get; set; }
+    [Required]
+    public string? ServerUrl { get; set; }
+    
+    [Required]
+    public string? DefaultIndex { get; set; }
 }
