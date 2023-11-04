@@ -4,6 +4,8 @@ using MassTransit;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using Nest;
 
 namespace Dberries.Store.Tests;
 
@@ -31,6 +33,9 @@ public class TestServiceContainer : IDisposable
 
         services.AddMassTransitTestHarness();
 
+        var mockElasticClient = new Mock<IElasticClient>();
+        services.AddSingleton(mockElasticClient.Object);
+        
         _services = services.BuildServiceProvider();
 
         using (var scope = _services.CreateScope())
