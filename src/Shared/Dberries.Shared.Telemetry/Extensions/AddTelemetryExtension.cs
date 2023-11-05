@@ -17,12 +17,12 @@ public static class AddTelemetryExtension
             DberriesApplicationOptions.Get<ElasticApmOptions>(builder.Services, builder.Configuration, "ElasticApm");
 
         var resourceBuilder = ResourceBuilder.CreateDefault()
-            .AddService(options.ServiceName)
+            .AddService(options.ServiceName!)
             .AddTelemetrySdk()
             .AddAttributes(
                 new KeyValuePair<string, object>[]
                 {
-                    new("deployment.environment", options.Environment)
+                    new("deployment.environment", options.Environment!)
                 })
             .AddEnvironmentVariableDetector();
 
@@ -30,7 +30,7 @@ public static class AddTelemetryExtension
             .AddOpenTelemetry(x =>
             {
                 x.SetResourceBuilder(resourceBuilder)
-                    .AddOtlpExporter(cfg => { cfg.Endpoint = new Uri(options.ServerUrl); });
+                    .AddOtlpExporter(cfg => { cfg.Endpoint = new Uri(options.ServerUrl!); });
 
                 x.IncludeFormattedMessage = true;
                 x.IncludeScopes = true;
@@ -61,7 +61,8 @@ public static class AddTelemetryExtension
                             o.EnrichWithHttpResponseMessage = HttpClientEnrichUtility.EnrichWithHttpResponseMessage;
                         }
                     })
-                    .AddOtlpExporter(cfg => { cfg.Endpoint = new Uri(options.ServerUrl); });
+                    .AddOtlpExporter(cfg => { cfg.Endpoint = new Uri(options.ServerUrl!); })
+                    .AddElasticsearchClientInstrumentation();
             });
 
         ExceptionTelemetry.EnableOpenTelemetry();

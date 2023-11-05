@@ -12,7 +12,7 @@ public static class AddElasticsearchExtension
             DberriesApplicationOptions.Get<ElasticsearchOptions>(builder.Services, builder.Configuration,
                 "Elasticsearch");
 
-        var settings = new ConnectionSettings(new Uri(options.ServerUrl));
+        var settings = new ConnectionSettings(new Uri(options.ServerUrl!));
         settings.DefaultIndex(options.DefaultIndex);
         
         var client = new ElasticClient(settings);
