@@ -1,13 +1,17 @@
 using BitzArt;
 using BitzArt.Pagination;
 using Microsoft.EntityFrameworkCore;
+using Nest;
 
 namespace Dberries.Store.Persistence;
 
 public class ItemsRepository : RepositoryBase, IItemsRepository
 {
-    public ItemsRepository(AppDbContext db) : base(db)
+    private readonly IElasticClient _elasticClient;
+    
+    public ItemsRepository(AppDbContext db, IElasticClient elasticClient) : base(db)
     {
+        _elasticClient = elasticClient;
     }
 
     public async Task<PageResult<Item>> GetPageAsync(PageRequest pageRequest)
@@ -36,25 +40,70 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<PageResult<Item>> GetByIdsAsync(PageRequest pageRequest, IEnumerable<Guid> ids)
+    public async Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, SearchRequestDto searchRequest)
     {
+        var searchResponse = await _elasticClient.SearchAsync<Item>(x => x
+            .From(pageRequest.Offset!.Value)
+            .Size(pageRequest.Limit!.Value)
+            .Query(q => q
+                .MultiMatch(m => m
+                    .Query(searchRequest.Q)
+                    .Fields(fs => fs
+                        .Field(f => f.Name)
+                        .Field(f => f.Description)
+                    )
+                )
+            )
+            .Source(s => s
+                .Includes(i => i
+                    .Field(f => f.Id)
+                )
+            )
+        );
+
+        var itemIds = searchResponse.Documents.Select(x => x.Id!.Value);
+
         return await Db.Set<Item>()
-            .Where(item => ids.Contains(item.Id!.Value))
+            .Where(item => itemIds.Contains(item.Id!.Value))
             .OrderBy(x => x.Id)
             .ToPageAsync(pageRequest);
     }
-
+    
     public async Task<Item> AddAsync(Item item)
     {
         await Db.ThrowIfExistsByExternalIdAsync(typeof(Item), item.ExternalId!.Value);
         Db.Add(item);
+        
+        await _elasticClient.IndexDocumentAsync(item);
 
         return item;
     }
 
-    public void Remove(Item item)
+    public async Task<Item> UpdateAsync(Item item)
+    {
+        var existingItem = await GetByExternalIdAsync(item.ExternalId!.Value);
+
+        if (existingItem is null)
+        {
+            existingItem = await AddAsync(item);
+        }
+        else
+        {
+            existingItem.Patch(item)
+                .Property(x => x.Name)
+                .Property(x => x.Description);
+        }
+        
+        await _elasticClient.IndexDocumentAsync(existingItem);
+
+        return existingItem;
+    }
+
+    public async Task RemoveAsync(Item item)
     {
         Db.Remove(item);
+        
+        await _elasticClient.DeleteAsync<Item>(item.Id);
     }
 
     public async Task<ItemAvailabilityResponse> GetAvailabilityAsync(Guid id)

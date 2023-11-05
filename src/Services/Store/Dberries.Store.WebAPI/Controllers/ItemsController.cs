@@ -33,7 +33,7 @@ public class ItemsController : ControllerBase
 
     [HttpPost("search")]
     public async Task<IActionResult> SearchAsync([FromQuery] PageRequest pageRequest,
-        [FromBody] SearchRequest searchRequest)
+        [FromBody] SearchRequestDto searchRequest)
     {
         var items = await _itemsService.SearchAsync(pageRequest, searchRequest);
         var result = items.Convert(x => x.ToDto());

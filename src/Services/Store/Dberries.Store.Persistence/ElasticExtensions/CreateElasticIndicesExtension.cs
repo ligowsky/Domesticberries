@@ -1,6 +1,6 @@
 using Nest;
 
-namespace Dberries.Store.Infrastructure;
+namespace Dberries.Store.Persistence;
 
 public static class CreateElasticIndicesExtension
 {

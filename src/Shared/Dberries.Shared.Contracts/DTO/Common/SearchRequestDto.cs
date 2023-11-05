@@ -2,17 +2,17 @@ using System.Text.Json.Serialization;
 
 namespace Dberries;
 
-public class SearchRequest : ISearchRequest
+public class SearchRequestDto
 {
     [JsonPropertyName("q")] 
     public string? Q { get; set; }
 
-    public SearchRequest()
+    public SearchRequestDto()
         : this(string.Empty)
     {
     }
 
-    public SearchRequest(string? q)
+    public SearchRequestDto(string? q)
     {
         Q = q;
     }
