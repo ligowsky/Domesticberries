@@ -31,9 +31,16 @@ public class TestServiceContainer : IDisposable
         services.AddRepositories();
 
         services.AddMassTransitTestHarness();
-        
-        services.AddSingleton<IElasticClient, ElasticClient>();
-        
+
+        services.AddSingleton(_ =>
+        {
+            var settings = new ConnectionSettings();
+            settings.DefaultIndex("default");
+            settings.ConfigureElasticMapping();
+
+            return new ElasticClient(settings);
+        });
+
         _services = services.BuildServiceProvider();
 
         using (var scope = _services.CreateScope())

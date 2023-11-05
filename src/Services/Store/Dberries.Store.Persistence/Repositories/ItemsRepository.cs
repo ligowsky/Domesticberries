@@ -7,9 +7,9 @@ namespace Dberries.Store.Persistence;
 
 public class ItemsRepository : RepositoryBase, IItemsRepository
 {
-    private readonly IElasticClient _elasticClient;
+    private readonly ElasticClient _elasticClient;
     
-    public ItemsRepository(AppDbContext db, IElasticClient elasticClient) : base(db)
+    public ItemsRepository(AppDbContext db, ElasticClient elasticClient) : base(db)
     {
         _elasticClient = elasticClient;
     }
@@ -47,7 +47,7 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             .Size(pageRequest.Limit!.Value)
             .Query(q => q
                 .MultiMatch(m => m
-                    .Query(searchRequest.Q)
+                    .Query(searchRequest.Q!)
                     .Fields(fs => fs
                         .Field(f => f.Name)
                         .Field(f => f.Description)
@@ -103,7 +103,7 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
     {
         Db.Remove(item);
         
-        await _elasticClient.DeleteAsync<Item>(item.Id);
+        await _elasticClient.DeleteAsync<Item>(item.Id!);
     }
 
     public async Task<ItemAvailabilityResponse> GetAvailabilityAsync(Guid id)

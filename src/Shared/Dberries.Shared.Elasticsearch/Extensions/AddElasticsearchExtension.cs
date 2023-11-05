@@ -6,7 +6,8 @@ namespace Dberries;
 
 public static class AddElasticsearchExtension
 {
-    public static IElasticClient AddElasticsearch(this WebApplicationBuilder builder)
+    public static void AddElasticsearch(this WebApplicationBuilder builder,
+        Action<ConnectionSettings> configureSettings)
     {
         var options =
             DberriesApplicationOptions.Get<ElasticsearchOptions>(builder.Services, builder.Configuration,
@@ -14,11 +15,9 @@ public static class AddElasticsearchExtension
 
         var settings = new ConnectionSettings(new Uri(options.ServerUrl!));
         settings.DefaultIndex(options.DefaultIndex);
-        
-        var client = new ElasticClient(settings);
-        
-        builder.Services.AddSingleton<IElasticClient>(client);
 
-        return client;
+        configureSettings(settings);
+
+        builder.Services.AddScoped(_ => new ElasticClient(settings));
     }
 }
