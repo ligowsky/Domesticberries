@@ -84,6 +84,11 @@ public class ItemsService : IItemsService
                     )
                 )
             )
+            .Source(s => s
+                .Includes(i => i
+                    .Field(f => f.Id)
+                )
+            )
         );
 
         var itemIds = searchResponse.Documents.Select(x => x.Id!.Value);
