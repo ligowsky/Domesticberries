@@ -19,4 +19,12 @@ public class UsersController : ControllerBase
 
         return Ok(result);
     }
+    
+    [HttpPost("signin")]
+    public async Task<IActionResult> SignInAsync([FromBody] AuthRequestDto request)
+    {
+        var result = await _usersService.SignInAsync(request);
+
+        return Ok(result);
+    }
 }

@@ -20,15 +20,15 @@ public class PasswordService : IPasswordService
         var salt = _tokenAuthOptions.Value.Salt;
         var argon = new Argon2d(Encoding.UTF8.GetBytes(password))
         {
-            Salt = Encoding.UTF8.GetBytes(salt),
+            Salt = Encoding.UTF8.GetBytes(salt!),
             DegreeOfParallelism = 8,
             Iterations = 4,
             MemorySize = 8192
         };
 
-        var hash = argon.GetBytes(16);
-
-        return hash.ToString()!;
+        var hash = Convert.ToBase64String(argon.GetBytes(16));
+        
+        return hash;
     }
 
     public void Validate(string password, string passwordHash)
