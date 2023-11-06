@@ -22,7 +22,7 @@ public static class AddTokenAuthExtension
             })
             .AddJwtBearer(x =>
             {
-                var securityKey = Encoding.UTF8.GetBytes(options.PrivateKey!);
+                var securityKey = Encoding.UTF8.GetBytes(options.PublicKey!);
 
                 x.TokenValidationParameters = new TokenValidationParameters
                 {

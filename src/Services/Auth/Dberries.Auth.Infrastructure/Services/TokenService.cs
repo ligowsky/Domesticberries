@@ -24,8 +24,8 @@ public class TokenService : ITokenService
             new Claim(JwtRegisteredClaimNames.Sub, userId.ToString())
         };
 
-        var privateKey = _tokenAuthOptions.Value.PrivateKey;
-        var securityKey = Encoding.UTF8.GetBytes(privateKey!);
+        var publicKey = _tokenAuthOptions.Value.PublicKey;
+        var securityKey = Encoding.UTF8.GetBytes(publicKey!);
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
