@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Dberries.Store.Infrastructure;
+namespace Dberries;
 
 public static class AddTokenAuthExtension
 {
@@ -30,7 +30,7 @@ public static class AddTokenAuthExtension
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(securityKey),
+                    IssuerSigningKey = new SymmetricSecurityKey(securityKey)
                 };
             });
 
