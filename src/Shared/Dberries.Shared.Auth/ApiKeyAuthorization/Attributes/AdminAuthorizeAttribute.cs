@@ -9,12 +9,12 @@ namespace Dberries;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class AdminAuthorizeAttribute : Attribute, IAuthorizationFilter
 {
-    private static AuthOptions? _authOptions;
+    private static ApiKeyOptions? _authOptions;
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         _authOptions ??= context.HttpContext.RequestServices
-            .GetRequiredService<IOptions<AuthOptions>>().Value;
+            .GetRequiredService<IOptions<ApiKeyOptions>>().Value;
 
         var key = GetApiKey(context.HttpContext.Request);
         ValidateApiKey(key);

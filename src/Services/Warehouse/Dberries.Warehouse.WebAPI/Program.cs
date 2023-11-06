@@ -13,7 +13,7 @@ builder.Services.AddPresentation();
 
 builder.Services.AddApiExceptionHandler();
 
-builder.Services.AddAuthOptions(builder.Configuration);
+builder.Services.AddApiKeyOptions(builder.Configuration);
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

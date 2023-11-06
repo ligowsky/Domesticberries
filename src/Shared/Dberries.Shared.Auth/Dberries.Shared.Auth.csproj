@@ -13,6 +13,7 @@
 
     <ItemGroup>
         <PackageReference Include="BitzArt.ApiExceptions" Version="1.18.2"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.13" />
     </ItemGroup>
 
     <ItemGroup>

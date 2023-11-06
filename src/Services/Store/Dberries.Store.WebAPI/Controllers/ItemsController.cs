@@ -1,4 +1,5 @@
 using BitzArt.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dberries.Store.WebAPI;
@@ -14,6 +15,7 @@ public class ItemsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetPageAsync([FromQuery] PageRequest pageRequest)
     {
         var items = await _itemsService.GetPageAsync(pageRequest);
