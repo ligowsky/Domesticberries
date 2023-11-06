@@ -1,15 +1,13 @@
 using System.Reflection;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
 
 namespace Dberries.Store.Infrastructure;
 
 public static class AddInfrastructureExtension
 {
-    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration,
-        Assembly assembly)
+    public static void AddInfrastructure(this WebApplicationBuilder builder, Assembly assembly)
     {
-        services.AddServices();
-        services.AddMessaging(configuration, assembly);
+        builder.Services.AddServices();
+        builder.Services.AddMessaging(builder.Configuration, assembly);
     }
 }

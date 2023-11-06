@@ -1,4 +1,3 @@
-using BitzArt;
 using BitzArt.Pagination;
 
 namespace Dberries.Store.Infrastructure;
@@ -26,28 +25,16 @@ public class ItemsService : IItemsService
     {
         await _itemsRepository.AddAsync(item);
         await _itemsRepository.SaveChangesAsync();
-
+        
         return item;
     }
 
     public async Task<Item> UpdateAsync(Item item)
     {
-        var existingItem = await _itemsRepository.GetByExternalIdAsync(item.ExternalId!.Value);
-
-        if (existingItem is null)
-        {
-            existingItem = await _itemsRepository.AddAsync(item);
-        }
-        else
-        {
-            existingItem.Patch(item)
-                .Property(x => x.Name)
-                .Property(x => x.Description);
-        }
-
+        var updatedItem = await _itemsRepository.UpdateAsync(item);
         await _itemsRepository.SaveChangesAsync();
 
-        return existingItem;
+        return updatedItem;
     }
 
     public async Task RemoveAsync(Guid id)
@@ -55,14 +42,15 @@ public class ItemsService : IItemsService
         var existingItem = await _itemsRepository.GetByExternalIdAsync(id);
 
         if (existingItem is null) return;
+        
+        await _itemsRepository.RemoveAsync(existingItem);
 
-        _itemsRepository.Remove(existingItem);
         await _itemsRepository.SaveChangesAsync();
     }
 
-    public Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, string query)
+    public async Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, SearchRequestDto searchRequest)
     {
-        throw new NotImplementedException();
+        return await _itemsRepository.SearchAsync(pageRequest, searchRequest);
     }
 
     public Task<ItemAvailabilityResponse> GetAvailabilityAsync(Guid id)

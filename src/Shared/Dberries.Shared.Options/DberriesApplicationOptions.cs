@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,12 +22,20 @@ public static class DberriesApplicationOptions
         {
             var value = property.GetValue(options)?.ToString();
 
-            if (string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value) && IsFieldRequired(property))
                 throw new Exception($"{sectionName} {property.Name} is required");
         }
 
         services.Configure<T>(section);
 
         return options;
+    }
+    
+    private static bool IsFieldRequired(PropertyInfo? property)
+    {
+        if (property == null) return false;
+
+        var requiredAttribute = property.GetCustomAttribute<RequiredAttribute>();
+        return requiredAttribute != null;
     }
 }

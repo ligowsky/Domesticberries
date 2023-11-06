@@ -10,14 +10,14 @@
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
-
+    
     <ItemGroup>
-        <PackageReference Include="BitzArt.ApiExceptions" Version="1.18.2"/>
+      <PackageReference Include="NEST" Version="7.17.5" />
     </ItemGroup>
-
+    
     <ItemGroup>
-        <ProjectReference Include="..\Dberries.Shared.EFCore\Dberries.Shared.EFCore.csproj"/>
-        <ProjectReference Include="..\Dberries.Shared.Options\Dberries.Shared.Options.csproj" />
+      <ProjectReference Include="..\Dberries.Shared.Abstractions\Dberries.Shared.Abstractions.csproj" />
+      <ProjectReference Include="..\Dberries.Shared.Options\Dberries.Shared.Options.csproj" />
     </ItemGroup>
 
 </Project>

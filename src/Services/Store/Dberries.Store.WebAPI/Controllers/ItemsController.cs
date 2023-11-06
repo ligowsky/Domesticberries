@@ -31,6 +31,16 @@ public class ItemsController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost("search")]
+    public async Task<IActionResult> SearchAsync([FromQuery] PageRequest pageRequest,
+        [FromBody] SearchRequestDto searchRequest)
+    {
+        var items = await _itemsService.SearchAsync(pageRequest, searchRequest);
+        var result = items.Convert(x => x.ToDto());
+
+        return Ok(result);
+    }
+
     [HttpGet("{id:guid}/availability", Name = "GetAvailability")]
     public async Task<IActionResult> GetAvailabilityAsync([FromRoute] Guid id)
     {

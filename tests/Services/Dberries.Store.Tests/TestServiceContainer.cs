@@ -4,6 +4,7 @@ using MassTransit;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Nest;
 
 namespace Dberries.Store.Tests;
 
@@ -30,6 +31,15 @@ public class TestServiceContainer : IDisposable
         services.AddRepositories();
 
         services.AddMassTransitTestHarness();
+
+        services.AddSingleton(_ =>
+        {
+            var settings = new ConnectionSettings();
+            settings.DefaultIndex("default");
+            settings.ConfigureElasticMapping();
+
+            return new ElasticClient(settings);
+        });
 
         _services = services.BuildServiceProvider();
 

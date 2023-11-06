@@ -1,13 +1,17 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
 
 namespace Dberries.Store.Persistence;
 
 public static class AddPersistenceExtension
 {
-    public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
+    public static void AddPersistence(this WebApplicationBuilder builder)
     {
-        services.AddMsSqlDbContext(configuration);
-        services.AddRepositories();
+        builder.Services.AddMsSqlDbContext(builder.Configuration);
+
+        builder.Services.AddRepositories();
+
+        builder.AddElasticsearch(x =>
+            x.ConfigureElasticMapping()
+        );
     }
 }

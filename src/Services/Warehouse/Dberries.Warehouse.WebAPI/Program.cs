@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using BitzArt.ApiExceptions.AspNetCore;
 using Dberries;
 using Dberries.Warehouse.Infrastructure;
@@ -14,7 +15,11 @@ builder.Services.AddApiExceptionHandler();
 
 builder.Services.AddAuthOptions(builder.Configuration);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    );
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

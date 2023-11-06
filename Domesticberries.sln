@@ -73,6 +73,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Shared.EFCore", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Store.Tests", "tests\Services\Dberries.Store.Tests\Dberries.Store.Tests.csproj", "{915F02AA-DA28-4D9F-860D-B8FAB150C59B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Shared.Elasticsearch", "src\Shared\Dberries.Shared.Elasticsearch\Dberries.Shared.Elasticsearch.csproj", "{D29CE5AF-EC30-40D4-9A0E-9E4FCB7C39F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dberries.Shared.Options", "src\Shared\Dberries.Shared.Options\Dberries.Shared.Options.csproj", "{7428AED2-D56F-4767-985F-691422EE9470}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,6 +116,8 @@ Global
 		{F04181F9-65F9-47BE-B164-76B2A69A335D} = {EB5A449C-0BE9-4743-BD27-18378BFC7B6D}
 		{7E0517B9-2AE8-4ACB-91CA-CEA8A40C8050} = {EB5A449C-0BE9-4743-BD27-18378BFC7B6D}
 		{915F02AA-DA28-4D9F-860D-B8FAB150C59B} = {2EE28B65-B3DB-4C4A-95D3-758E48D92E11}
+		{D29CE5AF-EC30-40D4-9A0E-9E4FCB7C39F3} = {EB5A449C-0BE9-4743-BD27-18378BFC7B6D}
+		{7428AED2-D56F-4767-985F-691422EE9470} = {EB5A449C-0BE9-4743-BD27-18378BFC7B6D}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{16DA55B2-5679-4FF3-A8E1-C3AE3FBE839D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -222,5 +228,13 @@ Global
 		{915F02AA-DA28-4D9F-860D-B8FAB150C59B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{915F02AA-DA28-4D9F-860D-B8FAB150C59B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{915F02AA-DA28-4D9F-860D-B8FAB150C59B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D29CE5AF-EC30-40D4-9A0E-9E4FCB7C39F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D29CE5AF-EC30-40D4-9A0E-9E4FCB7C39F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D29CE5AF-EC30-40D4-9A0E-9E4FCB7C39F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D29CE5AF-EC30-40D4-9A0E-9E4FCB7C39F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7428AED2-D56F-4767-985F-691422EE9470}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7428AED2-D56F-4767-985F-691422EE9470}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7428AED2-D56F-4767-985F-691422EE9470}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7428AED2-D56F-4767-985F-691422EE9470}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
