@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dberries.Store.WebAPI;
 
 [Route("[Controller]")]
+[Authorize]
 public class ItemsController : ControllerBase
 {
     private readonly IItemsService _itemsService;
@@ -15,7 +16,6 @@ public class ItemsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> GetPageAsync([FromQuery] PageRequest pageRequest)
     {
         var items = await _itemsService.GetPageAsync(pageRequest);

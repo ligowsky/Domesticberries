@@ -8,11 +8,11 @@ namespace Dberries.Auth.Infrastructure;
 
 public class PasswordService : IPasswordService
 {
-    private readonly IOptions<TokenAuthOptions> _tokenAuthOptions;
+    private readonly IOptions<TokenAuthProviderOptions> _tokenAuthOptions;
 
     public PasswordService(IServiceProvider serviceProvider)
     {
-        _tokenAuthOptions = serviceProvider.GetRequiredService<IOptions<TokenAuthOptions>>();
+        _tokenAuthOptions = serviceProvider.GetRequiredService<IOptions<TokenAuthProviderOptions>>();
     }
 
     public string GenerateHash(string password)
@@ -26,9 +26,7 @@ public class PasswordService : IPasswordService
             MemorySize = 8192
         };
 
-        var hash = Convert.ToBase64String(argon.GetBytes(16));
-        
-        return hash;
+        return Convert.ToBase64String(argon.GetBytes(16));
     }
 
     public void Validate(string password, string passwordHash)

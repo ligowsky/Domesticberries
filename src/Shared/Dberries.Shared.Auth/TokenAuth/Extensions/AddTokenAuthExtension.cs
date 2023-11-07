@@ -11,7 +11,7 @@ public static class AddTokenAuthExtension
     public static void AddTokenAuth(this WebApplicationBuilder builder)
     {
         var options =
-            DberriesApplicationOptions.Get<TokenAuthOptions>(builder.Services, builder.Configuration,
+            DberriesApplicationOptions.Get<TokenAuthClientOptions>(builder.Services, builder.Configuration,
                 "Auth");
 
         builder.Services.AddAuthentication(x =>

@@ -1,4 +1,4 @@
-namespace Dberries;
+namespace Dberries.Auth;
 
 public interface IPasswordService
 {
