@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dberries.Auth.WebAPI;
 
-[Route("[Controller]")]
+[Route("")]
 public class UsersController : ControllerBase
 {
     private readonly IUsersService _usersService;

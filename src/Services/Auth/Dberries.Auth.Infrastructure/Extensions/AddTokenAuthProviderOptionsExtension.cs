@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Dberries;
+namespace Dberries.Auth.Infrastructure;
 
 public static class AddTokenAuthProviderOptionsExtension
 {

@@ -1,11 +1,10 @@
 using BitzArt.Pagination;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dberries.Store.WebAPI;
 
 [Route("[Controller]")]
-[Authorize]
+[TokenAuthorize]
 public class ItemsController : ControllerBase
 {
     private readonly IItemsService _itemsService;
@@ -48,6 +47,16 @@ public class ItemsController : ControllerBase
     {
         var itemAvailability = await _itemsService.GetAvailabilityAsync(id);
         var result = itemAvailability.ToDto();
+
+        return Ok(result);
+    }
+
+    [HttpPost("{itemId:guid}/rate", Name = "UpdateRating")]
+    public async Task<IActionResult> UpdateRatingAsync([FromRoute] Guid itemId, [FromBody] byte value)
+    {
+        var userId = HttpContext.GetUserId();
+        var updatedItem = await _itemsService.UpdateRatingAsync(itemId, userId, value);
+        var result = updatedItem.ToDto();
 
         return Ok(result);
     }

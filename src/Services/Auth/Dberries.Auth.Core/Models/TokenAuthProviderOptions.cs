@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Dberries;
+namespace Dberries.Auth;
 
 public class TokenAuthProviderOptions
 {
@@ -12,4 +12,7 @@ public class TokenAuthProviderOptions
     
     [Required]
     public string? Salt { get; set; }
+    
+    [Required]
+    public int AccessTokenDurationInMinutes { get; set; }
 }

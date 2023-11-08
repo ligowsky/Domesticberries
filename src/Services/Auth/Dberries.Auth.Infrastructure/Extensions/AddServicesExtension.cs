@@ -8,6 +8,6 @@ public static class AddServicesExtension
     {
         services.AddScoped<IUsersService, UsersService>();
         services.AddScoped<IPasswordService, PasswordService>();
-        services.AddScoped<ITokenService, TokenService>();
+        services.AddSingleton<ITokenProviderService, TokenProviderService>();
     }
 }

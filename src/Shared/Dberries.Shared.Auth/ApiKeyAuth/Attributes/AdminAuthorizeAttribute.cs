@@ -25,10 +25,10 @@ public class AdminAuthorizeAttribute : Attribute, IAuthorizationFilter
         var authHeaders = request.Headers["X-API-Key"];
 
         if (!authHeaders.Any())
-            throw ApiException.Unauthorized("X-API-Key not found");
+            throw ApiException.Unauthorized("X-API-Key header is not found");
 
         if (authHeaders.Count > 1)
-            throw ApiException.Unauthorized("Multiple X-API-Keys not allowed");
+            throw ApiException.Unauthorized("Multiple X-API-Key headers are not allowed");
 
         var header = authHeaders.First()!;
 

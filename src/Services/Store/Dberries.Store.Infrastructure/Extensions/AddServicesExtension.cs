@@ -1,3 +1,5 @@
+using Dberries.Auth;
+using Dberries.Auth.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Dberries.Store.Infrastructure;

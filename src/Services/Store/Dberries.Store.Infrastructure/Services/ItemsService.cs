@@ -58,7 +58,7 @@ public class ItemsService : IItemsService
         return _itemsRepository.GetAvailabilityAsync(id);
     }
 
-    public Task UpdateRatingAsync(Guid id, byte value)
+    public Task<Item> UpdateRatingAsync(Guid itemId, Guid userId, byte value)
     {
         throw new NotImplementedException();
     }

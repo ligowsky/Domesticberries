@@ -1,0 +1,17 @@
+using Dberries.Auth.Infrastructure;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Dberries;
+
+public static class AddTokenAuthExtensions
+{
+    public static void AddTokenAuth(this IServiceCollection services, IConfiguration configuration)
+    {
+        DberriesApplicationOptions.Get<TokenAuthClientOptions>(services, configuration, "Auth");
+
+        services.AddSingleton<ITokenClientService, TokenClientService>();
+    }
+    
+    
+}
