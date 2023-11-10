@@ -2,7 +2,6 @@ using BitzArt;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace Dberries;
 
@@ -14,7 +13,7 @@ public class AdminAuthorizeAttribute : Attribute, IAuthorizationFilter
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         _authOptions ??= context.HttpContext.RequestServices
-            .GetRequiredService<IOptions<ApiKeyOptions>>().Value;
+            .GetRequiredService<ApiKeyOptions>();
 
         var key = GetApiKey(context.HttpContext.Request);
         ValidateApiKey(key);

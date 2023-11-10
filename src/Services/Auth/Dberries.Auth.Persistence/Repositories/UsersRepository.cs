@@ -28,7 +28,7 @@ public class UsersRepository : RepositoryBase, IUsersRepository
             .FirstOrDefaultAsync();
 
         if (result is null)
-            throw ApiException.NotFound($"{nameof(User)} with Email '{email}' is not found");
+            throw ApiException.Unauthorized($"{nameof(User)} with Email '{email}' is not found");
 
         return result;
     }
@@ -40,7 +40,7 @@ public class UsersRepository : RepositoryBase, IUsersRepository
             .AnyAsync();
 
         if (exists)
-            throw ApiException.BadRequest($"{nameof(User)} with Email '{email}' already exists");
+            throw ApiException.Conflict($"{nameof(User)} with Email '{email}' already exists");
 
         return exists;
     }

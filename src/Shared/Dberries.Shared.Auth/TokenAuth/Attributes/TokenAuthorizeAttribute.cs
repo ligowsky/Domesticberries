@@ -18,7 +18,7 @@ public class TokenAuthorizeAttribute : Attribute, IAuthorizationFilter
             .GetRequiredService<ITokenClientService>();
         
         _tokenAuthOptions ??= context.HttpContext.RequestServices
-            .GetRequiredService<IOptions<TokenAuthClientOptions>>().Value;
+            .GetRequiredService<TokenAuthClientOptions>();
 
         var accessToken = GetAccessToken(context.HttpContext.Request);
         

@@ -33,6 +33,6 @@ public class PasswordService : IPasswordService
         var hash = GenerateHash(password);
 
         if (hash != passwordHash)
-            throw ApiException.Forbidden("Invalid password");
+            throw ApiException.Unauthorized("Invalid password");
     }
 }

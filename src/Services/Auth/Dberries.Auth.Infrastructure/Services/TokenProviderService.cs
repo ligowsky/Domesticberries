@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Dberries.Auth.Infrastructure;
@@ -16,7 +15,7 @@ public class TokenProviderService : ITokenProviderService
     public TokenProviderService(IServiceProvider serviceProvider)
     {
         _tokenAuthOptions = serviceProvider
-            .GetRequiredService<IOptions<TokenAuthProviderOptions>>().Value;
+            .GetRequiredService<TokenAuthProviderOptions>();
 
         _tokenHandler = new JwtSecurityTokenHandler();
 
