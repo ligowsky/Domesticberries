@@ -26,8 +26,8 @@ public static class DberriesApplicationOptions
                 throw new Exception($"{sectionName} {property.Name} is required");
         }
 
-        services.Configure<T>(section);
-
+        services.AddSingleton(options);
+        
         return options;
     }
     

@@ -1,6 +1,7 @@
 using Dberries.Auth.Persistence;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Dberries.Auth.Tests;
@@ -19,6 +20,10 @@ public class TestServiceContainer : IDisposable
     {
         var services = new ServiceCollection();
 
+        var authOptions = new TokenAuthProviderOptions();
+
+        services.AddSingleton(authOptions);
+        
         var sqliteConnection = new SqliteConnection("Filename=:memory:");
         sqliteConnection.Open();
 

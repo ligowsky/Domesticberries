@@ -2,22 +2,21 @@ using System.Text;
 using BitzArt;
 using Konscious.Security.Cryptography;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace Dberries.Auth.Infrastructure;
 
 public class PasswordService : IPasswordService
 {
-    private readonly IOptions<TokenAuthProviderOptions> _tokenAuthOptions;
+    private readonly TokenAuthProviderOptions _tokenAuthOptions;
 
     public PasswordService(IServiceProvider serviceProvider)
     {
-        _tokenAuthOptions = serviceProvider.GetRequiredService<IOptions<TokenAuthProviderOptions>>();
+        _tokenAuthOptions = serviceProvider.GetRequiredService<TokenAuthProviderOptions>();
     }
 
     public string GenerateHash(string password)
     {
-        var salt = _tokenAuthOptions.Value.Salt;
+        var salt = _tokenAuthOptions.Salt;
         var argon = new Argon2d(Encoding.UTF8.GetBytes(password))
         {
             Salt = Encoding.UTF8.GetBytes(salt!),
