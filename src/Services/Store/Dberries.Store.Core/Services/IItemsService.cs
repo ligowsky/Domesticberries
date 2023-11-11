@@ -11,5 +11,5 @@ public interface IItemsService
     public Task RemoveAsync(Guid id);
     public Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, SearchRequestDto searchRequest);
     public Task<ItemAvailabilityResponse> GetAvailabilityAsync(Guid id);
-    public Task<Item> UpdateRatingAsync(Guid itemId, Rating rating);
+    public Task<Item> UpdateRatingAsync(Guid itemId, Guid userId, byte value);
 }

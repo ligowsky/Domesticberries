@@ -5,10 +5,12 @@ namespace Dberries.Store.Infrastructure;
 public class ItemsService : IItemsService
 {
     private readonly IItemsRepository _itemsRepository;
+    private readonly IUsersRepository _usersRepository;
 
-    public ItemsService(IItemsRepository itemsRepository)
+    public ItemsService(IItemsRepository itemsRepository, IUsersRepository usersRepository)
     {
         _itemsRepository = itemsRepository;
+        _usersRepository = usersRepository;
     }
 
     public async Task<PageResult<Item>> GetPageAsync(PageRequest pageRequest)
@@ -58,8 +60,16 @@ public class ItemsService : IItemsService
         return _itemsRepository.GetAvailabilityAsync(id);
     }
 
-    public async Task<Item> UpdateRatingAsync(Guid itemId, Rating rating)
+    public async Task<Item> UpdateRatingAsync(Guid itemId, Guid userId, byte value)
     {
+        var user = await _usersRepository.GetByExternalIdAsync(userId);
+
+        var rating = new Rating
+        {
+            UserId = user.Id,
+            Value = value
+        };
+        
         var item = await _itemsRepository.UpdateRatingAsync(itemId, rating);
 
         await _itemsRepository.SaveChangesAsync();

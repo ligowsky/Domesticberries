@@ -52,11 +52,10 @@ public class ItemsController : ControllerBase
 
     [HttpPost("{itemId:guid}/rate", Name = "UpdateRating")]
     [TokenAuthorize]
-    public async Task<IActionResult> UpdateRatingAsync([FromRoute] Guid itemId, [FromBody] RatingDto input)
+    public async Task<IActionResult> UpdateRatingAsync([FromRoute] Guid itemId, [FromBody] RatingDto dto)
     {
         var userId = HttpContext.GetUserId();
-        var rating = input.ToModel(userId);
-        var updatedItem = await _itemsService.UpdateRatingAsync(itemId, rating);
+        var updatedItem = await _itemsService.UpdateRatingAsync(itemId, userId, dto.Value!.Value);
         var result = updatedItem.ToDto();
 
         return Ok(result);

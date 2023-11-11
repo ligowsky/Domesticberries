@@ -21,11 +21,16 @@ public class UsersRepository : RepositoryBase, IUsersRepository
         return user;
     }
 
-    public async Task<User?> GetByExternalIdAsync(Guid id)
+    public async Task<User> GetByExternalIdAsync(Guid id)
     {
-        return await Db.Set<User>()
+        var user = await Db.Set<User>()
             .Where(x => x.ExternalId == id)
             .FirstOrDefaultAsync();
+
+        if (user is null)
+            throw ApiException.NotFound($"{nameof(User)} with External '{id}' is not found");
+
+        return user;
     }
 
     public async Task<User> AddAsync(User user)

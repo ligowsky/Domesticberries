@@ -8,12 +8,10 @@ namespace Dberries.Store.Persistence;
 public class ItemsRepository : RepositoryBase, IItemsRepository
 {
     private readonly ElasticClient _elasticClient;
-    private readonly IUsersRepository _usersRepository;
 
-    public ItemsRepository(AppDbContext db, ElasticClient elasticClient, IUsersRepository usersRepository) : base(db)
+    public ItemsRepository(AppDbContext db, ElasticClient elasticClient) : base(db)
     {
         _elasticClient = elasticClient;
-        _usersRepository = usersRepository;
     }
 
     public async Task<PageResult<Item>> GetPageAsync(PageRequest pageRequest)
@@ -132,13 +130,6 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         if (input.Value < Rating.MinValue || input.Value > Rating.MaxValue)
             throw ApiException.BadRequest(
                 $"{nameof(Rating)} value must be between {Rating.MinValue} and {Rating.MaxValue}");
-
-        var user = await _usersRepository.GetByExternalIdAsync(input.UserId!.Value);
-
-        if (user is null)
-            throw ApiException.NotFound($"{nameof(User)} with ExternalId '{input.UserId}' is not found");
-
-        input = new Rating(user.Id!.Value, input.Value);
 
         var item = await Db.Set<Item>()
             .Where(x => x.Id == itemId)
