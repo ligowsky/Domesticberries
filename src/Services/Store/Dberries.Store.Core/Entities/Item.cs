@@ -8,7 +8,7 @@ public class Item : IEntityWithExternalId<Guid>
     public string? Description { get; set; }
     public ICollection<Rating>? Ratings { get; set; }
 
-    public decimal? AverageRating => Math.Round((decimal)Ratings?.Average(x => x.Value)!);
+    public float? AverageRating => (float?)Ratings?.Average(x => x.Value);
 
     public Item(string? name, string? description)
     {

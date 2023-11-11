@@ -243,7 +243,7 @@ public class ItemsServiceTests
                 return EntityGenerator.GenerateRating(value);
             }).ToList();
 
-        var averageRating = Math.Round((decimal)ratings.Average(x => x.Value)!);
+        var averageRating = ratings.Average(x => x.Value)!;
 
         // Act 
         foreach (var rating in ratings)
