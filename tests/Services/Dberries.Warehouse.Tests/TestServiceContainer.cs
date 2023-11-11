@@ -26,8 +26,8 @@ public class TestServiceContainer : IDisposable
 
         services.AddDbContext<TestDbContext>(x => x.UseSqlite(sqliteConnection));
         services.AddScoped<AppDbContext>(x => x.GetRequiredService<TestDbContext>());
-        services.AddServices();
         services.AddRepositories();
+        services.AddServices();
 
         services.AddMassTransitTestHarness();
 

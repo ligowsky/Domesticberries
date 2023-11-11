@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\src\Services\Auth\Dberries.Auth.Persistence\Dberries.Auth.Persistence.csproj"/>
+      <ProjectReference Include="..\..\..\src\Services\Auth\Dberries.Auth.WebAPI\Dberries.Auth.WebAPI.csproj" />
     </ItemGroup>
 
 </Project>

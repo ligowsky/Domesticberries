@@ -10,6 +10,7 @@
     <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' "/>
     <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' "/>
     <ItemGroup>
+        <PackageReference Include="BitzArt.ApiExceptions.AspNetCore" Version="1.18.2" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
     </ItemGroup>
@@ -21,11 +22,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Controllers\"/>
-    </ItemGroup>
-
-    <ItemGroup>
+        <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Telemetry\Dberries.Shared.Telemetry.csproj" />
         <ProjectReference Include="..\Dberries.Auth.Infrastructure\Dberries.Auth.Infrastructure.csproj"/>
+        <ProjectReference Include="..\Dberries.Auth.Persistence\Dberries.Auth.Persistence.csproj" />
+        <ProjectReference Include="..\Dberries.Auth.Presentation\Dberries.Auth.Presentation.csproj" />
     </ItemGroup>
 
 </Project>

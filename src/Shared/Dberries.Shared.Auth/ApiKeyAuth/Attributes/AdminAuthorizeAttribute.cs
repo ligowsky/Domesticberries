@@ -2,19 +2,18 @@ using BitzArt;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace Dberries;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class AdminAuthorizeAttribute : Attribute, IAuthorizationFilter
 {
-    private static AuthOptions? _authOptions;
+    private static ApiKeyOptions? _authOptions;
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         _authOptions ??= context.HttpContext.RequestServices
-            .GetRequiredService<IOptions<AuthOptions>>().Value;
+            .GetRequiredService<ApiKeyOptions>();
 
         var key = GetApiKey(context.HttpContext.Request);
         ValidateApiKey(key);
@@ -25,10 +24,10 @@ public class AdminAuthorizeAttribute : Attribute, IAuthorizationFilter
         var authHeaders = request.Headers["X-API-Key"];
 
         if (!authHeaders.Any())
-            throw ApiException.Unauthorized("X-API-Key not found");
+            throw ApiException.Unauthorized("X-API-Key header is not found");
 
         if (authHeaders.Count > 1)
-            throw ApiException.Unauthorized("Multiple X-API-Keys not allowed");
+            throw ApiException.Unauthorized("Multiple X-API-Key headers are not allowed");
 
         var header = authHeaders.First()!;
 

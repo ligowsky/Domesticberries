@@ -4,7 +4,17 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>Dberries.Auth.Core</RootNamespace>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Abstractions\Dberries.Shared.Abstractions.csproj" />
+      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Contracts\Dberries.Shared.Contracts.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="BitzArt.ApiExceptions" Version="1.18.2" />
+    </ItemGroup>
 
 
 </Project>

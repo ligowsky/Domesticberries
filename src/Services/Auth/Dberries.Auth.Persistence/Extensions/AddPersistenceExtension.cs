@@ -8,5 +8,7 @@ public static class AddPersistenceExtension
     public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMsSqlDbContext(configuration);
+        
+        services.AddRepositories();
     }
 }
