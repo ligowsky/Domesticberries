@@ -70,7 +70,7 @@ public class TokenProviderService : ITokenProviderService
         return new AuthResponseDto(accessToken, refreshToken);
     }
     
-    public RefreshTokenData GetRefreshTokenData(string token)
+    public RefreshTokenData GetTokenData(string token)
     {
         try
         {

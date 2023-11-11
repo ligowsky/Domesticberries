@@ -22,7 +22,7 @@ public class TokenAuthorizeAttribute : Attribute, IAuthorizationFilter
 
         var accessToken = GetAccessToken(context.HttpContext.Request);
         
-        var accessTokenData = _tokenService.GetAccessTokenData(accessToken);
+        var accessTokenData = _tokenService.GetTokenData(accessToken);
         
         context.HttpContext.Items["UserId"] = accessTokenData.UserId;
     }

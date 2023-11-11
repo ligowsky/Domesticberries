@@ -2,5 +2,5 @@ namespace Dberries;
 
 public interface IJwtService
 {
-    public AccessTokenData GetAccessTokenData(string accessToken);
+    public AccessTokenData GetTokenData(string accessToken);
 }

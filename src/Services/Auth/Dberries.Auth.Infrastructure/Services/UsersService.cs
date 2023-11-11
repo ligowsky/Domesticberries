@@ -44,7 +44,7 @@ public class UsersService : IUsersService
 
     public AuthResponseDto RefreshTokenAsync(RefreshTokenRequestDto request)
     {
-        var tokenData = _tokenProviderService.GetRefreshTokenData(request.RefreshToken!);
+        var tokenData = _tokenProviderService.GetTokenData(request.RefreshToken!);
         return _tokenProviderService.BuildAuthResponse(tokenData.UserId!.Value);
     }
 }

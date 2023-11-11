@@ -32,7 +32,7 @@ internal class JwtService : IJwtService
         };
     }
 
-    public AccessTokenData GetAccessTokenData(string token)
+    public AccessTokenData GetTokenData(string token)
     {
         try
         {
