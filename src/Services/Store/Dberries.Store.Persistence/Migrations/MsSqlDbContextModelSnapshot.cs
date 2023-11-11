@@ -74,6 +74,30 @@ namespace Dberries.Store.Persistence.Migrations
                     b.ToTable("Locations", "Location");
                 });
 
+            modelBuilder.Entity("Dberries.Store.User", b =>
+                {
+                    b.Property<Guid?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<Guid?>("ExternalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExternalId")
+                        .IsUnique()
+                        .IsDescending()
+                        .HasFilter("[ExternalId] IS NOT NULL");
+
+                    b.ToTable("Users", "User");
+                });
+
             modelBuilder.Entity("Dberries.Store.Item", b =>
                 {
                     b.OwnsMany("Dberries.Store.Rating", "Ratings", b1 =>
@@ -82,7 +106,6 @@ namespace Dberries.Store.Persistence.Migrations
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<Guid?>("UserId")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<byte?>("Value")
@@ -91,10 +114,20 @@ namespace Dberries.Store.Persistence.Migrations
 
                             b1.HasKey("ItemId", "UserId");
 
+                            b1.HasIndex("UserId");
+
                             b1.ToTable("Rating", "Item");
 
                             b1.WithOwner()
                                 .HasForeignKey("ItemId");
+
+                            b1.HasOne("Dberries.Store.User", "User")
+                                .WithMany()
+                                .HasForeignKey("UserId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+
+                            b1.Navigation("User");
                         });
 
                     b.Navigation("Ratings");

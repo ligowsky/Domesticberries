@@ -1,10 +1,9 @@
-using BitzArt;
-
 namespace Dberries.Store;
 
 public class Rating
 {
     public Guid? UserId { get; set; }
+    public User? User { get; set; }
     public byte? Value { get; set; }
 
     public static byte MinValue = 0;

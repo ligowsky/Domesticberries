@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Dberries.Warehouse.Persistence.Migrations
+namespace Dberries.Warehouse.Migrations
 {
     [DbContext(typeof(MsSqlDbContext))]
     partial class MsSqlDbContextModelSnapshot : ModelSnapshot
@@ -17,7 +17,7 @@ namespace Dberries.Warehouse.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "7.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Dberries.Store.Persistence.Migrations
+namespace Dberries.Warehouse.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -23,7 +23,6 @@ namespace Dberries.Store.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ExternalId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -38,33 +37,13 @@ namespace Dberries.Store.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ExternalId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Coordinates_Latitude = table.Column<double>(type: "float(7)", precision: 7, scale: 5, nullable: false),
+                    Coordinates_Longitude = table.Column<double>(type: "float(7)", precision: 7, scale: 5, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Locations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Rating",
-                schema: "Item",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Value = table.Column<byte>(type: "tinyint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Rating", x => new { x.ItemId, x.UserId });
-                    table.ForeignKey(
-                        name: "FK_Rating_Items_ItemId",
-                        column: x => x.ItemId,
-                        principalSchema: "Item",
-                        principalTable: "Items",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -96,24 +75,6 @@ namespace Dberries.Store.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_ExternalId",
-                schema: "Item",
-                table: "Items",
-                column: "ExternalId",
-                unique: true,
-                descending: new bool[0],
-                filter: "[ExternalId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Locations_ExternalId",
-                schema: "Location",
-                table: "Locations",
-                column: "ExternalId",
-                unique: true,
-                descending: new bool[0],
-                filter: "[ExternalId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Stock_ItemId",
                 schema: "Location",
                 table: "Stock",
@@ -123,10 +84,6 @@ namespace Dberries.Store.Persistence.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Rating",
-                schema: "Item");
-
             migrationBuilder.DropTable(
                 name: "Stock",
                 schema: "Location");

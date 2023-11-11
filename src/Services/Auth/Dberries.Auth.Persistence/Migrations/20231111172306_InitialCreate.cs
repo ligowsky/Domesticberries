@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Dberries.Auth.Persistence.Migrations
+namespace Dberries.Auth.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
