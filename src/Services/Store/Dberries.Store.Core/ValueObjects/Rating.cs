@@ -9,10 +9,10 @@ public class Rating
     public static byte MinValue = 0;
     public static byte MaxValue = 5;
 
-    public Rating(Guid? userId, byte? value)
+    public Rating(Guid? userId, int? value)
     {
         UserId = userId;
-        Value = value;
+        Value = value is not null ? (byte)value : null;
     }
 
     public Rating()

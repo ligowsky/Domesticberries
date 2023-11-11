@@ -56,8 +56,8 @@ public class ItemsController : DberriesController
     {
         Validate(input);
         var userId = HttpContext.GetUserId();
-        var value = (byte)input.Value!;
-        var updatedItem = await _itemsService.UpdateRatingAsync(itemId, userId, value);
+        var rating = input.ToModel(userId);
+        var updatedItem = await _itemsService.UpdateRatingAsync(itemId, rating);
         var result = updatedItem.ToDto();
 
         return Ok(result);

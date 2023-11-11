@@ -37,4 +37,15 @@ public static class EntityGenerator
             Email = $"{Guid.NewGuid()}@example.com",
         };
     }
+    
+    public static Rating GenerateRating(byte value = 1)
+    {
+        var userId = Guid.NewGuid();
+        return new Rating(userId, value);
+    }
+    
+    public static Rating GenerateRating(Guid? userId, byte value = 1)
+    {
+        return new Rating(userId, value);
+    }
 }

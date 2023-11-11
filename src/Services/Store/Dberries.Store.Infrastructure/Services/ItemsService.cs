@@ -60,15 +60,11 @@ public class ItemsService : IItemsService
         return _itemsRepository.GetAvailabilityAsync(id);
     }
 
-    public async Task<Item> UpdateRatingAsync(Guid itemId, Guid userId, byte value)
+    public async Task<Item> UpdateRatingAsync(Guid itemId, Rating rating)
     {
-        var user = await _usersRepository.GetByExternalIdAsync(userId);
+        var user = await _usersRepository.GetByExternalIdAsync(rating.UserId!.Value);
 
-        var rating = new Rating
-        {
-            UserId = user.Id,
-            Value = value
-        };
+        rating = new Rating(user.Id, rating.Value);
         
         var item = await _itemsRepository.UpdateRatingAsync(itemId, rating);
 

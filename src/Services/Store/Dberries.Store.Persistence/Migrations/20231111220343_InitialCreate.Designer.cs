@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dberries.Store.Persistence.Migrations
 {
     [DbContext(typeof(MsSqlDbContext))]
-    [Migration("20231111171939_InitialCreate")]
+    [Migration("20231111220343_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
