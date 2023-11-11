@@ -8,7 +8,8 @@ public static class ItemMappingExtensions
         {
             Id = model.Id,
             Name = model.Name,
-            Description = model.Description
+            Description = model.Description,
+            AverageRating = model.AverageRating,
         };
     }
 

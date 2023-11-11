@@ -8,7 +8,7 @@ namespace Dberries.Store.Persistence;
 public class ItemsRepository : RepositoryBase, IItemsRepository
 {
     private readonly ElasticClient _elasticClient;
-    
+
     public ItemsRepository(AppDbContext db, ElasticClient elasticClient) : base(db)
     {
         _elasticClient = elasticClient;
@@ -68,12 +68,12 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             .OrderBy(x => x.Id)
             .ToPageAsync(pageRequest);
     }
-    
+
     public async Task<Item> AddAsync(Item item)
     {
         await Db.ThrowIfExistsByExternalIdAsync(typeof(Item), item.ExternalId!.Value);
         Db.Add(item);
-        
+
         await _elasticClient.IndexDocumentAsync(item);
 
         return item;
@@ -93,7 +93,7 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
                 .Property(x => x.Name)
                 .Property(x => x.Description);
         }
-        
+
         await _elasticClient.IndexDocumentAsync(existingItem);
 
         return existingItem;
@@ -102,7 +102,7 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
     public async Task RemoveAsync(Item item)
     {
         Db.Remove(item);
-        
+
         await _elasticClient.DeleteAsync<Item>(item.Id!);
     }
 
@@ -123,5 +123,33 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             .ToListAsync();
 
         return new ItemAvailabilityResponse(availableInLocations);
+    }
+
+    public async Task<Item> UpdateRatingAsync(Guid itemId, Rating input)
+    {
+        if (input.Value < Rating.MinValue || input.Value > Rating.MaxValue)
+            throw ApiException.BadRequest(
+                $"{nameof(Rating)} value must be between {Rating.MinValue} and {Rating.MaxValue}");
+
+        var item = await Db.Set<Item>()
+            .Where(x => x.Id == itemId)
+            .Include(x => x.Ratings)
+            .FirstOrDefaultAsync();
+
+        if (item is null)
+            throw ApiException.NotFound($"{nameof(Item)} with Id '{itemId}' is not found");
+
+        var rating = item.Ratings!.FirstOrDefault(x => x.UserId == input.UserId);
+
+        if (rating is null)
+        {
+            rating = input;
+            item.Ratings!.Add(rating);
+        }
+
+        if (rating.Value == 0)
+            item.Ratings!.Remove(rating);
+
+        return item;
     }
 }

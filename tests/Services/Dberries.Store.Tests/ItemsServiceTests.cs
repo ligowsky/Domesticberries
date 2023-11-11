@@ -226,4 +226,83 @@ public class ItemsServiceTests
         Task Action() => _itemsService.GetAvailabilityAsync(itemId);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
+
+    [Fact]
+    public async Task UpdateRating_ExistingItem_UpdatedItemRating()
+    {
+        // Arrange
+        var item = EntityGenerator.GenerateItem();
+        item = await _itemsService.AddAsync(item);
+        var random = new Random();
+        var ratingCount = random.Next(1, 10);
+
+        var ratings = Enumerable.Range(0, ratingCount)
+            .Select(_ =>
+            {
+                var value = (byte)random.Next(1, 5);
+                return EntityGenerator.GenerateRating(value);
+            }).ToList();
+
+        var averageRating = Math.Round((decimal)ratings.Average(x => x.Value)!);
+
+        // Act 
+        foreach (var rating in ratings)
+        {
+            await _itemsService.UpdateRatingAsync(item.Id!.Value, rating);
+        }
+
+        // Assert
+        var updatedItem = await _itemsService.GetAsync(item.Id!.Value);
+
+        Assert.NotNull(updatedItem);
+        Assert.Equal(item.Id, updatedItem.Id);
+        Assert.Equal(averageRating, updatedItem.AverageRating);
+    }
+
+    [Fact]
+    public async Task UpdateRating_ZeroValue_RemovesRating()
+    {
+        // Arrange
+        var item = EntityGenerator.GenerateItem();
+        item = await _itemsService.AddAsync(item);
+        var rating = EntityGenerator.GenerateRating(5);
+        await _itemsService.UpdateRatingAsync(item.Id!.Value, rating);
+        rating.Value = 0;
+
+        // Assert
+        var updatedItem = await _itemsService.UpdateRatingAsync(item.Id!.Value, rating);
+        var existingRating = updatedItem.Ratings!.FirstOrDefault(x => x.UserId == rating.UserId);
+
+        Assert.NotNull(updatedItem);
+        Assert.Equal(item.Id, updatedItem.Id);
+        Assert.Null(existingRating);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(6)]
+    public async Task UpdateRating_InvalidValue_ThrowsBadRequestApiException(int value)
+    {
+        // Arrange
+        var item = EntityGenerator.GenerateItem();
+        item = await _itemsService.AddAsync(item);
+        var rating = EntityGenerator.GenerateRating();
+        rating.Value = (byte)value;
+
+        // Assert
+        Task Action() => _itemsService.UpdateRatingAsync(item.Id!.Value, rating);
+        await Assert.ThrowsAsync<BadRequestApiException>(Action);
+    }
+
+    [Fact]
+    public async Task UpdateRating_NotExistingItem_ThrowsNotFoundApiException()
+    {
+        // Arrange
+        var itemId = Guid.NewGuid();
+        var rating = EntityGenerator.GenerateRating();
+
+        // Assert
+        Task Action() => _itemsService.UpdateRatingAsync(itemId, rating);
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
+    }
 }

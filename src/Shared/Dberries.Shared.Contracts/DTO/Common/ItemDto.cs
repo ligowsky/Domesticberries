@@ -13,8 +13,8 @@ public class ItemDto
     [JsonPropertyName("description")] 
     public string? Description { get; set; }
 
-    [JsonPropertyName("score")] 
-    public int? Score { get; set; }
+    [JsonPropertyName("averageRating")] 
+    public decimal? AverageRating { get; set; }
 
     [JsonPropertyName("locations")] 
     public IEnumerable<LocationDto>? Locations { get; set; }

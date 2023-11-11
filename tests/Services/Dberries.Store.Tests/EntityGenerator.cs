@@ -28,4 +28,10 @@ public static class EntityGenerator
             Quantity = quantity
         };
     }
+
+    public static Rating GenerateRating(byte value = 1)
+    {
+        var userId = Guid.NewGuid();
+        return new Rating(userId, value);
+    }
 }

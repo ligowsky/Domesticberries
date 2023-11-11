@@ -28,11 +28,7 @@ public class ItemsServiceTests
             await _itemsService.AddAsync(item);
         }
 
-        var pageRequest = new PageRequest()
-        {
-            Offset = 0,
-            Limit = itemsCount
-        };
+        var pageRequest = new PageRequest(0, itemsCount);
 
         // Act
         var itemsPage = await _itemsService.GetPageAsync(pageRequest);

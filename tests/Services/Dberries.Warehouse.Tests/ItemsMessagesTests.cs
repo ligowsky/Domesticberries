@@ -66,16 +66,16 @@ public class ItemsMessagesTests
         // Arrange
         var itemId = Guid.NewGuid();
         var item = EntityGenerator.GenerateItem();
-        Task Action() => _itemsService.UpdateAsync(itemId, item);
 
         // Assert
+        Task Action() => _itemsService.UpdateAsync(itemId, item);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
 
-        var isPublishesMessage = _harness.Published
+        var isMessagePublished = _harness.Published
             .Select<ItemUpdatedMessage>()
             .Any(x => x.Context.Message.Item.Id == item.Id);
 
-        Assert.False(isPublishesMessage);
+        Assert.False(isMessagePublished);
     }
 
     [Fact]
@@ -108,10 +108,10 @@ public class ItemsMessagesTests
         // Assert
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
 
-        var isPublishesMessage = _harness.Published
+        var isMessagePublished = _harness.Published
             .Select<ItemRemovedMessage>()
             .Any(x => x.Context.Message.Id == itemId);
 
-        Assert.False(isPublishesMessage);
+        Assert.False(isMessagePublished);
     }
 }

@@ -25,7 +25,7 @@ public class ItemsService : IItemsService
     {
         await _itemsRepository.AddAsync(item);
         await _itemsRepository.SaveChangesAsync();
-        
+
         return item;
     }
 
@@ -42,7 +42,7 @@ public class ItemsService : IItemsService
         var existingItem = await _itemsRepository.GetByExternalIdAsync(id);
 
         if (existingItem is null) return;
-        
+
         await _itemsRepository.RemoveAsync(existingItem);
 
         await _itemsRepository.SaveChangesAsync();
@@ -58,8 +58,12 @@ public class ItemsService : IItemsService
         return _itemsRepository.GetAvailabilityAsync(id);
     }
 
-    public Task<Item> UpdateRatingAsync(Guid itemId, Guid userId, byte value)
+    public async Task<Item> UpdateRatingAsync(Guid itemId, Rating rating)
     {
-        throw new NotImplementedException();
+        var item = await _itemsRepository.UpdateRatingAsync(itemId, rating);
+
+        await _itemsRepository.SaveChangesAsync();
+
+        return item;
     }
 }

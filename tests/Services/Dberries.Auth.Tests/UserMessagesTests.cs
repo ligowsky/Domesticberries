@@ -1,3 +1,4 @@
+using BitzArt.ApiExceptions;
 using MassTransit.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
