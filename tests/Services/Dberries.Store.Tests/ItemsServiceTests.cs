@@ -10,6 +10,7 @@ public class ItemsServiceTests
 {
     private readonly IItemsService _itemsService;
     private readonly ILocationsService _locationsService;
+    private readonly IUsersService _usersService;
     private readonly AppDbContext _db;
 
     public ItemsServiceTests(TestServiceContainer testServiceContainer)
@@ -17,6 +18,7 @@ public class ItemsServiceTests
         var serviceProvider = testServiceContainer.ServiceProvider;
         _itemsService = serviceProvider.GetRequiredService<IItemsService>();
         _locationsService = serviceProvider.GetRequiredService<ILocationsService>();
+        _usersService = serviceProvider.GetRequiredService<IUsersService>();
         _db = serviceProvider.GetRequiredService<AppDbContext>();
     }
 
@@ -243,11 +245,16 @@ public class ItemsServiceTests
                 return EntityGenerator.GenerateRating(value);
             }).ToList();
 
-        var averageRating = ratings.Average(x => x.Value)!;
+        var averageRating = Math.Round((decimal)ratings.Average(x => x.Value)!, 2);
 
         // Act 
         foreach (var rating in ratings)
         {
+            var user = EntityGenerator.GenerateUser();
+            user = await _usersService.AddAsync(user);
+
+            rating.UserId = user.ExternalId;
+
             await _itemsService.UpdateRatingAsync(item.Id!.Value, rating);
         }
 
@@ -265,17 +272,23 @@ public class ItemsServiceTests
         // Arrange
         var item = EntityGenerator.GenerateItem();
         item = await _itemsService.AddAsync(item);
-        var rating = EntityGenerator.GenerateRating(5);
+
+        var user = EntityGenerator.GenerateUser();
+        user = await _usersService.AddAsync(user);
+
+        var rating = EntityGenerator.GenerateRating(user.ExternalId);
+        
         await _itemsService.UpdateRatingAsync(item.Id!.Value, rating);
+        
         rating.Value = 0;
 
         // Assert
         var updatedItem = await _itemsService.UpdateRatingAsync(item.Id!.Value, rating);
-        var existingRating = updatedItem.Ratings!.FirstOrDefault(x => x.UserId == rating.UserId);
+        var ratingExists = updatedItem.Ratings!.Any(x => x.UserId == user.Id);
 
         Assert.NotNull(updatedItem);
         Assert.Equal(item.Id, updatedItem.Id);
-        Assert.Null(existingRating);
+        Assert.False(ratingExists);
     }
 
     [Theory]
@@ -286,8 +299,11 @@ public class ItemsServiceTests
         // Arrange
         var item = EntityGenerator.GenerateItem();
         item = await _itemsService.AddAsync(item);
-        var rating = EntityGenerator.GenerateRating();
-        rating.Value = (byte)value;
+
+        var user = EntityGenerator.GenerateUser();
+        user = await _usersService.AddAsync(user);
+
+        var rating = EntityGenerator.GenerateRating(user.Id, (byte)value);
 
         // Assert
         Task Action() => _itemsService.UpdateRatingAsync(item.Id!.Value, rating);
@@ -299,10 +315,30 @@ public class ItemsServiceTests
     {
         // Arrange
         var itemId = Guid.NewGuid();
-        var rating = EntityGenerator.GenerateRating();
+
+        var user = EntityGenerator.GenerateUser();
+        user = await _usersService.AddAsync(user);
+
+        var rating = EntityGenerator.GenerateRating(user.Id);
 
         // Assert
         Task Action() => _itemsService.UpdateRatingAsync(itemId, rating);
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
+    }
+
+    [Fact]
+    public async Task UpdateRating_NotExistingUser_ThrowsBadRequestApiException()
+    {
+        // Arrange
+        var item = EntityGenerator.GenerateItem();
+        item = await _itemsService.AddAsync(item);
+
+        var userId = Guid.NewGuid();
+
+        var rating = EntityGenerator.GenerateRating(userId);
+
+        // Assert
+        Task Action() => _itemsService.UpdateRatingAsync(item.Id!.Value, rating);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 }

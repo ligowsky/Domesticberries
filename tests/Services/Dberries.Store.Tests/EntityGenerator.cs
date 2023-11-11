@@ -35,6 +35,11 @@ public static class EntityGenerator
         return new Rating(userId, value);
     }
     
+    public static Rating GenerateRating(Guid? userId, byte value = 1)
+    {
+        return new Rating(userId, value);
+    }
+    
     public static User GenerateUser()
     {
         return new User
