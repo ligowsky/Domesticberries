@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Dberries.Auth.Infrastructure;
 
-internal class TokenConsumerService : ITokenClientService
+internal class TokenConsumerService : ITokenConsumerService
 {
     private readonly JwtSecurityTokenHandler _tokenHandler;
     private readonly TokenValidationParameters _accessTokenValidationParameters;
