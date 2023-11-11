@@ -318,7 +318,7 @@ public class ItemsServiceTests
         var user = EntityGenerator.GenerateUser();
         user = await _usersService.AddAsync(user);
 
-        var rating = EntityGenerator.GenerateRating(user.Id, 5);
+        var rating = EntityGenerator.GenerateRating(user.ExternalId, 5);
 
         // Assert
         Task Action() => _itemsService.UpdateRatingAsync(itemId, rating);
