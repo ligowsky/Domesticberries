@@ -9,13 +9,13 @@ namespace Dberries;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class TokenAuthorizeAttribute : Attribute, IAuthorizationFilter
 {
-    private ITokenConsumerService? _tokenService;
+    private IJwtService? _tokenService;
     private static TokenAuthConsumerOptions? _tokenAuthOptions;
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         _tokenService ??= context.HttpContext.RequestServices
-            .GetRequiredService<ITokenConsumerService>();
+            .GetRequiredService<IJwtService>();
         
         _tokenAuthOptions ??= context.HttpContext.RequestServices
             .GetRequiredService<TokenAuthConsumerOptions>();

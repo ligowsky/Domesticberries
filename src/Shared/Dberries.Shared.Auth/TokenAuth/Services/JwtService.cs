@@ -6,12 +6,12 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Dberries.Auth.Infrastructure;
 
-internal class TokenConsumerService : ITokenConsumerService
+internal class JwtService : IJwtService
 {
     private readonly JwtSecurityTokenHandler _tokenHandler;
     private readonly TokenValidationParameters _accessTokenValidationParameters;
 
-    public TokenConsumerService(IServiceProvider serviceProvider)
+    public JwtService(IServiceProvider serviceProvider)
     {
         var tokenAuthOptions = serviceProvider
             .GetRequiredService<TokenAuthConsumerOptions>();

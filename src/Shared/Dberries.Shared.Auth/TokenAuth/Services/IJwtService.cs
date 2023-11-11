@@ -1,6 +1,6 @@
 namespace Dberries;
 
-public interface ITokenConsumerService
+public interface IJwtService
 {
     public AccessTokenData GetAccessTokenData(string accessToken);
 }
