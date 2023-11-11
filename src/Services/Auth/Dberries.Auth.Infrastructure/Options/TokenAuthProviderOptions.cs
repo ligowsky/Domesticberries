@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Dberries.Auth;
+namespace Dberries.Auth.Infrastructure;
 
 public class TokenAuthProviderOptions
 {
