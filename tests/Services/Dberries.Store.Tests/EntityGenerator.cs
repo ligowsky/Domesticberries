@@ -34,4 +34,13 @@ public static class EntityGenerator
         var userId = Guid.NewGuid();
         return new Rating(userId, value);
     }
+    
+    public static User GenerateUser()
+    {
+        return new User
+        {
+            ExternalId = Guid.NewGuid(),
+            Email = $"{Guid.NewGuid()}@example.com",
+        };
+    }
 }
