@@ -70,7 +70,7 @@ public class TokenProviderService : ITokenProviderService
         return new AuthResponseDto(accessToken, refreshToken);
     }
     
-    public TokenData GetRefreshTokenData(string token)
+    public RefreshTokenData GetRefreshTokenData(string token)
     {
         try
         {
@@ -80,7 +80,7 @@ public class TokenProviderService : ITokenProviderService
 
             var userId = Guid.Parse(claims.First(x => x.Type == JwtRegisteredClaimNames.Sub).Value);
 
-            return new TokenData(userId);
+            return new RefreshTokenData(userId);
         }
         catch (Exception)
         {

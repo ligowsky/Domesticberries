@@ -2,5 +2,5 @@ namespace Dberries;
 
 public interface ITokenClientService
 {
-    public TokenData GetAccessTokenData(string accessToken);
+    public AccessTokenData GetAccessTokenData(string accessToken);
 }

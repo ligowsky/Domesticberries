@@ -9,7 +9,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Abstractions\Dberries.Shared.Abstractions.csproj" />
-      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Auth\Dberries.Shared.Auth.csproj" />
       <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Contracts\Dberries.Shared.Contracts.csproj" />
     </ItemGroup>
 

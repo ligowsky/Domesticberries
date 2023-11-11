@@ -32,7 +32,7 @@ internal class TokenClientService : ITokenClientService
         };
     }
 
-    public TokenData GetAccessTokenData(string token)
+    public AccessTokenData GetAccessTokenData(string token)
     {
         try
         {
@@ -42,7 +42,7 @@ internal class TokenClientService : ITokenClientService
 
             var userId = Guid.Parse(claims.First(x => x.Type == JwtRegisteredClaimNames.Sub).Value);
 
-            return new TokenData(userId);
+            return new AccessTokenData(userId);
         }
         catch (Exception)
         {

@@ -1,10 +1,10 @@
 namespace Dberries;
 
-public class TokenData
+public class RefreshTokenData
 {
     public Guid? UserId { get; set; }
 
-    public TokenData(Guid userId)
+    public RefreshTokenData(Guid userId)
     {
         UserId = userId;
     }
