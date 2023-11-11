@@ -10,6 +10,6 @@ public static class AddTokenAuthExtensions
     {
         DberriesApplicationOptions.Get<TokenAuthConsumerOptions>(services, configuration, "Auth");
 
-        services.AddSingleton<ITokenClientService, TokenClientService>();
+        services.AddSingleton<ITokenClientService, TokenConsumerService>();
     }
 }
