@@ -12,7 +12,7 @@ public class UsersController : ControllerBase
         _usersService = usersService;
     }
 
-    [HttpPost("signup")]
+    [HttpPost("signup", Name = "SignUp")]
     public async Task<IActionResult> SignUpAsync([FromBody] AuthRequestDto request)
     {
         var result = await _usersService.SignUpAsync(request);
@@ -20,10 +20,18 @@ public class UsersController : ControllerBase
         return Ok(result);
     }
     
-    [HttpPost("signin")]
+    [HttpPost("signin", Name = "SignIn")]
     public async Task<IActionResult> SignInAsync([FromBody] AuthRequestDto request)
     {
         var result = await _usersService.SignInAsync(request);
+
+        return Ok(result);
+    }
+    
+    [HttpPost("refresh", Name = "Refresh")]
+    public IActionResult Refresh([FromBody] RefreshTokenRequestDto request)
+    {
+        var result = _usersService.RefreshTokenAsync(request);
 
         return Ok(result);
     }

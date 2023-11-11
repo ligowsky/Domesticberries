@@ -15,4 +15,7 @@ public class TokenAuthProviderOptions
     
     [Required]
     public int AccessTokenDurationInMinutes { get; set; }
+    
+    [Required]
+    public int RefreshTokenDurationInMinutes { get; set; }
 }

@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using BitzArt;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Dberries.Auth.Infrastructure;
@@ -21,7 +20,7 @@ internal class TokenClientService : ITokenClientService
 
         var publicRsa = RSA.Create();
         var publicKey = Convert.FromBase64String(tokenAuthOptions.PublicKey!);
-        publicRsa.ImportRSAPublicKey(publicKey, out _);
+        publicRsa.ImportSubjectPublicKeyInfo(publicKey, out _);
 
         var publicSecurityKey = new RsaSecurityKey(publicRsa);
 
@@ -33,17 +32,17 @@ internal class TokenClientService : ITokenClientService
         };
     }
 
-    public AccessTokenData GetAccessTokenData(string accessToken)
+    public TokenData GetAccessTokenData(string token)
     {
         try
         {
-            _tokenHandler.ValidateToken(accessToken, _accessTokenValidationParameters, out _);
-            var jwt = _tokenHandler.ReadJwtToken(accessToken);
+            _tokenHandler.ValidateToken(token, _accessTokenValidationParameters, out _);
+            var jwt = _tokenHandler.ReadJwtToken(token);
             var claims = jwt.Claims.ToList();
 
             var userId = Guid.Parse(claims.First(x => x.Type == JwtRegisteredClaimNames.Sub).Value);
 
-            return new AccessTokenData(userId);
+            return new TokenData(userId);
         }
         catch (Exception)
         {

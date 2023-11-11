@@ -25,6 +25,7 @@ public class UsersServiceTests
         
         Assert.NotNull(response);
         Assert.NotNull(response.AccessToken);
+        Assert.NotNull(response.RefreshToken);
     }
     
     [Fact]
@@ -51,6 +52,7 @@ public class UsersServiceTests
         
         Assert.NotNull(response);
         Assert.NotNull(response.AccessToken);
+        Assert.NotNull(response.RefreshToken);
     }
     
     [Fact]
@@ -75,5 +77,36 @@ public class UsersServiceTests
         // Assert
         Task Action() => _usersService.SignInAsync(request);
         await Assert.ThrowsAsync<UnauthorizedApiException>(Action);
+    }
+    
+    [Fact]
+    public async Task RefreshToken_ValidToken_ReturnsAuthResponse()
+    {
+        // Arrange
+        var authRequest = EntityGenerator.GenerateAuthRequest();
+        var authResponse = await _usersService.SignUpAsync(authRequest);
+        var refreshToken = authResponse.RefreshToken;
+        var refreshTokenRequest = new RefreshTokenRequestDto(refreshToken!);
+        
+        // Assert
+        var refreshTokenResponse = _usersService.RefreshTokenAsync(refreshTokenRequest);
+        
+        Assert.NotNull(refreshTokenResponse);
+        Assert.NotNull(refreshTokenResponse.AccessToken);
+        Assert.NotNull(refreshTokenResponse.RefreshToken);
+    }
+    
+    [Fact]
+    public async Task RefreshToken_InvalidToken_ReturnsAuthResponse()
+    {
+        // Arrange
+        var authRequest = EntityGenerator.GenerateAuthRequest();
+        await _usersService.SignUpAsync(authRequest);
+        const string refreshToken = "InvalidRefreshToken";
+        var refreshTokenRequest = new RefreshTokenRequestDto(refreshToken);
+        
+        // Assert
+        void Action() => _usersService.RefreshTokenAsync(refreshTokenRequest); 
+        Assert.Throws<UnauthorizedApiException>(Action);
     }
 }

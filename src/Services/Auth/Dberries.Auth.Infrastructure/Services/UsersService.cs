@@ -31,9 +31,7 @@ public class UsersService : IUsersService
         var message = new UserAddedMessage(user.ToDto());
         await _publishEndpoint.Publish(message);
 
-        var accessToken = _tokenProviderService.GenerateAccessToken(user.Id!.Value);
-
-        return new AuthResponseDto(accessToken);
+        return _tokenProviderService.BuildAuthResponse(user.Id!.Value);
     }
 
     public async Task<AuthResponseDto> SignInAsync(AuthRequestDto request)
@@ -41,8 +39,12 @@ public class UsersService : IUsersService
         var user = await _usersRepository.GetByEmailAsync(request.Email!);
         _passwordService.Validate(request.Password!, user.PasswordHash!);
 
-        var accessToken = _tokenProviderService.GenerateAccessToken(user.Id!.Value);
+        return _tokenProviderService.BuildAuthResponse(user.Id!.Value);
+    }
 
-        return new AuthResponseDto(accessToken);
+    public AuthResponseDto RefreshTokenAsync(RefreshTokenRequestDto request)
+    {
+        var tokenData = _tokenProviderService.GetRefreshTokenData(request.RefreshToken!);
+        return _tokenProviderService.BuildAuthResponse(tokenData.UserId!.Value);
     }
 }

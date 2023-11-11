@@ -2,5 +2,6 @@ namespace Dberries;
 
 public interface ITokenProviderService
 {
-    public string GenerateAccessToken(Guid userId);
+    public AuthResponseDto BuildAuthResponse(Guid userId);
+    public TokenData GetRefreshTokenData(string token);
 }
