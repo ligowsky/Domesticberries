@@ -1,6 +1,6 @@
 namespace Dberries;
 
-public class RatingDto
+public class UpdateRatingRequestDto
 {
     public int? Value { get; set; }
 }

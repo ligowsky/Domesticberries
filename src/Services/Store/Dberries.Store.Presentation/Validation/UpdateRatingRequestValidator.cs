@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace Dberries.Store.Presentation;
 
-public class RatingValidator : AbstractValidator<RatingDto>
+public class RatingValidator : AbstractValidator<UpdateRatingRequestDto>
 {
     public RatingValidator()
     {
