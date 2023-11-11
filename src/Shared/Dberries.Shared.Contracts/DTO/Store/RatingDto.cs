@@ -2,5 +2,5 @@ namespace Dberries;
 
 public class RatingDto
 {
-    public byte? Value { get; set; }
+    public int? Value { get; set; }
 }

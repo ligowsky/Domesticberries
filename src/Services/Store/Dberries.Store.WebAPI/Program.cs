@@ -3,12 +3,14 @@ using BitzArt.ApiExceptions.AspNetCore;
 using Dberries;
 using Dberries.Store.Infrastructure;
 using Dberries.Store.Persistence;
+using Dberries.Store.Presentation;
 using Dberries.Store.WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddPersistence();
 builder.AddInfrastructure(typeof(IConsumersAssemblyPointer).Assembly);
+builder.Services.AddPresentation();
 
 builder.Services.AddApiExceptionHandler();
 

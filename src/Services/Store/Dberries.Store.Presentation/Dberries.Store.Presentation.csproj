@@ -7,7 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Validation\Dberries.Shared.Validation.csproj" />
         <ProjectReference Include="..\Dberries.Store.Core\Dberries.Store.Core.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="11.5.1" />
     </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dberries.Store.WebAPI;
 
 [Route("[Controller]")]
-public class ItemsController : ControllerBase
+public class ItemsController : DberriesController
 {
     private readonly IItemsService _itemsService;
 
@@ -54,8 +54,10 @@ public class ItemsController : ControllerBase
     [TokenAuthorize]
     public async Task<IActionResult> UpdateRatingAsync([FromRoute] Guid itemId, [FromBody] RatingDto dto)
     {
+        Validate(dto);
         var userId = HttpContext.GetUserId();
-        var updatedItem = await _itemsService.UpdateRatingAsync(itemId, userId, dto.Value!.Value);
+        var value = (byte)dto.Value!;
+        var updatedItem = await _itemsService.UpdateRatingAsync(itemId, userId, value);
         var result = updatedItem.ToDto();
 
         return Ok(result);
