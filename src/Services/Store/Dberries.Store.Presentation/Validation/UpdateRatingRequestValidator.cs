@@ -2,9 +2,9 @@ using FluentValidation;
 
 namespace Dberries.Store.Presentation;
 
-public class RatingValidator : AbstractValidator<UpdateRatingRequestDto>
+public class UpdateRatingRequestValidator : AbstractValidator<UpdateRatingRequestDto>
 {
-    public RatingValidator()
+    public UpdateRatingRequestValidator()
     {
         RuleFor(x => x.Value)
             .NotNull()

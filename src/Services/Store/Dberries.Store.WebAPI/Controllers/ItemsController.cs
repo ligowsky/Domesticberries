@@ -52,11 +52,11 @@ public class ItemsController : DberriesController
 
     [HttpPost("{itemId:guid}/rate", Name = "UpdateRating")]
     [TokenAuthorize]
-    public async Task<IActionResult> UpdateRatingAsync([FromRoute] Guid itemId, [FromBody] RatingDto dto)
+    public async Task<IActionResult> UpdateRatingAsync([FromRoute] Guid itemId, [FromBody] UpdateRatingRequestDto input)
     {
-        Validate(dto);
+        Validate(input);
         var userId = HttpContext.GetUserId();
-        var value = (byte)dto.Value!;
+        var value = (byte)input.Value!;
         var updatedItem = await _itemsService.UpdateRatingAsync(itemId, userId, value);
         var result = updatedItem.ToDto();
 
