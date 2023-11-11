@@ -18,7 +18,7 @@ public class UsersServiceTests
     public async Task Signup_NewUser_ReturnsAuthResponse()
     {
         // Arrange
-        var request = new AuthRequestDto("user1@example.com", "P@ssw0rd");
+        var request = EntityGenerator.GenerateAuthRequest();
         
         // Assert
         var response = await _usersService.SignUpAsync(request);
@@ -31,7 +31,7 @@ public class UsersServiceTests
     public async Task Signup_ExistingUser_ThrowsConflictApiException()
     {
         // Arrange
-        var request = new AuthRequestDto("user2@example.com", "P@ssw0rd");
+        var request = EntityGenerator.GenerateAuthRequest();
         await _usersService.SignUpAsync(request);
 
         // Assert
@@ -43,7 +43,7 @@ public class UsersServiceTests
     public async Task Signin_ExistingUser_ReturnsAuthResponse()
     {
         // Arrange
-        var request = new AuthRequestDto("user3@example.com", "P@ssw0rd");
+        var request = EntityGenerator.GenerateAuthRequest();
         await _usersService.SignUpAsync(request);
         
         // Assert
@@ -57,7 +57,7 @@ public class UsersServiceTests
     public async Task Signin_NotExistingUser_ThrowsUnauthorizedApiException()
     {
         // Arrange
-        var request = new AuthRequestDto("user4@example.com", "P@ssw0rd");
+        var request = EntityGenerator.GenerateAuthRequest();
 
         // Assert
         Task Action() => _usersService.SignInAsync(request);
@@ -68,7 +68,7 @@ public class UsersServiceTests
     public async Task Signin_InvalidPassword_ThrowsUnauthorizedApiException()
     {
         // Arrange
-        var request = new AuthRequestDto("user5@example.com", "P@ssw0rd");
+        var request = EntityGenerator.GenerateAuthRequest();
         await _usersService.SignUpAsync(request);
         request.Password = "Inv@l1dP@ssw0rd";
 

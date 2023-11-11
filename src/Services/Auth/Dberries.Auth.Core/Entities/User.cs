@@ -11,9 +11,8 @@ public class User : IEntity
         Email = email;
         PasswordHash = passwordHash;
     }
-    
+
     public User()
     {
-        
     }
 }

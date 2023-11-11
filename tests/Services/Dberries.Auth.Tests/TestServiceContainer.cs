@@ -1,5 +1,6 @@
 using Dberries.Auth.Infrastructure;
 using Dberries.Auth.Persistence;
+using MassTransit;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +39,8 @@ public class TestServiceContainer : IDisposable
         services.AddScoped<AppDbContext>(x => x.GetRequiredService<TestDbContext>());
         services.AddRepositories();
         services.AddServices();
+        
+        services.AddMassTransitTestHarness();
 
         _services = services.BuildServiceProvider();
 

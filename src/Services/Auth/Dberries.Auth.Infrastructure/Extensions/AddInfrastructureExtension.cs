@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,5 +10,6 @@ public static class AddInfrastructureExtension
     {
         services.AddTokenAuthProviderOptions(configuration);
         services.AddServices();
+        services.AddMessaging(configuration, Assembly.GetExecutingAssembly());
     }
 }

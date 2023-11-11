@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Auth\Dberries.Shared.Auth.csproj" />
+      <ProjectReference Include="..\..\..\Shared\Dberries.Shared.Messages\Dberries.Shared.Messages.csproj" />
       <ProjectReference Include="..\Dberries.Auth.Core\Dberries.Auth.Core.csproj" />
     </ItemGroup>
 
