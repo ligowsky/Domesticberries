@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dberries.Store.WebAPI;
 
 [Route("[Controller]")]
-[TokenAuthorize]
 public class ItemsController : ControllerBase
 {
     private readonly IItemsService _itemsService;
@@ -52,6 +51,7 @@ public class ItemsController : ControllerBase
     }
 
     [HttpPost("{itemId:guid}/rate", Name = "UpdateRating")]
+    [TokenAuthorize]
     public async Task<IActionResult> UpdateRatingAsync([FromRoute] Guid itemId, [FromBody] byte value)
     {
         var userId = HttpContext.GetUserId();

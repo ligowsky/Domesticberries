@@ -15,7 +15,7 @@ internal class TokenClientService : ITokenClientService
     public TokenClientService(IServiceProvider serviceProvider)
     {
         var tokenAuthOptions = serviceProvider
-            .GetRequiredService<TokenAuthClientOptions>();
+            .GetRequiredService<TokenAuthConsumerOptions>();
 
         _tokenHandler = new JwtSecurityTokenHandler();
 

@@ -10,7 +10,7 @@ namespace Dberries;
 public class TokenAuthorizeAttribute : Attribute, IAuthorizationFilter
 {
     private ITokenClientService? _tokenService;
-    private static TokenAuthClientOptions? _tokenAuthOptions;
+    private static TokenAuthConsumerOptions? _tokenAuthOptions;
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
@@ -18,7 +18,7 @@ public class TokenAuthorizeAttribute : Attribute, IAuthorizationFilter
             .GetRequiredService<ITokenClientService>();
         
         _tokenAuthOptions ??= context.HttpContext.RequestServices
-            .GetRequiredService<TokenAuthClientOptions>();
+            .GetRequiredService<TokenAuthConsumerOptions>();
 
         var accessToken = GetAccessToken(context.HttpContext.Request);
         

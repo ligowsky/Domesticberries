@@ -70,7 +70,7 @@ public class UsersServiceTests
         // Arrange
         var request = new AuthRequestDto("user5@example.com", "P@ssw0rd");
         await _usersService.SignUpAsync(request);
-        request.Password = "Inv@l1dP@ssword";
+        request.Password = "Inv@l1dP@ssw0rd";
 
         // Assert
         Task Action() => _usersService.SignInAsync(request);

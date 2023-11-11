@@ -6,14 +6,14 @@ public class User : IEntity
     public string? Email { get; set; }
     public string? PasswordHash { get; set; }
 
-    public User()
-    {
-        
-    }
-
     public User(string? email, string? passwordHash)
     {
         Email = email;
         PasswordHash = passwordHash;
+    }
+    
+    public User()
+    {
+        
     }
 }
