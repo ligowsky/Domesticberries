@@ -9,19 +9,22 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
     {
     }
 
-    public async Task<Location?> GetAsync(Guid id)
+    public async Task<Location?> GetAsync(IFilterSet<Location> filterSet)
     {
         return await Db.Set<Location>()
-            .Where(x => x.ExternalId! == id)
+            .Apply(filterSet)
             .FirstOrDefaultAsync();
     }
 
-    public async Task<Location> AddAsync(Location location)
+    public void Add(Location location)
     {
-        await Db.ThrowIfExistsByExternalIdAsync(typeof(Location), location.ExternalId!.Value);
         Db.Set<Location>().Add(location);
+    }
 
-        return location;
+    public void Update(Location existingLocation, Location location)
+    {
+        existingLocation.Patch(location)
+            .Property(x => x.Name);
     }
 
     public void Remove(Location location)
@@ -29,45 +32,41 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
         Db.Set<Location>().Remove(location);
     }
 
-    public async Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, int quantity)
+    public async Task UpdateStockAsync(IFilterSet<Location> filterSet, Stock input)
     {
-        if (quantity < 0)
-            throw ApiException.BadRequest($"Invalid quantity: {quantity}. Quantity must be greater than 0.");
-
-        var item = await Db.Set<Item>()
-            .Where(x => x.ExternalId == itemId)
-            .FirstOrDefaultAsync();
-
-        if (item is null)
-            throw ApiException.NotFound($"{nameof(Item)} with ExternalId '{itemId}' is not found");
-
-        var location = await Db.Set<Location>()
-            .Where(x => x.ExternalId == locationId)
-            .Include(x => x.Stock!
-                .Where(y => y.ItemId == item.Id))
-            .FirstOrDefaultAsync();
-
-        if (location is null)
-            throw ApiException.NotFound($"{nameof(Location)} with ExternalId '{locationId}' is not found");
-
-
-        var stock = location.Stock!.FirstOrDefault(x => x.ItemId == item.Id);
+        var location = await GetWithItemStock(filterSet, input.ItemId!.Value);
+        var stock = location.Stock!.FirstOrDefault(x => x.ItemId == input.ItemId);
 
         if (stock is null)
         {
-            stock = new Stock
-            {
-                ItemId = item.Id,
-            };
-
-            location.Stock!.Add(stock);
+            location.Stock!.Add(input);
         }
+        else
+        {
+            stock.Quantity = input.Quantity;
+        }
+    }
 
-        stock.Quantity = quantity;
+    public async Task RemoveStockAsync(IFilterSet<Location> filterSet, Guid itemId)
+    {
+        var location = await GetWithItemStock(filterSet, itemId);
+        var stock = location.Stock!.FirstOrDefault(x => x.ItemId == itemId);
 
-        if (quantity == 0)
+        if (stock is not null)
             location.Stock!.Remove(stock);
+    }
 
-        return stock;
+    private async Task<Location> GetWithItemStock(IFilterSet<Location> filterSet, Guid itemId)
+    {
+        var location = await Db.Set<Location>()
+            .Apply(filterSet)
+            .Include(x => x.Stock!
+                .Where(y => y.ItemId == itemId))
+            .FirstOrDefaultAsync();
+
+        if (location is null)
+            throw ApiException.NotFound($"{nameof(Location)} is not found");
+
+        return location;
     }
 }

@@ -15,6 +15,8 @@ public class LocationAddedMessageConsumer : IConsumer<LocationAddedMessage>
     public async Task Consume(ConsumeContext<LocationAddedMessage> context)
     {
         var location = context.Message.Location.ToModel();
-        await _locationsService.AddAsync(location);
+        var filter = new LocationFilterSet { ExternalId = location.Id };
+
+        await _locationsService.AddAsync(filter, location);
     }
 }

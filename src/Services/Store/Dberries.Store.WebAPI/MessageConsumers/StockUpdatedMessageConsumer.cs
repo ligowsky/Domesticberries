@@ -14,12 +14,10 @@ public class StockUpdatedMessageConsumer : IConsumer<StockUpdatedMessage>
 
     public async Task Consume(ConsumeContext<StockUpdatedMessage> context)
     {
-        var message = context.Message;
-        var locationId = message.LocationId;
-        var stock = message.Stock;
-        var itemId = stock!.ItemId!.Value;
-        var quantity = stock.Quantity!.Value;
+        var locationFilter = new LocationFilterSet { ExternalId = context.Message.LocationId };
+        var itemFilter = new ItemFilterSet { ExternalId = context.Message.Stock!.ItemId };
+        var quantity = context.Message.Stock.Quantity!.Value;
 
-        await _locationsService.UpdateStockAsync(locationId, itemId, quantity);
+        await _locationsService.UpdateStockAsync(locationFilter, itemFilter, quantity);
     }
 }

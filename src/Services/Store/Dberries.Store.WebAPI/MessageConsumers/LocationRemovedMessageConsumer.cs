@@ -15,6 +15,8 @@ public class LocationRemovedMessageConsumer : IConsumer<LocationRemovedMessage>
     public async Task Consume(ConsumeContext<LocationRemovedMessage> context)
     {
         var id = context.Message.Id;
-        await _locationsService.RemoveAsync(id);
+        var filter = new LocationFilterSet { ExternalId = id };
+        
+        await _locationsService.RemoveAsync(filter);
     }
 }

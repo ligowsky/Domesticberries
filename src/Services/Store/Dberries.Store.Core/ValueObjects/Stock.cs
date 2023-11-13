@@ -6,8 +6,13 @@ public class Stock
     public Item? Item { get; set; }
     public int? Quantity { get; set; }
 
-    public void Update(Stock input)
+    public Stock(Guid itemId, int quantity)
     {
-        Quantity = input.Quantity ?? Quantity;
+        ItemId = itemId;
+        Quantity = quantity;
+    }
+
+    public Stock()
+    {
     }
 }
