@@ -56,12 +56,12 @@ public class UsersServiceTests
 
         // Assert
         filter = new UserFilterSet { Id = user.Id };
-        var returnedUser = await _usersService.GetAsync(filter);
+        var addedUser = await _usersService.GetAsync(filter);
 
-        Assert.NotNull(returnedUser);
-        Assert.Equal(user.Id, returnedUser.Id);
-        Assert.Equal(user.ExternalId, returnedUser.ExternalId);
-        Assert.Equal(user.Email, returnedUser.Email);
+        Assert.NotNull(addedUser);
+        Assert.Equal(user.Id, addedUser.Id);
+        Assert.Equal(user.ExternalId, addedUser.ExternalId);
+        Assert.Equal(user.Email, addedUser.Email);
     }
 
     [Fact]

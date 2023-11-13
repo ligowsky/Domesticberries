@@ -18,7 +18,7 @@ public class LocationsService : ILocationsService
         var existingLocation = await _locationsRepository.GetAsync(filter);
 
         if (existingLocation is not null)
-            return existingLocation;
+            throw ApiException.Conflict($"{nameof(Location)} already exists");
 
         _locationsRepository.Add(location);
         await _locationsRepository.SaveChangesAsync();

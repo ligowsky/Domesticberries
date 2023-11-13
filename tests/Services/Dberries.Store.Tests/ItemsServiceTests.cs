@@ -92,14 +92,13 @@ public class ItemsServiceTests
 
         // Assert
         filter = new ItemFilterSet { Id = item.Id };
-        var returnedItem = await _itemsService.GetAsync(filter);
+        var addedItem = await _itemsService.GetAsync(filter);
 
-        Assert.NotNull(returnedItem);
-        Assert.Equal(item.Id, returnedItem.Id);
-        Assert.Equal(item.ExternalId, returnedItem.ExternalId);
-        Assert.Equal(item.Name, returnedItem.Name);
-        Assert.Equal(item.Description, returnedItem.Description);
-        Assert.NotNull(returnedItem.AverageRating);
+        Assert.NotNull(addedItem);
+        Assert.Equal(item.Id, addedItem.Id);
+        Assert.Equal(item.ExternalId, addedItem.ExternalId);
+        Assert.Equal(item.Name, addedItem.Name);
+        Assert.Equal(item.Description, addedItem.Description);
     }
 
     [Fact]
@@ -134,14 +133,13 @@ public class ItemsServiceTests
 
         // Assert
         filter = new ItemFilterSet { Id = item.Id };
-        var returnedItem = await _itemsService.GetAsync(filter);
+        var updatedItem = await _itemsService.GetAsync(filter);
 
-        Assert.NotNull(returnedItem);
-        Assert.Equal(item.Id, returnedItem.Id);
-        Assert.Equal(item.ExternalId, returnedItem.ExternalId);
-        Assert.Equal(item.Name, returnedItem.Name);
-        Assert.Equal(item.Description, returnedItem.Description);
-        Assert.NotNull(returnedItem.AverageRating);
+        Assert.NotNull(updatedItem);
+        Assert.Equal(item.Id, updatedItem.Id);
+        Assert.Equal(item.ExternalId, updatedItem.ExternalId);
+        Assert.Equal(item.Name, updatedItem.Name);
+        Assert.Equal(item.Description, updatedItem.Description);
     }
 
     [Fact]
@@ -156,14 +154,13 @@ public class ItemsServiceTests
 
         // Assert
         filter = new ItemFilterSet { Id = item.Id };
-        var returnedItem = await _itemsService.GetAsync(filter);
+        var addedItem = await _itemsService.GetAsync(filter);
 
-        Assert.NotNull(returnedItem);
-        Assert.Equal(item.Id, returnedItem.Id);
-        Assert.Equal(item.ExternalId, returnedItem.ExternalId);
-        Assert.Equal(item.Name, returnedItem.Name);
-        Assert.Equal(item.Description, returnedItem.Description);
-        Assert.NotNull(returnedItem.AverageRating);
+        Assert.NotNull(addedItem);
+        Assert.Equal(item.Id, addedItem.Id);
+        Assert.Equal(item.ExternalId, addedItem.ExternalId);
+        Assert.Equal(item.Name, addedItem.Name);
+        Assert.Equal(item.Description, addedItem.Description);
     }
 
     [Fact]
@@ -185,7 +182,7 @@ public class ItemsServiceTests
     }
 
     [Fact]
-    public async Task RemoveItem_NotExistingItem_DoesNotThrowNotFoundApiException()
+    public async Task RemoveItem_NotExistingItem_DoesNotThrowException()
     {
         // Arrange
         var filter = new ItemFilterSet { ExternalId = Guid.NewGuid() };
@@ -208,7 +205,7 @@ public class ItemsServiceTests
         var itemsQuantity = _random.Next(1, 5);
 
         var locations = Enumerable.Range(0, locationsCount)
-            .Select(EntityGenerator.GenerateLocation).ToList();
+            .Select(_ => EntityGenerator.GenerateLocation()).ToList();
 
         foreach (var location in locations)
         {
@@ -289,6 +286,38 @@ public class ItemsServiceTests
         Assert.Equal(item.ExternalId, returnedItem.ExternalId);
         Assert.NotNull(returnedItem.AverageRating);
         Assert.Equal(averageRating, returnedItem.AverageRating);
+    }
+
+    [Fact]
+    public async Task UpdateRating_ExistingRating_UpdatedItemRating()
+    {
+        // Arrange
+        var item = EntityGenerator.GenerateItem();
+        var itemFilter = new ItemFilterSet { ExternalId = item.ExternalId };
+        item = await _itemsService.AddAsync(itemFilter, item);
+
+        var user = EntityGenerator.GenerateUser();
+        var userFilter = new UserFilterSet { ExternalId = user.ExternalId };
+        await _usersService.AddAsync(userFilter, user);
+
+        var value = (byte)_random.Next(1, 5);
+        
+        await _itemsService.UpdateRatingAsync(itemFilter, userFilter, value);
+
+        value = (byte)_random.Next(1, 5);
+        itemFilter = new ItemFilterSet { Id = item.Id };
+
+        // Act 
+        await _itemsService.UpdateRatingAsync(itemFilter, userFilter, value);
+
+        // Assert
+        var returnedItem = await _itemsService.GetAsync(itemFilter);
+
+        Assert.NotNull(returnedItem);
+        Assert.Equal(item.Id, returnedItem.Id);
+        Assert.Equal(item.ExternalId, returnedItem.ExternalId);
+        Assert.NotNull(returnedItem.AverageRating);
+        Assert.Equal(value, returnedItem.AverageRating);
     }
 
     [Fact]
