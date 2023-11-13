@@ -1,3 +1,4 @@
+using BitzArt;
 using BitzArt.Pagination;
 
 namespace Dberries.Store.Infrastructure;
@@ -5,12 +6,12 @@ namespace Dberries.Store.Infrastructure;
 public class ItemsService : IItemsService
 {
     private readonly IItemsRepository _itemsRepository;
-    private readonly IUsersRepository _usersRepository;
+    private readonly IUsersService _usersService;
 
-    public ItemsService(IItemsRepository itemsRepository, IUsersRepository usersRepository)
+    public ItemsService(IItemsRepository itemsRepository, IUsersService usersService)
     {
         _itemsRepository = itemsRepository;
-        _usersRepository = usersRepository;
+        _usersService = usersService;
     }
 
     public async Task<PageResult<Item>> GetPageAsync(PageRequest pageRequest)
@@ -18,35 +19,54 @@ public class ItemsService : IItemsService
         return await _itemsRepository.GetPageAsync(pageRequest);
     }
 
-    public async Task<Item> GetAsync(Guid id)
+    public async Task<Item> GetAsync(IFilterSet<Item> filterSet)
     {
-        return await _itemsRepository.GetAsync(id);
-    }
+        var item = await _itemsRepository.GetAsync(filterSet);
 
-    public async Task<Item> AddAsync(Item item)
-    {
-        await _itemsRepository.AddAsync(item);
-        await _itemsRepository.SaveChangesAsync();
+        if (item is null)
+            throw ApiException.NotFound($"{nameof(Item)} is not found");
 
         return item;
     }
 
-    public async Task<Item> UpdateAsync(Item item)
+    public async Task<Item> AddAsync(IFilterSet<Item> filterSet, Item item)
     {
-        var updatedItem = await _itemsRepository.UpdateAsync(item);
+        var existingItem = await _itemsRepository.GetAsync(filterSet);
+
+        if (existingItem is not null)
+            return existingItem;
+
+        await _itemsRepository.AddAsync(item);
         await _itemsRepository.SaveChangesAsync();
 
-        return updatedItem;
+        return await GetAsync(filterSet);
     }
 
-    public async Task RemoveAsync(Guid id)
+    public async Task<Item> UpdateAsync(IFilterSet<Item> filterSet, Item item)
     {
-        var existingItem = await _itemsRepository.GetByExternalIdAsync(id);
+        var existingItem = await _itemsRepository.GetAsync(filterSet);
+
+        if (existingItem is null)
+        {
+            await _itemsRepository.AddAsync(item);
+        }
+        else
+        {
+            await _itemsRepository.UpdateAsync(existingItem, item);
+        }
+
+        await _itemsRepository.SaveChangesAsync();
+
+        return await GetAsync(filterSet);
+    }
+
+    public async Task RemoveAsync(IFilterSet<Item> filterSet)
+    {
+        var existingItem = await _itemsRepository.GetAsync(filterSet);
 
         if (existingItem is null) return;
 
         await _itemsRepository.RemoveAsync(existingItem);
-
         await _itemsRepository.SaveChangesAsync();
     }
 
@@ -60,16 +80,25 @@ public class ItemsService : IItemsService
         return _itemsRepository.GetAvailabilityAsync(id);
     }
 
-    public async Task<Item> UpdateRatingAsync(Guid itemId, Rating rating)
+    public async Task<Item> UpdateRatingAsync(IFilterSet<Item> itemFilterSet, IFilterSet<User> userFilterSet,
+        byte value)
     {
-        var user = await _usersRepository.GetByExternalIdAsync(rating.UserId!.Value);
+        var user = await _usersService.GetAsync(userFilterSet);
+        var rating = new Rating(user.Id!.Value, value);
 
-        rating = new Rating(user.Id, rating.Value);
-        
-        var item = await _itemsRepository.UpdateRatingAsync(itemId, rating);
-
+        await _itemsRepository.UpdateRatingAsync(itemFilterSet, rating);
         await _itemsRepository.SaveChangesAsync();
 
-        return item;
+        return await GetAsync(itemFilterSet);
+    }
+
+    public async Task<Item> RemoveRatingAsync(IFilterSet<Item> filterSet, IFilterSet<User> userFilterSet)
+    {
+        var user = await _usersService.GetAsync(userFilterSet);
+
+        await _itemsRepository.RemoveRatingAsync(filterSet, user.Id!.Value);
+        await _itemsRepository.SaveChangesAsync();
+
+        return await GetAsync(filterSet);
     }
 }

@@ -25,7 +25,9 @@ public class ItemsController : DberriesController
     [HttpGet("{id:guid}", Name = "GetItem")]
     public async Task<IActionResult> GetAsync([FromRoute] Guid id)
     {
-        var item = await _itemsService.GetAsync(id);
+        var filter = new ItemFilterSet { Id = id };
+        
+        var item = await _itemsService.GetAsync(filter);
         var result = item.ToDto();
 
         return Ok(result);
@@ -55,9 +57,12 @@ public class ItemsController : DberriesController
     public async Task<IActionResult> UpdateRatingAsync([FromRoute] Guid itemId, [FromBody] UpdateRatingRequestDto input)
     {
         Validate(input);
-        var userId = HttpContext.GetUserId();
-        var rating = input.ToModel(userId);
-        var updatedItem = await _itemsService.UpdateRatingAsync(itemId, rating);
+
+        var itemFilter = new ItemFilterSet { Id = itemId };
+        var userFilter = new UserFilterSet { ExternalId = HttpContext.GetUserId() };
+        var value = (byte)input.Value!;
+
+        var updatedItem = await _itemsService.UpdateRatingAsync(itemFilter, userFilter, value);
         var result = updatedItem.ToDto();
 
         return Ok(result);
