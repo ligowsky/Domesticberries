@@ -26,7 +26,7 @@ public class UsersService : IUsersService
         var existingUser = await _usersRepository.GetAsync(filter);
 
         if (existingUser is not null)
-            return existingUser;
+            throw ApiException.Conflict($"{nameof(User)} already exists");
 
         _usersRepository.Add(user);
         await _usersRepository.SaveChangesAsync();

@@ -19,11 +19,14 @@ public class UsersServiceTests
     {
         // Arrange
         var user = EntityGenerator.GenerateUser();
-        await _usersService.AddAsync(user);
+        var filter = new UserFilterSet { ExternalId = user.ExternalId };
+        user = await _usersService.AddAsync(filter, user);
+        filter = new UserFilterSet { Id = user.Id };
+
+        // Act
+        var returnedUser = await _usersService.GetAsync(filter);
 
         // Assert
-        var returnedUser = await _usersService.GetAsync(user.Id!.Value);
-
         Assert.NotNull(returnedUser);
         Assert.Equal(user.Id, returnedUser.Id);
         Assert.Equal(user.ExternalId, returnedUser.ExternalId);
@@ -34,10 +37,12 @@ public class UsersServiceTests
     public async Task GetUser_NotExistingUser_ThrowsNotFoundApiException()
     {
         // Arrange
-        var userId = Guid.NewGuid();
+        var filter = new UserFilterSet { Id = Guid.NewGuid() };
+
+        // Act 
+        Task Action() => _usersService.GetAsync(filter);
 
         // Assert
-        Task Action() => _usersService.GetAsync(userId);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 
@@ -46,27 +51,33 @@ public class UsersServiceTests
     {
         // Arrange
         var user = EntityGenerator.GenerateUser();
+        var filter = new UserFilterSet { ExternalId = user.ExternalId };
 
         // Act
-        await _usersService.AddAsync(user);
+        user = await _usersService.AddAsync(filter, user);
 
         // Assert
-        var addedUser = await _usersService.GetAsync(user.Id!.Value);
+        filter = new UserFilterSet { Id = user.Id };
+        var returnedUser = await _usersService.GetAsync(filter);
 
-        Assert.NotNull(addedUser);
-        Assert.Equal(user.ExternalId, addedUser.ExternalId);
-        Assert.Equal(user.Email, addedUser.Email);
+        Assert.NotNull(returnedUser);
+        Assert.Equal(user.Id, returnedUser.Id);
+        Assert.Equal(user.ExternalId, returnedUser.ExternalId);
+        Assert.Equal(user.Email, returnedUser.Email);
     }
 
     [Fact]
-    public async Task AddUser_ExistingUser_ThrowsBadRequestApiException()
+    public async Task AddUser_ExistingUser_ThrowsConflictApiException()
     {
         // Arrange
         var user = EntityGenerator.GenerateUser();
-        await _usersService.AddAsync(user);
-
+        var filter = new UserFilterSet { ExternalId = user.ExternalId };
+        await _usersService.AddAsync(filter, user);
+    
+        // Act
+        Task Action() => _usersService.AddAsync(filter, user);
+        
         // Assert
-        Task Action() => _usersService.AddAsync(user);
-        await Assert.ThrowsAsync<BadRequestApiException>(Action);
+        await Assert.ThrowsAsync<ConflictApiException>(Action);
     }
 }

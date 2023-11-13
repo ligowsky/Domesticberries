@@ -79,8 +79,7 @@ public class ItemsService : IItemsService
         return _itemsRepository.GetAvailabilityAsync(id);
     }
 
-    public async Task<Item> UpdateRatingAsync(IFilterSet<Item> itemFilter, IFilterSet<User> userFilter,
-        byte value)
+    public async Task<Item> UpdateRatingAsync(IFilterSet<Item> itemFilter, IFilterSet<User> userFilter, byte value)
     {
         var user = await _usersService.GetAsync(userFilter);
         var rating = new Rating(user.Id!.Value, value);
