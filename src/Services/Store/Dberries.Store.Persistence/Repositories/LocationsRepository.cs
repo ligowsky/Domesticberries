@@ -9,10 +9,10 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
     {
     }
 
-    public async Task<Location?> GetAsync(IFilterSet<Location> filterSet)
+    public async Task<Location?> GetAsync(IFilterSet<Location> filter)
     {
         return await Db.Set<Location>()
-            .Apply(filterSet)
+            .Apply(filter)
             .FirstOrDefaultAsync();
     }
 
@@ -32,9 +32,9 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
         Db.Set<Location>().Remove(location);
     }
 
-    public async Task UpdateStockAsync(IFilterSet<Location> filterSet, Stock input)
+    public async Task UpdateStockAsync(IFilterSet<Location> filter, Stock input)
     {
-        var location = await GetWithItemStock(filterSet, input.ItemId!.Value);
+        var location = await GetWithItemStock(filter, input.ItemId!.Value);
         var stock = location.Stock!.FirstOrDefault(x => x.ItemId == input.ItemId);
 
         if (stock is null)
@@ -47,19 +47,19 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
         }
     }
 
-    public async Task RemoveStockAsync(IFilterSet<Location> filterSet, Guid itemId)
+    public async Task RemoveStockAsync(IFilterSet<Location> filter, Guid itemId)
     {
-        var location = await GetWithItemStock(filterSet, itemId);
+        var location = await GetWithItemStock(filter, itemId);
         var stock = location.Stock!.FirstOrDefault(x => x.ItemId == itemId);
 
         if (stock is not null)
             location.Stock!.Remove(stock);
     }
 
-    private async Task<Location> GetWithItemStock(IFilterSet<Location> filterSet, Guid itemId)
+    private async Task<Location> GetWithItemStock(IFilterSet<Location> filter, Guid itemId)
     {
         var location = await Db.Set<Location>()
-            .Apply(filterSet)
+            .Apply(filter)
             .Include(x => x.Stock!
                 .Where(y => y.ItemId == itemId))
             .FirstOrDefaultAsync();

@@ -4,6 +4,6 @@ namespace Dberries.Store;
 
 public interface IUsersService
 {
-    public Task<User> GetAsync(IFilterSet<User> filterSet);
-    public Task<User> AddAsync(IFilterSet<User> filterSet, User user);
+    public Task<User> GetAsync(IFilterSet<User> filter);
+    public Task<User> AddAsync(IFilterSet<User> filter, User user);
 }

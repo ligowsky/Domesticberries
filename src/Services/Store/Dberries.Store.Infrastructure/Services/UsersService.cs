@@ -11,9 +11,9 @@ public class UsersService : IUsersService
         _usersRepository = usersRepository;
     }
 
-    public async Task<User> GetAsync(IFilterSet<User> filterSet)
+    public async Task<User> GetAsync(IFilterSet<User> filter)
     {
-        var user = await _usersRepository.GetAsync(filterSet);
+        var user = await _usersRepository.GetAsync(filter);
 
         if (user is null)
             throw ApiException.NotFound($"{nameof(User)} is not found");
@@ -21,11 +21,11 @@ public class UsersService : IUsersService
         return user;
     }
 
-    public async Task<User> AddAsync(IFilterSet<User> filterSet, User user)
+    public async Task<User> AddAsync(IFilterSet<User> filter, User user)
     {
         await _usersRepository.AddAsync(user);
         await _usersRepository.SaveChangesAsync();
 
-        return await GetAsync(filterSet);
+        return await GetAsync(filter);
     }
 }

@@ -9,10 +9,10 @@ public class UsersRepository : RepositoryBase, IUsersRepository
     {
     }
 
-    public async Task<User?> GetAsync(IFilterSet<User> filterSet)
+    public async Task<User?> GetAsync(IFilterSet<User> filter)
     {
         return await Db.Set<User>()
-            .Apply(filterSet)
+            .Apply(filter)
             .FirstOrDefaultAsync();
     }
 

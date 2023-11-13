@@ -21,16 +21,16 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             .ToPageAsync(pageRequest);
     }
 
-    public async Task<Item?> GetAsync(IFilterSet<Item> filterSet)
+    public async Task<Item?> GetAsync(IFilterSet<Item> filter)
     {
         var item = await Db.Set<Item>()
-            .Apply(filterSet)
+            .Apply(filter)
             .FirstOrDefaultAsync();
 
         if (item is not null)
         {
             var averageRating = await Db.Set<Item>()
-                .Apply(filterSet)
+                .Apply(filter)
                 .SelectMany(x => x.Ratings!)
                 .AverageAsync(x => x.Value!.Value);
 
@@ -87,7 +87,7 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         existingItem.Patch(item)
             .Property(x => x.Name)
             .Property(x => x.Description);
-        
+
         await IndexAsync(existingItem);
     }
 
@@ -116,9 +116,9 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         return new ItemAvailabilityResponse(availableInLocations);
     }
 
-    public async Task UpdateRatingAsync(IFilterSet<Item> filterSet, Rating input)
+    public async Task UpdateRatingAsync(IFilterSet<Item> filter, Rating input)
     {
-        var item = await GetWithUserRatingAsync(filterSet, input.UserId!.Value);
+        var item = await GetWithUserRatingAsync(filter, input.UserId!.Value);
         var rating = item.Ratings!.FirstOrDefault(x => x.UserId == input.UserId!.Value);
 
         if (rating is null)
@@ -130,20 +130,20 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             rating.Value = input.Value;
         }
     }
-    
-    public async Task RemoveRatingAsync(IFilterSet<Item> filterSet, Guid userId)
+
+    public async Task RemoveRatingAsync(IFilterSet<Item> filter, Guid userId)
     {
-        var item = await GetWithUserRatingAsync(filterSet, userId);
+        var item = await GetWithUserRatingAsync(filter, userId);
         var rating = item.Ratings!.FirstOrDefault(x => x.UserId == userId);
 
         if (rating is not null)
             item.Ratings!.Remove(rating);
     }
-    
-    private async Task<Item> GetWithUserRatingAsync(IFilterSet<Item> filterSet, Guid userId)
+
+    private async Task<Item> GetWithUserRatingAsync(IFilterSet<Item> filter, Guid userId)
     {
         var item = await Db.Set<Item>()
-            .Apply(filterSet)
+            .Apply(filter)
             .Include(x => x.Ratings!
                 .Where(y => y.UserId == userId)
             )

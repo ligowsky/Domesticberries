@@ -19,9 +19,9 @@ public class ItemsService : IItemsService
         return await _itemsRepository.GetPageAsync(pageRequest);
     }
 
-    public async Task<Item> GetAsync(IFilterSet<Item> filterSet)
+    public async Task<Item> GetAsync(IFilterSet<Item> filter)
     {
-        var item = await _itemsRepository.GetAsync(filterSet);
+        var item = await _itemsRepository.GetAsync(filter);
 
         if (item is null)
             throw ApiException.NotFound($"{nameof(Item)} is not found");
@@ -29,9 +29,9 @@ public class ItemsService : IItemsService
         return item;
     }
 
-    public async Task<Item> AddAsync(IFilterSet<Item> filterSet, Item item)
+    public async Task<Item> AddAsync(IFilterSet<Item> filter, Item item)
     {
-        var existingItem = await _itemsRepository.GetAsync(filterSet);
+        var existingItem = await _itemsRepository.GetAsync(filter);
 
         if (existingItem is not null)
             return existingItem;
@@ -39,12 +39,12 @@ public class ItemsService : IItemsService
         await _itemsRepository.AddAsync(item);
         await _itemsRepository.SaveChangesAsync();
 
-        return await GetAsync(filterSet);
+        return await GetAsync(filter);
     }
 
-    public async Task<Item> UpdateAsync(IFilterSet<Item> filterSet, Item item)
+    public async Task<Item> UpdateAsync(IFilterSet<Item> filter, Item item)
     {
-        var existingItem = await _itemsRepository.GetAsync(filterSet);
+        var existingItem = await _itemsRepository.GetAsync(filter);
 
         if (existingItem is null)
         {
@@ -57,12 +57,12 @@ public class ItemsService : IItemsService
 
         await _itemsRepository.SaveChangesAsync();
 
-        return await GetAsync(filterSet);
+        return await GetAsync(filter);
     }
 
-    public async Task RemoveAsync(IFilterSet<Item> filterSet)
+    public async Task RemoveAsync(IFilterSet<Item> filter)
     {
-        var existingItem = await _itemsRepository.GetAsync(filterSet);
+        var existingItem = await _itemsRepository.GetAsync(filter);
 
         if (existingItem is null) return;
 
@@ -80,25 +80,25 @@ public class ItemsService : IItemsService
         return _itemsRepository.GetAvailabilityAsync(id);
     }
 
-    public async Task<Item> UpdateRatingAsync(IFilterSet<Item> itemFilterSet, IFilterSet<User> userFilterSet,
+    public async Task<Item> UpdateRatingAsync(IFilterSet<Item> itemFilter, IFilterSet<User> userFilter,
         byte value)
     {
-        var user = await _usersService.GetAsync(userFilterSet);
+        var user = await _usersService.GetAsync(userFilter);
         var rating = new Rating(user.Id!.Value, value);
 
-        await _itemsRepository.UpdateRatingAsync(itemFilterSet, rating);
+        await _itemsRepository.UpdateRatingAsync(itemFilter, rating);
         await _itemsRepository.SaveChangesAsync();
 
-        return await GetAsync(itemFilterSet);
+        return await GetAsync(itemFilter);
     }
 
-    public async Task<Item> RemoveRatingAsync(IFilterSet<Item> filterSet, IFilterSet<User> userFilterSet)
+    public async Task<Item> RemoveRatingAsync(IFilterSet<Item> filter, IFilterSet<User> userFilter)
     {
-        var user = await _usersService.GetAsync(userFilterSet);
+        var user = await _usersService.GetAsync(userFilter);
 
-        await _itemsRepository.RemoveRatingAsync(filterSet, user.Id!.Value);
+        await _itemsRepository.RemoveRatingAsync(filter, user.Id!.Value);
         await _itemsRepository.SaveChangesAsync();
 
-        return await GetAsync(filterSet);
+        return await GetAsync(filter);
     }
 }
