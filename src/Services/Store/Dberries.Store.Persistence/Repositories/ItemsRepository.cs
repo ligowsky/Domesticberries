@@ -32,7 +32,9 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
             var averageRating = await Db.Set<Item>()
                 .Apply(filter)
                 .SelectMany(x => x.Ratings!)
-                .AverageAsync(x => x.Value!.Value);
+                .Select(x => x.Value!.Value)
+                .DefaultIfEmpty()
+                .AverageAsync(x => x);
 
             item.AverageRating = (decimal?)Math.Round(averageRating, 2);
         }

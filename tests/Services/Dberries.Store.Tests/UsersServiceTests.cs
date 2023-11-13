@@ -38,11 +38,9 @@ public class UsersServiceTests
     {
         // Arrange
         var filter = new UserFilterSet { Id = Guid.NewGuid() };
-
-        // Act 
-        Task Action() => _usersService.GetAsync(filter);
-
+        
         // Assert
+        Task Action() => _usersService.GetAsync(filter);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 
@@ -73,11 +71,9 @@ public class UsersServiceTests
         var user = EntityGenerator.GenerateUser();
         var filter = new UserFilterSet { ExternalId = user.ExternalId };
         await _usersService.AddAsync(filter, user);
-    
-        // Act
-        Task Action() => _usersService.AddAsync(filter, user);
         
         // Assert
+        Task Action() => _usersService.AddAsync(filter, user);
         await Assert.ThrowsAsync<ConflictApiException>(Action);
     }
 }

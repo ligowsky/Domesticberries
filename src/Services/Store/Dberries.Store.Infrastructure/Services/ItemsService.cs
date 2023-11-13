@@ -34,7 +34,7 @@ public class ItemsService : IItemsService
         var existingItem = await _itemsRepository.GetAsync(filter);
 
         if (existingItem is not null)
-            return existingItem;
+            throw ApiException.Conflict($"{nameof(Item)} already exists");
 
         await _itemsRepository.AddAsync(item);
         await _itemsRepository.SaveChangesAsync();
