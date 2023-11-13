@@ -1,8 +1,9 @@
+using BitzArt;
+
 namespace Dberries.Store;
 
 public interface IUsersRepository : IRepository
 {
-    public Task<User> GetAsync(Guid id);
-    public Task<User> GetByExternalIdAsync(Guid id);
-    public Task<User> AddAsync(User user);
+    public Task<User?> GetAsync(IFilterSet<User> filterSet);
+    public Task AddAsync(User user);
 }

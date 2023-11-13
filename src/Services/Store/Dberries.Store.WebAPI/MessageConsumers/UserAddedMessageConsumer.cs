@@ -14,7 +14,9 @@ public class UserAddedMessageConsumer : IConsumer<UserAddedMessage>
 
     public async Task Consume(ConsumeContext<UserAddedMessage> context)
     {
-        var item = context.Message.User.ToModel();
-        await _usersService.AddAsync(item);
+        var user = context.Message.User.ToModel();
+        var filter = new UserFilterSet { ExternalId = user.Id };
+
+        await _usersService.AddAsync(filter, user);
     }
 }

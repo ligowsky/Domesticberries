@@ -1,7 +1,9 @@
+using BitzArt;
+
 namespace Dberries.Store;
 
 public interface IUsersService
 {
-    public Task<User> GetAsync(Guid id);
-    public Task<User> AddAsync(User user);
+    public Task<User> GetAsync(IFilterSet<User> filterSet);
+    public Task<User> AddAsync(IFilterSet<User> filterSet, User user);
 }

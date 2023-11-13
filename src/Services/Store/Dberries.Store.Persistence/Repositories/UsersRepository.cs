@@ -9,16 +9,11 @@ public class UsersRepository : RepositoryBase, IUsersRepository
     {
     }
 
-    public async Task<User> GetAsync(Guid id)
+    public async Task<User?> GetAsync(IFilterSet<User> filterSet)
     {
-        var user = await Db.Set<User>()
-            .Where(x => x.Id == id)
+        return await Db.Set<User>()
+            .Apply(filterSet)
             .FirstOrDefaultAsync();
-
-        if (user is null)
-            throw ApiException.NotFound($"{nameof(User)} with Id '{id}' is not found");
-
-        return user;
     }
 
     public async Task<User> GetByExternalIdAsync(Guid id)
@@ -33,11 +28,9 @@ public class UsersRepository : RepositoryBase, IUsersRepository
         return user;
     }
 
-    public async Task<User> AddAsync(User user)
+    public async Task AddAsync(User user)
     {
         await Db.ThrowIfExistsByExternalIdAsync(typeof(User), user.ExternalId!.Value);
         Db.Add(user);
-
-        return user;
     }
 }

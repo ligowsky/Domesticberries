@@ -1,3 +1,5 @@
+using BitzArt;
+
 namespace Dberries.Store.Infrastructure;
 
 public class UsersService : IUsersService
@@ -9,16 +11,21 @@ public class UsersService : IUsersService
         _usersRepository = usersRepository;
     }
 
-    public async Task<User> GetAsync(Guid id)
+    public async Task<User> GetAsync(IFilterSet<User> filterSet)
     {
-        return await _usersRepository.GetAsync(id);
+        var user = await _usersRepository.GetAsync(filterSet);
+
+        if (user is null)
+            throw ApiException.NotFound($"{nameof(User)} is not found");
+
+        return user;
     }
 
-    public async Task<User> AddAsync(User user)
+    public async Task<User> AddAsync(IFilterSet<User> filterSet, User user)
     {
         await _usersRepository.AddAsync(user);
         await _usersRepository.SaveChangesAsync();
 
-        return user;
+        return await GetAsync(filterSet);
     }
 }
