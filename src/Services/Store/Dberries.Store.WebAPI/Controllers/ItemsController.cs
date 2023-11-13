@@ -26,7 +26,7 @@ public class ItemsController : DberriesController
     public async Task<IActionResult> GetAsync([FromRoute] Guid id)
     {
         var filter = new ItemFilterSet { Id = id };
-        
+
         var item = await _itemsService.GetAsync(filter);
         var result = item.ToDto();
 
@@ -52,7 +52,7 @@ public class ItemsController : DberriesController
         return Ok(result);
     }
 
-    [HttpPost("{itemId:guid}/rate", Name = "UpdateRating")]
+    [HttpPost("{itemId:guid}/rating", Name = "UpdateRating")]
     [TokenAuthorize]
     public async Task<IActionResult> UpdateRatingAsync([FromRoute] Guid itemId, [FromBody] UpdateRatingRequestDto input)
     {
@@ -63,6 +63,19 @@ public class ItemsController : DberriesController
         var value = (byte)input.Value!;
 
         var updatedItem = await _itemsService.UpdateRatingAsync(itemFilter, userFilter, value);
+        var result = updatedItem.ToDto();
+
+        return Ok(result);
+    }
+
+    [HttpDelete("{itemId:guid}/rating", Name = "DeleteRating")]
+    [TokenAuthorize]
+    public async Task<IActionResult> RemoveRatingAsync([FromRoute] Guid itemId)
+    {
+        var itemFilter = new ItemFilterSet { Id = itemId };
+        var userFilter = new UserFilterSet { ExternalId = HttpContext.GetUserId() };
+
+        var updatedItem = await _itemsService.RemoveRatingAsync(itemFilter, userFilter);
         var result = updatedItem.ToDto();
 
         return Ok(result);
