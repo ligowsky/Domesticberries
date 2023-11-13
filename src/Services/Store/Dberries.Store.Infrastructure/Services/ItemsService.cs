@@ -39,7 +39,7 @@ public class ItemsService : IItemsService
         await _itemsRepository.AddAsync(item);
         await _itemsRepository.SaveChangesAsync();
 
-        return await GetAsync(filter);
+        return item;
     }
 
     public async Task<Item> UpdateAsync(IFilterSet<Item> filter, Item item)
@@ -49,15 +49,14 @@ public class ItemsService : IItemsService
         if (existingItem is null)
         {
             await _itemsRepository.AddAsync(item);
-        }
-        else
-        {
-            await _itemsRepository.UpdateAsync(existingItem, item);
+            await _itemsRepository.SaveChangesAsync();
+            return item;
         }
 
+        await _itemsRepository.UpdateAsync(existingItem, item);
         await _itemsRepository.SaveChangesAsync();
 
-        return await GetAsync(filter);
+        return existingItem;
     }
 
     public async Task RemoveAsync(IFilterSet<Item> filter)
