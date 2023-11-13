@@ -16,21 +16,8 @@ public class UsersRepository : RepositoryBase, IUsersRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<User> GetByExternalIdAsync(Guid id)
+    public void Add(User user)
     {
-        var user = await Db.Set<User>()
-            .Where(x => x.ExternalId == id)
-            .FirstOrDefaultAsync();
-
-        if (user is null)
-            throw ApiException.NotFound($"{nameof(User)} with External '{id}' is not found");
-
-        return user;
-    }
-
-    public async Task AddAsync(User user)
-    {
-        await Db.ThrowIfExistsByExternalIdAsync(typeof(User), user.ExternalId!.Value);
         Db.Add(user);
     }
 }

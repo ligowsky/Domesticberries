@@ -23,9 +23,14 @@ public class UsersService : IUsersService
 
     public async Task<User> AddAsync(IFilterSet<User> filter, User user)
     {
-        await _usersRepository.AddAsync(user);
+        var existingUser = await _usersRepository.GetAsync(filter);
+
+        if (existingUser is not null)
+            return existingUser;
+
+        _usersRepository.Add(user);
         await _usersRepository.SaveChangesAsync();
 
-        return await GetAsync(filter);
+        return user;
     }
 }
