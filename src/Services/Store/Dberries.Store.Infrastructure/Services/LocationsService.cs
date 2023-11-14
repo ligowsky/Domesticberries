@@ -13,39 +13,38 @@ public class LocationsService : ILocationsService
         _itemsService = itemsService;
     }
 
-    public async Task<Location> AddAsync(IFilterSet<Location> filter, Location location)
+    public async Task<Location> AddAsync(Location location)
     {
-        var existingLocation = await _locationsRepository.GetAsync(filter);
-
-        if (existingLocation is not null)
-            throw ApiException.Conflict($"{nameof(Location)} already exists");
-
-        _locationsRepository.Add(location);
+        await _locationsRepository.AddAsync(location);
         await _locationsRepository.SaveChangesAsync();
 
         return location;
     }
 
-    public async Task<Location> UpdateAsync(IFilterSet<Location> filter, Location location)
+    public async Task<Location> UpdateAsync(Guid id, Location location)
     {
+        var filter = new LocationFilterSet { ExternalId = id };
         var existingLocation = await _locationsRepository.GetAsync(filter);
 
         if (existingLocation is null)
         {
-            _locationsRepository.Add(location);
+            await _locationsRepository.AddAsync(location);
             await _locationsRepository.SaveChangesAsync();
 
             return location;
         }
 
-        _locationsRepository.Update(existingLocation, location);
+        existingLocation.Patch(location)
+            .Property(x => x.Name);
+        
         await _locationsRepository.SaveChangesAsync();
 
         return existingLocation;
     }
 
-    public async Task RemoveAsync(IFilterSet<Location> filter)
+    public async Task RemoveAsync(Guid id)
     {
+        var filter = new LocationFilterSet { ExternalId = id };
         var existingLocation = await _locationsRepository.GetAsync(filter);
 
         if (existingLocation is null) return;
@@ -54,21 +53,22 @@ public class LocationsService : ILocationsService
         await _locationsRepository.SaveChangesAsync();
     }
 
-    public async Task UpdateStockAsync(IFilterSet<Location> locationFilter, IFilterSet<Item> itemFilter,
-        int quantity)
+    public async Task UpdateStockAsync(Guid locationId, Guid itemId, int quantity)
     {
-        var item = await _itemsService.GetAsync(itemFilter);
+        var filter = new ItemFilterSet { ExternalId = itemId };
+        var item = await _itemsService.GetAsync(filter);
         var stock = new Stock(item.Id!.Value, quantity);
 
-        await _locationsRepository.UpdateStockAsync(locationFilter, stock);
+        await _locationsRepository.UpdateStockAsync(locationId, stock);
         await _locationsRepository.SaveChangesAsync();
     }
 
-    public async Task RemoveStockAsync(IFilterSet<Location> locationFilter, IFilterSet<Item> itemFilter)
+    public async Task RemoveStockAsync(Guid locationId, Guid itemId)
     {
-        var item = await _itemsService.GetAsync(itemFilter);
+        var filter = new ItemFilterSet { ExternalId = itemId };
+        var item = await _itemsService.GetAsync(filter);
 
-        await _locationsRepository.RemoveStockAsync(locationFilter, item.Id!.Value);
+        await _locationsRepository.RemoveStockAsync(locationId, item.Id!.Value);
         await _locationsRepository.SaveChangesAsync();
     }
 }

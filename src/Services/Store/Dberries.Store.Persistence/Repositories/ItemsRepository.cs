@@ -42,13 +42,6 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         return item;
     }
 
-    public async Task<Item?> GetByExternalIdAsync(Guid id)
-    {
-        return await Db.Set<Item>()
-            .Where(x => x.ExternalId == id)
-            .FirstOrDefaultAsync();
-    }
-
     public async Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, SearchRequestDto searchRequest)
     {
         var searchResponse = await _elasticClient.SearchAsync<Item>(x => x

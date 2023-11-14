@@ -14,9 +14,8 @@ public class StockRemovedMessageConsumer : IConsumer<StockRemovedMessage>
 
     public async Task Consume(ConsumeContext<StockRemovedMessage> context)
     {
-        var locationFilter = new LocationFilterSet { ExternalId = context.Message.LocationId };
-        var itemFilter = new ItemFilterSet { ExternalId = context.Message.ItemId };
-
-        await _locationsService.RemoveStockAsync(locationFilter, itemFilter);
+        var locationId = context.Message.LocationId!.Value;
+        var itemId = context.Message.ItemId!.Value;
+        await _locationsService.RemoveStockAsync(locationId, itemId);
     }
 }

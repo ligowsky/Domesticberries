@@ -16,15 +16,10 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
             .FirstOrDefaultAsync();
     }
 
-    public void Add(Location location)
+    public async Task AddAsync(Location location)
     {
+        await Db.ThrowIfExistsByExternalIdAsync(typeof(Location), location.ExternalId!.Value);
         Db.Set<Location>().Add(location);
-    }
-
-    public void Update(Location existingLocation, Location location)
-    {
-        existingLocation.Patch(location)
-            .Property(x => x.Name);
     }
 
     public void Remove(Location location)
@@ -32,9 +27,9 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
         Db.Set<Location>().Remove(location);
     }
 
-    public async Task UpdateStockAsync(IFilterSet<Location> filter, Stock input)
+    public async Task UpdateStockAsync(Guid locationId, Stock input)
     {
-        var location = await GetWithItemStock(filter, input.ItemId!.Value);
+        var location = await GetWithItemStock(locationId, input.ItemId!.Value);
         var stock = location.Stock!.FirstOrDefault(x => x.ItemId == input.ItemId);
 
         if (stock is null)
@@ -47,19 +42,19 @@ public class LocationsRepository : RepositoryBase, ILocationsRepository
         }
     }
 
-    public async Task RemoveStockAsync(IFilterSet<Location> filter, Guid itemId)
+    public async Task RemoveStockAsync(Guid locationId, Guid itemId)
     {
-        var location = await GetWithItemStock(filter, itemId);
+        var location = await GetWithItemStock(locationId, itemId);
         var stock = location.Stock!.FirstOrDefault(x => x.ItemId == itemId);
 
         if (stock is not null)
             location.Stock!.Remove(stock);
     }
 
-    private async Task<Location> GetWithItemStock(IFilterSet<Location> filter, Guid itemId)
+    private async Task<Location> GetWithItemStock(Guid locationId, Guid itemId)
     {
         var location = await Db.Set<Location>()
-            .Apply(filter)
+            .Where(x => x.ExternalId == locationId)
             .Include(x => x.Stock!
                 .Where(y => y.ItemId == itemId))
             .FirstOrDefaultAsync();

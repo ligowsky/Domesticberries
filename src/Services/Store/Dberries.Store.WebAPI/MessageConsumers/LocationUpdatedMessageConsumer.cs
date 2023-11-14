@@ -15,8 +15,6 @@ public class LocationUpdatedMessageConsumer : IConsumer<LocationUpdatedMessage>
     public async Task Consume(ConsumeContext<LocationUpdatedMessage> context)
     {
         var location = context.Message.Location.ToModel();
-        var filter = new LocationFilterSet { ExternalId = location.Id };
-
-        await _locationsService.UpdateAsync(filter, location);
+        await _locationsService.UpdateAsync(location.ExternalId!.Value, location);
     }
 }

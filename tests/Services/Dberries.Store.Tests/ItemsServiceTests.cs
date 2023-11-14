@@ -191,7 +191,6 @@ public class ItemsServiceTests
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
-        var itemFilter = new ItemFilterSet { ExternalId = item.ExternalId };
         item = await _itemsService.AddAsync(item);
 
         var locationsCount = _random.Next(1, 10);
@@ -202,10 +201,9 @@ public class ItemsServiceTests
 
         foreach (var location in locations)
         {
-            var locationFilter = new LocationFilterSet { ExternalId = location.ExternalId };
-            await _locationsService.AddAsync(locationFilter, location);
+            await _locationsService.AddAsync(location);
 
-            await _locationsService.UpdateStockAsync(locationFilter, itemFilter, itemsQuantity);
+            await _locationsService.UpdateStockAsync(location.ExternalId!.Value, item.ExternalId!.Value, itemsQuantity);
 
             _db.ChangeTracker.Clear();
         }
@@ -370,15 +368,15 @@ public class ItemsServiceTests
     {
         // Arrange
         var itemId = Guid.NewGuid();
-    
+
         var user = EntityGenerator.GenerateUser();
         await _usersService.AddAsync(user);
-    
+
         // Assert
         Task Action() => _itemsService.RemoveRatingAsync(itemId, user.ExternalId!.Value);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
-    
+
     [Fact]
     public async Task RemoveRating_NotExistingUser_ThrowsNotFoundApiException()
     {
@@ -387,7 +385,7 @@ public class ItemsServiceTests
         item = await _itemsService.AddAsync(item);
 
         var userId = Guid.NewGuid();
-    
+
         // Assert
         Task Action() => _itemsService.RemoveRatingAsync(item.Id!.Value, userId);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
