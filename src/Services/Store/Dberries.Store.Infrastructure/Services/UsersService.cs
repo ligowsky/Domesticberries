@@ -21,14 +21,9 @@ public class UsersService : IUsersService
         return user;
     }
 
-    public async Task<User> AddAsync(IFilterSet<User> filter, User user)
+    public async Task<User> AddAsync(User user)
     {
-        var existingUser = await _usersRepository.GetAsync(filter);
-
-        if (existingUser is not null)
-            throw ApiException.Conflict($"{nameof(User)} already exists");
-
-        _usersRepository.Add(user);
+        await _usersRepository.AddAsync(user);
         await _usersRepository.SaveChangesAsync();
 
         return user;

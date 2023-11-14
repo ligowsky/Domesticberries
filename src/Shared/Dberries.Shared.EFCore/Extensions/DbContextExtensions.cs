@@ -64,7 +64,7 @@ public static class DbContextExtensions
         var entityExists = await CheckIfExistsByExternalIdAsync(db, entityType, id);
 
         if (entityExists)
-            throw ApiException.BadRequest($"{entityType.Name} with ExternalId '{id}' already exists");
+            throw ApiException.Conflict($"{entityType.Name} with ExternalId '{id}' already exists");
     }
 
     public static async Task ThrowIfNotExistsByExternalIdAsync<TExternalKey>(this DbContext db, Type entityType,

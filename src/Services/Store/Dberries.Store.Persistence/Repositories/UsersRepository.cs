@@ -16,8 +16,10 @@ public class UsersRepository : RepositoryBase, IUsersRepository
             .FirstOrDefaultAsync();
     }
 
-    public void Add(User user)
+    public async Task AddAsync(User user)
     {
+        await Db.ThrowIfExistsByExternalIdAsync(typeof(User), user.ExternalId!.Value);
+        
         Db.Add(user);
     }
 }
