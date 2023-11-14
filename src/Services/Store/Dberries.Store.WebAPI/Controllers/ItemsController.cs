@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dberries.Store.WebAPI;
 
 [Route("[Controller]")]
-public class ItemsController : ControllerBase
+public class ItemsController : DberriesController
 {
     private readonly IItemsService _itemsService;
 
@@ -25,7 +25,9 @@ public class ItemsController : ControllerBase
     [HttpGet("{id:guid}", Name = "GetItem")]
     public async Task<IActionResult> GetAsync([FromRoute] Guid id)
     {
-        var item = await _itemsService.GetAsync(id);
+        var filter = new ItemFilterSet { Id = id };
+
+        var item = await _itemsService.GetAsync(filter);
         var result = item.ToDto();
 
         return Ok(result);
@@ -50,12 +52,28 @@ public class ItemsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("{itemId:guid}/rate", Name = "UpdateRating")]
+    [HttpPost("{itemId:guid}/rating", Name = "UpdateRating")]
     [TokenAuthorize]
-    public async Task<IActionResult> UpdateRatingAsync([FromRoute] Guid itemId, [FromBody] byte value)
+    public async Task<IActionResult> UpdateRatingAsync([FromRoute] Guid itemId, [FromBody] UpdateRatingRequestDto input)
+    {
+        Validate(input);
+
+        var userId = HttpContext.GetUserId();
+        var value = (byte)input.Value!;
+
+        var updatedItem = await _itemsService.UpdateRatingAsync(itemId, userId, value);
+        var result = updatedItem.ToDto();
+
+        return Ok(result);
+    }
+
+    [HttpDelete("{itemId:guid}/rating", Name = "DeleteRating")]
+    [TokenAuthorize]
+    public async Task<IActionResult> RemoveRatingAsync([FromRoute] Guid itemId)
     {
         var userId = HttpContext.GetUserId();
-        var updatedItem = await _itemsService.UpdateRatingAsync(itemId, userId, value);
+
+        var updatedItem = await _itemsService.RemoveRatingAsync(itemId, userId);
         var result = updatedItem.ToDto();
 
         return Ok(result);

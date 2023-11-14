@@ -13,6 +13,7 @@
 
     <ItemGroup>
         <PackageReference Include="BitzArt.ApiExceptions" Version="1.18.2"/>
+        <PackageReference Include="BitzArt.LinqExtensions" Version="1.2.0" />
         <PackageReference Include="BitzArt.Pagination.EntityFrameworkCore" Version="1.14.0"/>
     </ItemGroup>
 

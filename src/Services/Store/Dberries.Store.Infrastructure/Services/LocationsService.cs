@@ -5,10 +5,12 @@ namespace Dberries.Store.Infrastructure;
 public class LocationsService : ILocationsService
 {
     private readonly ILocationsRepository _locationsRepository;
+    private readonly IItemsService _itemsService;
 
-    public LocationsService(ILocationsRepository locationsRepository)
+    public LocationsService(ILocationsRepository locationsRepository, IItemsService itemsService)
     {
         _locationsRepository = locationsRepository;
+        _itemsService = itemsService;
     }
 
     public async Task<Location> AddAsync(Location location)
@@ -19,20 +21,22 @@ public class LocationsService : ILocationsService
         return location;
     }
 
-    public async Task<Location> UpdateAsync(Location location)
+    public async Task<Location> UpdateAsync(Guid id, Location location)
     {
-        var existingLocation = await _locationsRepository.GetAsync(location.ExternalId!.Value);
+        var filter = new LocationFilterSet { ExternalId = id };
+        var existingLocation = await _locationsRepository.GetAsync(filter);
 
         if (existingLocation is null)
         {
-            existingLocation = await _locationsRepository.AddAsync(location);
-        }
-        else
-        {
-            existingLocation.Patch(location)
-                .Property(x => x.Name);
+            await _locationsRepository.AddAsync(location);
+            await _locationsRepository.SaveChangesAsync();
+
+            return location;
         }
 
+        existingLocation.Patch(location)
+            .Property(x => x.Name);
+        
         await _locationsRepository.SaveChangesAsync();
 
         return existingLocation;
@@ -40,7 +44,8 @@ public class LocationsService : ILocationsService
 
     public async Task RemoveAsync(Guid id)
     {
-        var existingLocation = await _locationsRepository.GetAsync(id);
+        var filter = new LocationFilterSet { ExternalId = id };
+        var existingLocation = await _locationsRepository.GetAsync(filter);
 
         if (existingLocation is null) return;
 
@@ -48,11 +53,22 @@ public class LocationsService : ILocationsService
         await _locationsRepository.SaveChangesAsync();
     }
 
-    public async Task<Stock?> UpdateStockAsync(Guid locationId, Guid itemId, int quantity)
+    public async Task UpdateStockAsync(Guid locationId, Guid itemId, int quantity)
     {
-        var updatedStock = await _locationsRepository.UpdateStockAsync(locationId, itemId, quantity);
-        await _locationsRepository.SaveChangesAsync();
+        var filter = new ItemFilterSet { ExternalId = itemId };
+        var item = await _itemsService.GetAsync(filter);
+        var stock = new Stock(item.Id!.Value, quantity);
 
-        return updatedStock;
+        await _locationsRepository.UpdateStockAsync(locationId, stock);
+        await _locationsRepository.SaveChangesAsync();
+    }
+
+    public async Task RemoveStockAsync(Guid locationId, Guid itemId)
+    {
+        var filter = new ItemFilterSet { ExternalId = itemId };
+        var item = await _itemsService.GetAsync(filter);
+
+        await _locationsRepository.RemoveStockAsync(locationId, item.Id!.Value);
+        await _locationsRepository.SaveChangesAsync();
     }
 }

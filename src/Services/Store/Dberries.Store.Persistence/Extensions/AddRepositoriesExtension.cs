@@ -8,5 +8,6 @@ public static class AddRepositoriesExtension
     {
         services.AddTransient<ILocationsRepository, LocationsRepository>();
         services.AddTransient<IItemsRepository, ItemsRepository>();
+        services.AddTransient<IUsersRepository, UsersRepository>();
     }
 }

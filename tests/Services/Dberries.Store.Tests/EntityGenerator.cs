@@ -2,30 +2,31 @@ namespace Dberries.Store.Tests;
 
 public static class EntityGenerator
 {
-    public static Location GenerateLocation(int number = 1)
+    public static Location GenerateLocation()
     {
         return new Location
         {
             ExternalId = Guid.NewGuid(),
-            Name = $"Location {number}",
+            Name = $"Location {Guid.NewGuid()}",
         };
     }
 
-    public static Item GenerateItem(int number = 1)
+    public static Item GenerateItem()
     {
         return new Item
         {
             ExternalId = Guid.NewGuid(),
-            Name = $"Item {number}",
-            Description = $"Description {number}"
+            Name = $"Item {Guid.NewGuid()}",
+            Description = $"Description {Guid.NewGuid()}"
         };
     }
 
-    public static Stock GenerateStock(int quantity = 1)
+    public static User GenerateUser()
     {
-        return new Stock
+        return new User
         {
-            Quantity = quantity
+            ExternalId = Guid.NewGuid(),
+            Email = $"{Guid.NewGuid()}@example.com",
         };
     }
 }

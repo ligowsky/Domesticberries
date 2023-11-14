@@ -8,6 +8,11 @@ internal static class RatingConfiguration
         where T : class
     {
         builder.Property(x => x.UserId).IsRequired();
+
+        builder.HasOne(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId);
+
         builder.Property(x => x.Value).IsRequired();
     }
 }

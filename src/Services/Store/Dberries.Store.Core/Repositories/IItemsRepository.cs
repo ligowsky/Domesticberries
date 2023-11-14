@@ -1,3 +1,4 @@
+using BitzArt;
 using BitzArt.Pagination;
 
 namespace Dberries.Store;
@@ -5,11 +6,12 @@ namespace Dberries.Store;
 public interface IItemsRepository : IRepository
 {
     public Task<PageResult<Item>> GetPageAsync(PageRequest pageRequest);
-    public Task<Item> GetAsync(Guid id);
-    public Task<Item?> GetByExternalIdAsync(Guid id);
+    public Task<Item?> GetAsync(IFilterSet<Item> filter);
     public Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, SearchRequestDto searchRequest);
-    public Task<Item> AddAsync(Item item);
-    public Task<Item> UpdateAsync(Item item);
+    public Task AddAsync(Item item);
+    public Task UpdateAsync(Item existingItem, Item item);
     public Task RemoveAsync(Item item);
     public Task<ItemAvailabilityResponse> GetAvailabilityAsync(Guid id);
+    public Task UpdateRatingAsync(Guid id, Rating rating);
+    public Task RemoveRatingAsync(Guid itemId, Guid userId);
 }

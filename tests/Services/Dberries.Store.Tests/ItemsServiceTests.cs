@@ -10,29 +10,33 @@ public class ItemsServiceTests
 {
     private readonly IItemsService _itemsService;
     private readonly ILocationsService _locationsService;
+    private readonly IUsersService _usersService;
     private readonly AppDbContext _db;
+    private readonly Random _random;
 
     public ItemsServiceTests(TestServiceContainer testServiceContainer)
     {
         var serviceProvider = testServiceContainer.ServiceProvider;
         _itemsService = serviceProvider.GetRequiredService<IItemsService>();
         _locationsService = serviceProvider.GetRequiredService<ILocationsService>();
+        _usersService = serviceProvider.GetRequiredService<IUsersService>();
         _db = serviceProvider.GetRequiredService<AppDbContext>();
+        _random = new Random();
     }
 
     [Fact]
     public async Task GetItemsPage_ExistingItems_ReturnsItemsPage()
     {
         // Arrange
-        const int itemsCount = 10;
+        const int offset = 0;
+        var limit = _random.Next(1, 10);
+        var pageRequest = new PageRequest(offset, limit);
 
-        for (var i = 0; i < itemsCount; i++)
+        for (var i = 0; i < limit; i++)
         {
             var item = EntityGenerator.GenerateItem();
             await _itemsService.AddAsync(item);
         }
-
-        var pageRequest = new PageRequest(0, itemsCount);
 
         // Act
         var itemsPage = await _itemsService.GetPageAsync(pageRequest);
@@ -40,7 +44,7 @@ public class ItemsServiceTests
         // Assert
         Assert.NotNull(itemsPage);
         Assert.NotNull(itemsPage.Data);
-        Assert.Equal(itemsCount, itemsPage.Data.Count());
+        Assert.Equal(limit, itemsPage.Data.Count());
     }
 
     [Fact]
@@ -48,10 +52,11 @@ public class ItemsServiceTests
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
-        await _itemsService.AddAsync(item);
+        item = await _itemsService.AddAsync(item);
+        var filter = new ItemFilterSet { Id = item.Id };
 
         // Act
-        var returnedItem = await _itemsService.GetAsync(item.Id!.Value);
+        var returnedItem = await _itemsService.GetAsync(filter);
 
         // Assert
         Assert.NotNull(returnedItem);
@@ -59,16 +64,17 @@ public class ItemsServiceTests
         Assert.Equal(item.ExternalId, returnedItem.ExternalId);
         Assert.Equal(item.Name, returnedItem.Name);
         Assert.Equal(item.Description, returnedItem.Description);
+        Assert.NotNull(returnedItem.AverageRating);
     }
 
     [Fact]
     public async Task GetItem_NotExistingItem_ThrowsNotFoundApiException()
     {
         // Arrange
-        var itemId = Guid.NewGuid();
+        var filter = new ItemFilterSet { Id = Guid.NewGuid() };
 
         // Assert
-        Task Action() => _itemsService.GetAsync(itemId);
+        Task Action() => _itemsService.GetAsync(filter);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 
@@ -79,16 +85,21 @@ public class ItemsServiceTests
         var item = EntityGenerator.GenerateItem();
 
         // Act
-        var addedItem = await _itemsService.AddAsync(item);
+        item = await _itemsService.AddAsync(item);
 
         // Assert
+        var filter = new ItemFilterSet { Id = item.Id };
+        var addedItem = await _itemsService.GetAsync(filter);
+
         Assert.NotNull(addedItem);
+        Assert.Equal(item.Id, addedItem.Id);
+        Assert.Equal(item.ExternalId, addedItem.ExternalId);
         Assert.Equal(item.Name, addedItem.Name);
         Assert.Equal(item.Description, addedItem.Description);
     }
 
     [Fact]
-    public async Task AddItem_ExistingItem_ThrowsBadRequestApiException()
+    public async Task AddItem_ExistingItem_ThrowsConflictApiException()
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
@@ -96,7 +107,7 @@ public class ItemsServiceTests
 
         // Assert
         Task Action() => _itemsService.AddAsync(item);
-        await Assert.ThrowsAsync<BadRequestApiException>(Action);
+        await Assert.ThrowsAsync<ConflictApiException>(Action);
     }
 
     [Fact]
@@ -106,20 +117,19 @@ public class ItemsServiceTests
         var item = EntityGenerator.GenerateItem();
         item = await _itemsService.AddAsync(item);
 
-        var payload = new Item
-        {
-            Name = "Updated Name",
-            Description = "Updated Description"
-        };
+        var payload = new Item("Updated name", "Updated Description");
 
         item.Patch(payload)
             .Property(x => x.Name)
             .Property(x => x.Description);
 
         // Act
-        var updatedItem = await _itemsService.UpdateAsync(item);
+        item = await _itemsService.UpdateAsync(item.ExternalId!.Value, item);
 
         // Assert
+        var filter = new ItemFilterSet { Id = item.Id };
+        var updatedItem = await _itemsService.GetAsync(filter);
+
         Assert.NotNull(updatedItem);
         Assert.Equal(item.Id, updatedItem.Id);
         Assert.Equal(item.ExternalId, updatedItem.ExternalId);
@@ -131,19 +141,14 @@ public class ItemsServiceTests
     public async Task UpdateItem_NotExistingItem_AddsItem()
     {
         // Arrange
-        var item = new Item
-        {
-            Id = Guid.NewGuid(),
-            ExternalId = Guid.NewGuid(),
-            Name = "Updated Name",
-            Description = "Updated Description"
-        };
+        var item = EntityGenerator.GenerateItem();
 
         // Act
-        item = await _itemsService.UpdateAsync(item);
+        item = await _itemsService.UpdateAsync(item.ExternalId!.Value, item);
 
         // Assert
-        var addedItem = await _itemsService.GetAsync(item.Id!.Value);
+        var filter = new ItemFilterSet { Id = item.Id };
+        var addedItem = await _itemsService.GetAsync(filter);
 
         Assert.NotNull(addedItem);
         Assert.Equal(item.Id, addedItem.Id);
@@ -163,18 +168,21 @@ public class ItemsServiceTests
         await _itemsService.RemoveAsync(item.ExternalId!.Value);
 
         // Assert
-        Task Action() => _itemsService.GetAsync(item.Id!.Value);
+        var filter = new ItemFilterSet { Id = item.Id };
+        Task Action() => _itemsService.GetAsync(filter);
+
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 
     [Fact]
-    public async Task RemoveItem_NotExistingItem_DoesNotThrowNotFoundApiException()
+    public async Task RemoveItem_NotExistingItem_DoesNotThrowException()
     {
         // Arrange
-        var itemId = Guid.NewGuid();
+        var id = Guid.NewGuid();
 
         // Assert
-        var exception = await Record.ExceptionAsync(() => _itemsService.RemoveAsync(itemId));
+        Task Action() => _itemsService.RemoveAsync(id);
+        var exception = await Record.ExceptionAsync(Action);
         Assert.Null(exception);
     }
 
@@ -185,29 +193,29 @@ public class ItemsServiceTests
         var item = EntityGenerator.GenerateItem();
         item = await _itemsService.AddAsync(item);
 
-        const int locationCount = 10;
-        const int itemsQuantity = 5;
+        var locationsCount = _random.Next(1, 10);
+        var itemsQuantity = _random.Next(1, 5);
 
-        var locations = Enumerable.Range(0, locationCount)
-            .Select(EntityGenerator.GenerateLocation).ToList();
+        var locations = Enumerable.Range(0, locationsCount)
+            .Select(_ => EntityGenerator.GenerateLocation()).ToList();
 
         foreach (var location in locations)
         {
             await _locationsService.AddAsync(location);
 
-            var stock = EntityGenerator.GenerateStock(itemsQuantity);
-            await _locationsService.UpdateStockAsync(location.ExternalId!.Value, item.ExternalId!.Value,
-                stock.Quantity!.Value);
+            await _locationsService.UpdateStockAsync(location.ExternalId!.Value, item.ExternalId!.Value, itemsQuantity);
 
             _db.ChangeTracker.Clear();
         }
 
-        // Assert
+        // Act 
         var itemAvailability = await _itemsService.GetAvailabilityAsync(item.Id!.Value);
+
+        // Assert
         var availabilityInLocations = itemAvailability.AvailableInLocations.ToList();
 
         Assert.NotNull(itemAvailability);
-        Assert.Equal(locationCount, availabilityInLocations.Count);
+        Assert.Equal(locationsCount, availabilityInLocations.Count);
 
         foreach (var availabilityInLocation in availabilityInLocations)
         {
@@ -224,6 +232,162 @@ public class ItemsServiceTests
 
         // Assert
         Task Action() => _itemsService.GetAvailabilityAsync(itemId);
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
+    }
+
+    [Fact]
+    public async Task UpdateRating_ExistingItem_UpdatesItemRating()
+    {
+        // Arrange
+        var item = EntityGenerator.GenerateItem();
+        item = await _itemsService.AddAsync(item);
+
+        var ratingCount = _random.Next(1, 10);
+
+        var ratingUpdates = Enumerable.Range(0, ratingCount)
+            .Select(async _ =>
+            {
+                var user = EntityGenerator.GenerateUser();
+                user = await _usersService.AddAsync(user);
+
+                var value = (byte)_random.Next(1, 5);
+
+                return (UserId: user.ExternalId, Value: value);
+            })
+            .Select(x => x.Result).ToList();
+
+        var averageRating = Math.Round((decimal)ratingUpdates.Average(x => x.Value), 2);
+
+        // Act 
+        foreach (var ratingUpdate in ratingUpdates)
+        {
+            await _itemsService.UpdateRatingAsync(item.Id!.Value, ratingUpdate.UserId!.Value, ratingUpdate.Value);
+        }
+
+        var itemFilter = new ItemFilterSet { Id = item.Id };
+
+        // Assert
+        var returnedItem = await _itemsService.GetAsync(itemFilter);
+
+        Assert.NotNull(returnedItem);
+        Assert.Equal(item.Id, returnedItem.Id);
+        Assert.Equal(item.ExternalId, returnedItem.ExternalId);
+        Assert.NotNull(returnedItem.AverageRating);
+        Assert.Equal(averageRating, returnedItem.AverageRating);
+    }
+
+    [Fact]
+    public async Task UpdateRating_ExistingRating_UpdatedItemRating()
+    {
+        // Arrange
+        var item = EntityGenerator.GenerateItem();
+        item = await _itemsService.AddAsync(item);
+
+        var user = EntityGenerator.GenerateUser();
+        await _usersService.AddAsync(user);
+
+        var value = (byte)_random.Next(1, 5);
+
+        await _itemsService.UpdateRatingAsync(item.Id!.Value, user.ExternalId!.Value, value);
+
+        value = (byte)_random.Next(1, 5);
+
+        var itemFilter = new ItemFilterSet { Id = item.Id };
+
+        // Act 
+        await _itemsService.UpdateRatingAsync(item.Id!.Value, user.ExternalId!.Value, value);
+
+        // Assert
+        var returnedItem = await _itemsService.GetAsync(itemFilter);
+
+        Assert.NotNull(returnedItem);
+        Assert.Equal(item.Id, returnedItem.Id);
+        Assert.Equal(item.ExternalId, returnedItem.ExternalId);
+        Assert.NotNull(returnedItem.AverageRating);
+        Assert.Equal(value, returnedItem.AverageRating);
+    }
+
+    [Fact]
+    public async Task UpdateRating_NotExistingItem_ThrowsNotFoundApiException()
+    {
+        // Arrange
+        var itemId = Guid.NewGuid();
+
+        var user = EntityGenerator.GenerateUser();
+        await _usersService.AddAsync(user);
+
+        var value = (byte)_random.Next(1, 5);
+
+        // Assert
+        Task Action() => _itemsService.UpdateRatingAsync(itemId, user.ExternalId!.Value, value);
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
+    }
+
+    [Fact]
+    public async Task UpdateRating_NotExistingUser_ThrowsNotFoundApiException()
+    {
+        // Arrange
+        var item = EntityGenerator.GenerateItem();
+        item = await _itemsService.AddAsync(item);
+
+        var userId = Guid.NewGuid();
+
+        var value = (byte)_random.Next(1, 5);
+
+        // Assert
+        Task Action() => _itemsService.UpdateRatingAsync(item.ExternalId!.Value, userId, value);
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
+    }
+
+    [Fact]
+    public async Task RemoveRating_ExistingItem_RemovesRating()
+    {
+        // Arrange
+        var item = EntityGenerator.GenerateItem();
+        item = await _itemsService.AddAsync(item);
+
+        var user = EntityGenerator.GenerateUser();
+        user = await _usersService.AddAsync(user);
+
+        var value = (byte)_random.Next(1, 5);
+
+        await _itemsService.UpdateRatingAsync(item.Id!.Value, user.ExternalId!.Value, value);
+
+        // Assert
+        var updatedItem = await _itemsService.RemoveRatingAsync(item.Id!.Value, user.ExternalId!.Value);
+        var ratingExists = updatedItem.Ratings!.Any(x => x.UserId == user.Id);
+
+        Assert.NotNull(updatedItem);
+        Assert.Equal(item.Id, updatedItem.Id);
+        Assert.Equal(item.ExternalId, updatedItem.ExternalId);
+        Assert.False(ratingExists);
+    }
+
+    [Fact]
+    public async Task RemoveRating_NotExistingItem_ThrowsNotFoundApiException()
+    {
+        // Arrange
+        var itemId = Guid.NewGuid();
+
+        var user = EntityGenerator.GenerateUser();
+        await _usersService.AddAsync(user);
+
+        // Assert
+        Task Action() => _itemsService.RemoveRatingAsync(itemId, user.ExternalId!.Value);
+        await Assert.ThrowsAsync<NotFoundApiException>(Action);
+    }
+
+    [Fact]
+    public async Task RemoveRating_NotExistingUser_ThrowsNotFoundApiException()
+    {
+        // Arrange
+        var item = EntityGenerator.GenerateItem();
+        item = await _itemsService.AddAsync(item);
+
+        var userId = Guid.NewGuid();
+
+        // Assert
+        Task Action() => _itemsService.RemoveRatingAsync(item.Id!.Value, userId);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 }

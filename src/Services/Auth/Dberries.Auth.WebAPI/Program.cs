@@ -27,6 +27,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+builder.AddTelemetry();
+builder.AddElasticLogging();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
