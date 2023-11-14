@@ -7,11 +7,11 @@ public interface IItemsService
 {
     public Task<PageResult<Item>> GetPageAsync(PageRequest pageRequest);
     public Task<Item> GetAsync(IFilterSet<Item> filter);
-    public Task<Item> AddAsync(IFilterSet<Item> filter, Item item);
-    public Task<Item> UpdateAsync(IFilterSet<Item> filter, Item item);
-    public Task RemoveAsync(IFilterSet<Item> filter);
+    public Task<Item> AddAsync(Item item);
+    public Task<Item> UpdateAsync(Guid id, Item item);
+    public Task RemoveAsync(Guid id);
     public Task<PageResult<Item>> SearchAsync(PageRequest pageRequest, SearchRequestDto searchRequest);
     public Task<ItemAvailabilityResponse> GetAvailabilityAsync(Guid id);
-    public Task<Item> UpdateRatingAsync(IFilterSet<Item> itemFilter, IFilterSet<User> userFilter, byte value);
-    public Task<Item> RemoveRatingAsync(IFilterSet<Item> itemFilter, IFilterSet<User> userFilter);
+    public Task<Item> UpdateRatingAsync(Guid itemId, Guid userId, byte value);
+    public Task<Item> RemoveRatingAsync(Guid itemId, Guid userId);
 }

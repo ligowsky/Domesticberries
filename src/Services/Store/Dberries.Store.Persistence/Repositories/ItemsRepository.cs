@@ -80,6 +80,7 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
 
     public async Task AddAsync(Item item)
     {
+        await Db.ThrowIfExistsByExternalIdAsync(typeof(Item), item.ExternalId!.Value);
         Db.Add(item);
         await IndexAsync(item);
     }
@@ -118,9 +119,9 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         return new ItemAvailabilityResponse(availableInLocations);
     }
 
-    public async Task UpdateRatingAsync(IFilterSet<Item> filter, Rating input)
+    public async Task UpdateRatingAsync(Guid id, Rating input)
     {
-        var item = await GetWithUserRatingAsync(filter, input.UserId!.Value);
+        var item = await GetWithUserRatingAsync(id, input.UserId!.Value);
         var rating = item.Ratings!.FirstOrDefault(x => x.UserId == input.UserId!.Value);
 
         if (rating is null)
@@ -133,19 +134,19 @@ public class ItemsRepository : RepositoryBase, IItemsRepository
         }
     }
 
-    public async Task RemoveRatingAsync(IFilterSet<Item> filter, Guid userId)
+    public async Task RemoveRatingAsync(Guid itemId, Guid userId)
     {
-        var item = await GetWithUserRatingAsync(filter, userId);
+        var item = await GetWithUserRatingAsync(itemId, userId);
         var rating = item.Ratings!.FirstOrDefault(x => x.UserId == userId);
 
         if (rating is not null)
             item.Ratings!.Remove(rating);
     }
 
-    private async Task<Item> GetWithUserRatingAsync(IFilterSet<Item> filter, Guid userId)
+    private async Task<Item> GetWithUserRatingAsync(Guid itemId, Guid userId)
     {
         var item = await Db.Set<Item>()
-            .Apply(filter)
+            .Where(x => x.Id == itemId)
             .Include(x => x.Ratings!
                 .Where(y => y.UserId == userId)
             )

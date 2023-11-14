@@ -58,11 +58,10 @@ public class ItemsController : DberriesController
     {
         Validate(input);
 
-        var itemFilter = new ItemFilterSet { Id = itemId };
-        var userFilter = new UserFilterSet { ExternalId = HttpContext.GetUserId() };
+        var userId = HttpContext.GetUserId();
         var value = (byte)input.Value!;
 
-        var updatedItem = await _itemsService.UpdateRatingAsync(itemFilter, userFilter, value);
+        var updatedItem = await _itemsService.UpdateRatingAsync(itemId, userId, value);
         var result = updatedItem.ToDto();
 
         return Ok(result);
@@ -72,10 +71,9 @@ public class ItemsController : DberriesController
     [TokenAuthorize]
     public async Task<IActionResult> RemoveRatingAsync([FromRoute] Guid itemId)
     {
-        var itemFilter = new ItemFilterSet { Id = itemId };
-        var userFilter = new UserFilterSet { ExternalId = HttpContext.GetUserId() };
+        var userId = HttpContext.GetUserId();
 
-        var updatedItem = await _itemsService.RemoveRatingAsync(itemFilter, userFilter);
+        var updatedItem = await _itemsService.RemoveRatingAsync(itemId, userId);
         var result = updatedItem.ToDto();
 
         return Ok(result);

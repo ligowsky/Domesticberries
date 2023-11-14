@@ -29,21 +29,17 @@ public class ItemsService : IItemsService
         return item;
     }
 
-    public async Task<Item> AddAsync(IFilterSet<Item> filter, Item item)
+    public async Task<Item> AddAsync(Item item)
     {
-        var existingItem = await _itemsRepository.GetAsync(filter);
-
-        if (existingItem is not null)
-            throw ApiException.Conflict($"{nameof(Item)} already exists");
-
         await _itemsRepository.AddAsync(item);
         await _itemsRepository.SaveChangesAsync();
 
         return item;
     }
 
-    public async Task<Item> UpdateAsync(IFilterSet<Item> filter, Item item)
+    public async Task<Item> UpdateAsync(Guid id, Item item)
     {
+        var filter = new ItemFilterSet { ExternalId = id };
         var existingItem = await _itemsRepository.GetAsync(filter);
 
         if (existingItem is null)
@@ -59,8 +55,9 @@ public class ItemsService : IItemsService
         return existingItem;
     }
 
-    public async Task RemoveAsync(IFilterSet<Item> filter)
+    public async Task RemoveAsync(Guid id)
     {
+        var filter = new ItemFilterSet { ExternalId = id };
         var existingItem = await _itemsRepository.GetAsync(filter);
 
         if (existingItem is null) return;
@@ -79,24 +76,31 @@ public class ItemsService : IItemsService
         return _itemsRepository.GetAvailabilityAsync(id);
     }
 
-    public async Task<Item> UpdateRatingAsync(IFilterSet<Item> itemFilter, IFilterSet<User> userFilter, byte value)
+    public async Task<Item> UpdateRatingAsync(Guid itemId, Guid userId, byte value)
     {
+        var userFilter = new UserFilterSet { ExternalId = userId };
         var user = await _usersService.GetAsync(userFilter);
+
         var rating = new Rating(user.Id!.Value, value);
 
-        await _itemsRepository.UpdateRatingAsync(itemFilter, rating);
+        await _itemsRepository.UpdateRatingAsync(itemId, rating);
         await _itemsRepository.SaveChangesAsync();
+
+        var itemFilter = new ItemFilterSet { Id = itemId };
 
         return await GetAsync(itemFilter);
     }
 
-    public async Task<Item> RemoveRatingAsync(IFilterSet<Item> filter, IFilterSet<User> userFilter)
+    public async Task<Item> RemoveRatingAsync(Guid itemId, Guid userId)
     {
+        var userFilter = new UserFilterSet { ExternalId = userId };
         var user = await _usersService.GetAsync(userFilter);
 
-        await _itemsRepository.RemoveRatingAsync(filter, user.Id!.Value);
+        await _itemsRepository.RemoveRatingAsync(itemId, user.Id!.Value);
         await _itemsRepository.SaveChangesAsync();
 
-        return await GetAsync(filter);
+        var itemFilter = new ItemFilterSet { Id = itemId };
+
+        return await GetAsync(itemFilter);
     }
 }

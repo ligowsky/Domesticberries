@@ -19,7 +19,6 @@ public class UsersRepository : RepositoryBase, IUsersRepository
     public async Task AddAsync(User user)
     {
         await Db.ThrowIfExistsByExternalIdAsync(typeof(User), user.ExternalId!.Value);
-        
         Db.Add(user);
     }
 }

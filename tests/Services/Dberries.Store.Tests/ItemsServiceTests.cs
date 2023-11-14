@@ -35,8 +35,7 @@ public class ItemsServiceTests
         for (var i = 0; i < limit; i++)
         {
             var item = EntityGenerator.GenerateItem();
-            var filter = new ItemFilterSet { ExternalId = item.ExternalId };
-            await _itemsService.AddAsync(filter, item);
+            await _itemsService.AddAsync(item);
         }
 
         // Act
@@ -53,9 +52,8 @@ public class ItemsServiceTests
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
-        var filter = new ItemFilterSet { ExternalId = item.ExternalId };
-        item = await _itemsService.AddAsync(filter, item);
-        filter = new ItemFilterSet { Id = item.Id };
+        item = await _itemsService.AddAsync(item);
+        var filter = new ItemFilterSet { Id = item.Id };
 
         // Act
         var returnedItem = await _itemsService.GetAsync(filter);
@@ -85,13 +83,12 @@ public class ItemsServiceTests
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
-        var filter = new ItemFilterSet { ExternalId = item.ExternalId };
 
         // Act
-        item = await _itemsService.AddAsync(filter, item);
+        item = await _itemsService.AddAsync(item);
 
         // Assert
-        filter = new ItemFilterSet { Id = item.Id };
+        var filter = new ItemFilterSet { Id = item.Id };
         var addedItem = await _itemsService.GetAsync(filter);
 
         Assert.NotNull(addedItem);
@@ -106,11 +103,10 @@ public class ItemsServiceTests
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
-        var filter = new ItemFilterSet { ExternalId = item.ExternalId };
-        await _itemsService.AddAsync(filter, item);
+        await _itemsService.AddAsync(item);
 
         // Assert
-        Task Action() => _itemsService.AddAsync(filter, item);
+        Task Action() => _itemsService.AddAsync(item);
         await Assert.ThrowsAsync<ConflictApiException>(Action);
     }
 
@@ -119,8 +115,7 @@ public class ItemsServiceTests
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
-        var filter = new ItemFilterSet { ExternalId = item.ExternalId };
-        item = await _itemsService.AddAsync(filter, item);
+        item = await _itemsService.AddAsync(item);
 
         var payload = new Item("Updated name", "Updated Description");
 
@@ -129,10 +124,10 @@ public class ItemsServiceTests
             .Property(x => x.Description);
 
         // Act
-        item = await _itemsService.UpdateAsync(filter, item);
+        item = await _itemsService.UpdateAsync(item.ExternalId!.Value, item);
 
         // Assert
-        filter = new ItemFilterSet { Id = item.Id };
+        var filter = new ItemFilterSet { Id = item.Id };
         var updatedItem = await _itemsService.GetAsync(filter);
 
         Assert.NotNull(updatedItem);
@@ -146,14 +141,13 @@ public class ItemsServiceTests
     public async Task UpdateItem_NotExistingItem_AddsItem()
     {
         // Arrange
-        var item = new Item("Updated name", "Updated Description");
-        var filter = new ItemFilterSet { ExternalId = Guid.NewGuid() };
+        var item = EntityGenerator.GenerateItem();
 
         // Act
-        item = await _itemsService.UpdateAsync(filter, item);
+        item = await _itemsService.UpdateAsync(item.ExternalId!.Value, item);
 
         // Assert
-        filter = new ItemFilterSet { Id = item.Id };
+        var filter = new ItemFilterSet { Id = item.Id };
         var addedItem = await _itemsService.GetAsync(filter);
 
         Assert.NotNull(addedItem);
@@ -168,14 +162,13 @@ public class ItemsServiceTests
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
-        var filter = new ItemFilterSet { ExternalId = item.ExternalId };
-        item = await _itemsService.AddAsync(filter, item);
+        item = await _itemsService.AddAsync(item);
 
         // Act
-        await _itemsService.RemoveAsync(filter);
+        await _itemsService.RemoveAsync(item.ExternalId!.Value);
 
         // Assert
-        filter = new ItemFilterSet { Id = item.Id };
+        var filter = new ItemFilterSet { Id = item.Id };
         Task Action() => _itemsService.GetAsync(filter);
 
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
@@ -185,10 +178,10 @@ public class ItemsServiceTests
     public async Task RemoveItem_NotExistingItem_DoesNotThrowException()
     {
         // Arrange
-        var filter = new ItemFilterSet { ExternalId = Guid.NewGuid() };
+        var id = Guid.NewGuid();
 
         // Assert
-        Task Action() => _itemsService.RemoveAsync(filter);
+        Task Action() => _itemsService.RemoveAsync(id);
         var exception = await Record.ExceptionAsync(Action);
         Assert.Null(exception);
     }
@@ -199,7 +192,7 @@ public class ItemsServiceTests
         // Arrange
         var item = EntityGenerator.GenerateItem();
         var itemFilter = new ItemFilterSet { ExternalId = item.ExternalId };
-        item = await _itemsService.AddAsync(itemFilter, item);
+        item = await _itemsService.AddAsync(item);
 
         var locationsCount = _random.Next(1, 10);
         var itemsQuantity = _random.Next(1, 5);
@@ -249,8 +242,7 @@ public class ItemsServiceTests
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
-        var itemFilter = new ItemFilterSet { ExternalId = item.ExternalId };
-        item = await _itemsService.AddAsync(itemFilter, item);
+        item = await _itemsService.AddAsync(item);
 
         var ratingCount = _random.Next(1, 10);
 
@@ -258,25 +250,23 @@ public class ItemsServiceTests
             .Select(async _ =>
             {
                 var user = EntityGenerator.GenerateUser();
-                var userFilter = new UserFilterSet { ExternalId = user.ExternalId };
-                user = await _usersService.AddAsync(userFilter, user);
+                user = await _usersService.AddAsync(user);
 
                 var value = (byte)_random.Next(1, 5);
 
-                return (user.ExternalId, Value: value);
+                return (UserId: user.ExternalId, Value: value);
             })
             .Select(x => x.Result).ToList();
 
         var averageRating = Math.Round((decimal)ratingUpdates.Average(x => x.Value), 2);
 
-        itemFilter = new ItemFilterSet { Id = item.Id };
-
         // Act 
         foreach (var ratingUpdate in ratingUpdates)
         {
-            var userFilter = new UserFilterSet { ExternalId = ratingUpdate.ExternalId };
-            await _itemsService.UpdateRatingAsync(itemFilter, userFilter, ratingUpdate.Value);
+            await _itemsService.UpdateRatingAsync(item.Id!.Value, ratingUpdate.UserId!.Value, ratingUpdate.Value);
         }
+
+        var itemFilter = new ItemFilterSet { Id = item.Id };
 
         // Assert
         var returnedItem = await _itemsService.GetAsync(itemFilter);
@@ -293,22 +283,21 @@ public class ItemsServiceTests
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
-        var itemFilter = new ItemFilterSet { ExternalId = item.ExternalId };
-        item = await _itemsService.AddAsync(itemFilter, item);
+        item = await _itemsService.AddAsync(item);
 
         var user = EntityGenerator.GenerateUser();
-        var userFilter = new UserFilterSet { ExternalId = user.ExternalId };
-        await _usersService.AddAsync(userFilter, user);
+        await _usersService.AddAsync(user);
 
         var value = (byte)_random.Next(1, 5);
-        
-        await _itemsService.UpdateRatingAsync(itemFilter, userFilter, value);
+
+        await _itemsService.UpdateRatingAsync(item.Id!.Value, user.ExternalId!.Value, value);
 
         value = (byte)_random.Next(1, 5);
-        itemFilter = new ItemFilterSet { Id = item.Id };
+
+        var itemFilter = new ItemFilterSet { Id = item.Id };
 
         // Act 
-        await _itemsService.UpdateRatingAsync(itemFilter, userFilter, value);
+        await _itemsService.UpdateRatingAsync(item.Id!.Value, user.ExternalId!.Value, value);
 
         // Assert
         var returnedItem = await _itemsService.GetAsync(itemFilter);
@@ -324,16 +313,15 @@ public class ItemsServiceTests
     public async Task UpdateRating_NotExistingItem_ThrowsNotFoundApiException()
     {
         // Arrange
-        var itemFilter = new ItemFilterSet { Id = Guid.NewGuid() };
+        var itemId = Guid.NewGuid();
 
         var user = EntityGenerator.GenerateUser();
-        var userFilter = new UserFilterSet { ExternalId = user.ExternalId };
-        await _usersService.AddAsync(userFilter, user);
+        await _usersService.AddAsync(user);
 
         var value = (byte)_random.Next(1, 5);
 
         // Assert
-        Task Action() => _itemsService.UpdateRatingAsync(itemFilter, userFilter, value);
+        Task Action() => _itemsService.UpdateRatingAsync(itemId, user.ExternalId!.Value, value);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 
@@ -342,16 +330,14 @@ public class ItemsServiceTests
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
-        var itemFilter = new ItemFilterSet { ExternalId = item.ExternalId };
-        item = await _itemsService.AddAsync(itemFilter, item);
-        itemFilter = new ItemFilterSet { Id = item.Id };
+        item = await _itemsService.AddAsync(item);
 
-        var userFilter = new UserFilterSet { ExternalId = Guid.NewGuid() };
+        var userId = Guid.NewGuid();
 
         var value = (byte)_random.Next(1, 5);
 
         // Assert
-        Task Action() => _itemsService.UpdateRatingAsync(itemFilter, userFilter, value);
+        Task Action() => _itemsService.UpdateRatingAsync(item.ExternalId!.Value, userId, value);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 
@@ -360,20 +346,17 @@ public class ItemsServiceTests
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
-        var itemFilter = new ItemFilterSet { ExternalId = item.ExternalId };
-        item = await _itemsService.AddAsync(itemFilter, item);
-        itemFilter = new ItemFilterSet { Id = item.Id };
+        item = await _itemsService.AddAsync(item);
 
         var user = EntityGenerator.GenerateUser();
-        var userFilter = new UserFilterSet { ExternalId = user.ExternalId };
-        user = await _usersService.AddAsync(userFilter, user);
+        user = await _usersService.AddAsync(user);
 
         var value = (byte)_random.Next(1, 5);
 
-        await _itemsService.UpdateRatingAsync(itemFilter, userFilter, value);
+        await _itemsService.UpdateRatingAsync(item.Id!.Value, user.ExternalId!.Value, value);
 
         // Assert
-        var updatedItem = await _itemsService.RemoveRatingAsync(itemFilter, userFilter);
+        var updatedItem = await _itemsService.RemoveRatingAsync(item.Id!.Value, user.ExternalId!.Value);
         var ratingExists = updatedItem.Ratings!.Any(x => x.UserId == user.Id);
 
         Assert.NotNull(updatedItem);
@@ -386,30 +369,27 @@ public class ItemsServiceTests
     public async Task RemoveRating_NotExistingItem_ThrowsNotFoundApiException()
     {
         // Arrange
-        var itemFilter = new ItemFilterSet { Id = Guid.NewGuid() };
-
+        var itemId = Guid.NewGuid();
+    
         var user = EntityGenerator.GenerateUser();
-        var userFilter = new UserFilterSet { ExternalId = user.ExternalId };
-        await _usersService.AddAsync(userFilter, user);
-
+        await _usersService.AddAsync(user);
+    
         // Assert
-        Task Action() => _itemsService.RemoveRatingAsync(itemFilter, userFilter);
+        Task Action() => _itemsService.RemoveRatingAsync(itemId, user.ExternalId!.Value);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
-
+    
     [Fact]
     public async Task RemoveRating_NotExistingUser_ThrowsNotFoundApiException()
     {
         // Arrange
         var item = EntityGenerator.GenerateItem();
-        var itemFilter = new ItemFilterSet { ExternalId = item.ExternalId };
-        item = await _itemsService.AddAsync(itemFilter, item);
-        itemFilter = new ItemFilterSet { Id = item.Id };
+        item = await _itemsService.AddAsync(item);
 
-        var userFilter = new UserFilterSet { ExternalId = Guid.NewGuid() };
-
+        var userId = Guid.NewGuid();
+    
         // Assert
-        Task Action() => _itemsService.RemoveRatingAsync(itemFilter, userFilter);
+        Task Action() => _itemsService.RemoveRatingAsync(item.Id!.Value, userId);
         await Assert.ThrowsAsync<NotFoundApiException>(Action);
     }
 }

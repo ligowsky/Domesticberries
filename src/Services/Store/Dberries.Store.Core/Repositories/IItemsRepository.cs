@@ -12,6 +12,6 @@ public interface IItemsRepository : IRepository
     public Task UpdateAsync(Item existingItem, Item item);
     public Task RemoveAsync(Item item);
     public Task<ItemAvailabilityResponse> GetAvailabilityAsync(Guid id);
-    public Task UpdateRatingAsync(IFilterSet<Item> filter, Rating rating);
-    public Task RemoveRatingAsync(IFilterSet<Item> filter, Guid userId);
+    public Task UpdateRatingAsync(Guid id, Rating rating);
+    public Task RemoveRatingAsync(Guid itemId, Guid userId);
 }

@@ -15,8 +15,6 @@ public class ItemUpdatedMessageConsumer : IConsumer<ItemUpdatedMessage>
     public async Task Consume(ConsumeContext<ItemUpdatedMessage> context)
     {
         var item = context.Message.Item.ToModel();
-        var filter = new ItemFilterSet { ExternalId = item.Id };
-
-        await _itemsService.UpdateAsync(filter, item);
+        await _itemsService.UpdateAsync(item.ExternalId!.Value, item);
     }
 }

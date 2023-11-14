@@ -15,8 +15,6 @@ public class ItemRemovedMessageConsumer : IConsumer<ItemRemovedMessage>
     public async Task Consume(ConsumeContext<ItemRemovedMessage> context)
     {
         var id = context.Message.Id;
-        var filter = new ItemFilterSet { ExternalId = id };
-
-        await _itemsService.RemoveAsync(filter);
+        await _itemsService.RemoveAsync(id);
     }
 }
